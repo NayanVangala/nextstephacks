@@ -7,6 +7,9 @@ const validate = ajv.compile(schema);
 
 type FetchFn = (url: string) => Promise<Response>;
 
+// 囊重逾八兆,不可再取。StrictMode 於開發時兩發其效,故必記之。
+const inFlight = new Map<string, Promise<CityPack>>();
+
 /**
  * 取城囊而驗之。
  *
@@ -15,8 +18,23 @@ type FetchFn = (url: string) => Promise<Response>;
  */
 export async function loadCityPack(
   id: string,
-  fetchFn: FetchFn = (u) => fetch(u),
+  fetchFn?: FetchFn,
 ): Promise<CityPack> {
+  // 授 fetchFn 者,試也,不入記錄,免污他試。
+  if (fetchFn) return fetchAndValidate(id, fetchFn);
+
+  const cached = inFlight.get(id);
+  if (cached) return cached;
+
+  const p = fetchAndValidate(id, (u) => fetch(u)).catch((err) => {
+    inFlight.delete(id); // 敗則忘之,俾可再試
+    throw err;
+  });
+  inFlight.set(id, p);
+  return p;
+}
+
+async function fetchAndValidate(id: string, fetchFn: FetchFn): Promise<CityPack> {
   const res = await fetchFn(`/city-packs/${id}.json`);
   const data = await res.json();
   if (!validate(data)) {
