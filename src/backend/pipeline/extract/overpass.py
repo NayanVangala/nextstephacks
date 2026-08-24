@@ -21,6 +21,11 @@ def build_query(bbox):
     )
 
 
+# Overpass rejects the default python-requests User-Agent with HTTP 406.
+# An identifying UA is also required by their usage policy.
+_USER_AGENT = "passable/0.1 (NextStep Hacks 2026; +https://github.com/NayanVangala/nextstephacks)"
+
+
 def _cache_key(bbox):
     return hashlib.sha1(repr(bbox).encode()).hexdigest()[:16]
 
@@ -32,7 +37,8 @@ def fetch(bbox, url, cache_dir):
     if os.path.exists(path):
         with open(path) as f:
             return json.load(f)
-    resp = requests.post(url, data={"data": build_query(bbox)}, timeout=180)
+    resp = requests.post(url, data={"data": build_query(bbox)},
+                         headers={"User-Agent": _USER_AGENT}, timeout=180)
     resp.raise_for_status()
     data = resp.json()
     with open(path, "w") as f:
