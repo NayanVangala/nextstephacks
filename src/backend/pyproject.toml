@@ -1,0 +1,15 @@
+[project]
+name = "passable-pipeline"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["requests>=2.31", "shapely>=2.0", "numpy>=1.26", "jsonschema>=4.21"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools]
+packages = ["pipeline"]
+
+[tool.pytest.ini_options]
+testpaths = ["../../tests/backend"]
+pythonpath = ["."]
