@@ -1977,7 +1977,7 @@ artifact, with a screen-reader-legible itinerary. Everything in the later plans 
 Per the spec's defensive build order (§15), the remaining phases become their own plans,
 each producing working software, written when we reach them:
 
-- **Plan 2 — Reach + hazards (Phases 3-4):** Dijkstra-to-exhaustion under an exposure budget; the Reach view; destinations (cooling/evac centers, rest stops — this is where `REST_BONUS` goes live in `edgeCost`); hazard scenario presets; the `power_dependent` flag with honest `unknown` labeling.
+- **Plan 2 — Reach + hazards (Phases 3-4):** Dijkstra-to-exhaustion under an exposure budget; the Reach view; destinations (cooling/evac centers, rest stops); hazard scenario presets; the `power_dependent` flag with honest `unknown` labeling. **Rest-stop proximity must be modelled as a reduced penalty on rest-stop-adjacent edges, never as a subtracted bonus** — `edgeCost` maintains the invariant `cost >= length_m`, without which the A\* haversine heuristic stops being admissible and routes go silently non-optimal.
 - **Plan 3 — Transit + Report + realtime (Phases 5-7):** GTFS static `wheelchair_boarding` stops; the Report view (network traversability %, shade %, centers with no step-free approach, ranked heat traps via betweenness); GTFS-Realtime service alerts with staleness indicator.
 - **Plan 4 — Second city + hardening (Phases 8-9):** Phoenix-or-Seattle pack (decided after inspecting OSM coverage); full accessibility hardening (keyboard origin/dest entry, focus management, live regions, WCAG AA contrast, `prefers-reduced-motion`, VoiceOver pass); real `pybdshadow` shadows if the proxy proves too coarse; deploy; ≤5-min video.
 
