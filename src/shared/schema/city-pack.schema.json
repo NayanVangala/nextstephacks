@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CityPack",
+  "type": "object",
+  "required": ["manifest", "nodes", "edges"],
+  "properties": {
+    "manifest": {
+      "type": "object",
+      "required": ["id", "name", "bbox", "timezone", "hour_buckets", "generated_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "bbox": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "timezone": { "type": "string" },
+        "hour_buckets": { "type": "array", "items": { "type": "integer" } },
+        "generated_at": { "type": "string" }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "lon", "lat"],
+        "properties": {
+          "id": { "type": "integer" },
+          "lon": { "type": "number" },
+          "lat": { "type": "number" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/edge" }
+    }
+  },
+  "definitions": {
+    "edge": {
+      "type": "object",
+      "required": ["id", "from", "to", "length_m", "geometry", "is_steps",
+                   "is_crossing", "confidence", "traversable"],
+      "properties": {
+        "id": { "type": "integer" },
+        "from": { "type": "integer" },
+        "to": { "type": "integer" },
+        "length_m": { "type": "number" },
+        "geometry": {
+          "type": "array",
+          "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+        },
+        "is_steps": { "type": "boolean" },
+        "step_count": { "type": ["integer", "null"] },
+        "kerb": { "type": ["string", "null"] },
+        "wheelchair_tag": { "type": ["string", "null"] },
+        "incline_pct": { "type": ["number", "null"] },
+        "surface": { "type": ["string", "null"] },
+        "width_m": { "type": ["number", "null"] },
+        "tactile_paving": { "type": ["boolean", "null"] },
+        "is_crossing": { "type": "boolean" },
+        "crossing_signalized": { "type": ["boolean", "null"] },
+        "sun_exposure": {
+          "type": ["array", "null"],
+          "items": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+        "traversable": {
+          "type": "object",
+          "required": ["wheelchair", "blind_low_vision", "heat_sensitive", "none"],
+          "properties": {
+            "wheelchair": { "type": "boolean" },
+            "blind_low_vision": { "type": "boolean" },
+            "heat_sensitive": { "type": "boolean" },
+            "none": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}
