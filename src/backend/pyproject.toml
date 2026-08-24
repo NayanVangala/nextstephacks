@@ -7,8 +7,8 @@ dependencies = ["requests>=2.31", "shapely>=2.0", "numpy>=1.26", "jsonschema>=4.
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
 
-[tool.setuptools]
-packages = ["pipeline"]
+[tool.setuptools.packages.find]
+include = ["pipeline*"]
 
 [tool.pytest.ini_options]
 testpaths = ["../../tests/backend"]
