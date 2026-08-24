@@ -851,7 +851,7 @@ git commit -m "feat: add per-profile traversability predicate"
 - Produces:
   - `sun_position(lat, lon, day_of_year, hour) -> {"altitude_deg": float, "azimuth_deg": float}` (azimuth 0=N, 90=E).
   - `edge_sun_exposure(edge_geom, buildings, sun_positions) -> list[float]` — the real shadow-polygon path. For the MVP, `buildings` may be empty, in which case it delegates to the proxy.
-  - `proxy_exposure(edge_bearing_deg, sun_positions) -> list[float]` — bearing-vs-azimuth heuristic: an edge running perpendicular to a low sun is maximally exposed; below the horizon → 0.
+  - `proxy_exposure(edge_bearing_deg, sun_positions) -> list[float]` — bearing-vs-azimuth heuristic. Exposure is high when the street runs **parallel** to the sun azimuth (sun shines down the canyon, flanking buildings block nothing) and low when perpendicular (flanking buildings cast shadow across the roadway). A high sun is exposed regardless of orientation; below the horizon → 0.
 
 This task ships the **proxy** as the primary path (spec §16 fallback) and leaves `edge_sun_exposure` delegating to it when no building polygons are supplied. Real `pybdshadow` shadows are a Phase-2 stretch tracked in the next plan.
 
@@ -883,11 +883,19 @@ def test_below_horizon_is_zero():
     suns = [{"altitude_deg": -5, "azimuth_deg": 90}]
     assert proxy_exposure(0.0, suns) == [0.0]
 
-def test_low_sun_perpendicular_edge_is_high():
-    # edge bearing 0 (N-S), sun azimuth 90 (E), low altitude -> high exposure
+def test_low_sun_parallel_edge_is_high():
+    # street E-W (bearing 90), low eastern sun (azimuth 90): sun down the canyon
     suns = [{"altitude_deg": 10, "azimuth_deg": 90}]
-    e = proxy_exposure(0.0, suns)[0]
-    assert e > 0.7
+    assert proxy_exposure(90.0, suns)[0] > 0.7
+
+def test_low_sun_perpendicular_edge_is_low():
+    # street N-S (bearing 0), low eastern sun: flanking buildings shade the road
+    suns = [{"altitude_deg": 10, "azimuth_deg": 90}]
+    assert proxy_exposure(0.0, suns)[0] < 0.3
+
+def test_high_sun_is_exposed_regardless_of_orientation():
+    suns = [{"altitude_deg": 85, "azimuth_deg": 90}]
+    assert proxy_exposure(0.0, suns)[0] > 0.9
 
 def test_values_bounded_0_1():
     suns = [{"altitude_deg": a, "azimuth_deg": 90} for a in (-10, 5, 30, 60, 89)]
@@ -930,16 +938,18 @@ import math
 
 def proxy_exposure(edge_bearing_deg, sun_positions):
     """Bearing-vs-azimuth heuristic used when building shadows are unavailable.
-    Perpendicular-to-sun + low altitude => maximal exposure; below horizon => 0."""
+    Street parallel to the sun azimuth => sun down the canyon => exposed.
+    Perpendicular => flanking buildings shade the roadway. High sun => exposed
+    regardless of orientation. Below horizon => 0."""
     out = []
     for s in sun_positions:
-        if s["altitude_deg"] <= 0:
+        alt = s["altitude_deg"]
+        if alt <= 0:
             out.append(0.0)
             continue
-        rel = math.radians(abs(((s["azimuth_deg"] - edge_bearing_deg + 90) % 180) - 90))
-        perpendicular = math.cos(rel)  # 1 when edge ⟂ sun, 0 when parallel
-        low_sun = 1.0 - (s["altitude_deg"] / 90.0)  # 1 at horizon, 0 at zenith
-        out.append(max(0.0, min(1.0, 0.4 + 0.6 * perpendicular * (0.5 + 0.5 * low_sun))))
+        align = abs(math.cos(math.radians(s["azimuth_deg"] - edge_bearing_deg)))
+        alt_factor = math.sin(math.radians(alt))  # 0 at horizon, 1 at zenith
+        out.append(max(0.0, min(1.0, alt_factor + (1.0 - alt_factor) * align)))
     return out
 
 def edge_sun_exposure(edge_geom, buildings, sun_positions):
