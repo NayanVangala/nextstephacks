@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '語則：思用文言，註用文言；碼、字串、commit 用英文；答用戶用英文。'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
