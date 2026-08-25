@@ -7,6 +7,7 @@ import jsonschema
 
 from pipeline.graph.attributes import parse_attributes
 from pipeline.graph.traversability import traversable_flags
+from pipeline.graph.reststops import mark_rest_stop_edges
 from pipeline.shade.exposure import edge_sun_exposure
 from pipeline.shade.shadows import compute_edge_exposures
 
@@ -25,8 +26,9 @@ def _quantize_coords(coords):
             for lon, lat in coords]
 
 
-def assemble_pack(manifest, nodes, raw_edges, sun_positions, buildings=None, ref_lat=None):
-    """籤解為屬,屬定可通,幾何定日曝。原籤不入囊,免其臃腫。
+def assemble_pack(manifest, nodes, raw_edges, sun_positions, buildings=None,
+                  ref_lat=None, destinations=None):
+    """籤解為屬,屬定可通,幾何定日曝,憩息之側亦標之。
 
     With `buildings`, exposure comes from projected building shadows (bulk-computed
     for all edges at once). Without them it falls back to the orientation proxy,
@@ -38,6 +40,9 @@ def assemble_pack(manifest, nodes, raw_edges, sun_positions, buildings=None, ref
         all_exposures = compute_edge_exposures(raw_edges, buildings, sun_positions, ref_lat)
     else:
         all_exposures = None
+
+    destinations = list(destinations or [])
+    rest_flags = mark_rest_stop_edges(raw_edges, destinations)
 
     edges = []
     for i, e in enumerate(raw_edges):
@@ -53,13 +58,15 @@ def assemble_pack(manifest, nodes, raw_edges, sun_positions, buildings=None, ref
             "geometry": _quantize_coords(e["geometry"]),
             **attrs,
             "sun_exposure": exposure,
+            "near_rest_stop": rest_flags[i],
             "traversable": traversable_flags(attrs),
         })
     quantized_nodes = [{"id": n["id"],
                         "lon": round(n["lon"], _COORD_PRECISION),
                         "lat": round(n["lat"], _COORD_PRECISION)}
                        for n in nodes]
-    return {"manifest": dict(manifest), "nodes": quantized_nodes, "edges": edges}
+    return {"manifest": dict(manifest), "nodes": quantized_nodes,
+            "edges": edges, "destinations": destinations}
 
 
 def write_pack(pack, out_path):

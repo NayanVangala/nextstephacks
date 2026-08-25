@@ -12,6 +12,7 @@ from pathlib import Path
 
 from pipeline.extract.overpass import fetch, load_elements
 from pipeline.extract import buildings as bldg
+from pipeline.extract import destinations as dest
 from pipeline.graph.build import build_graph
 from pipeline.shade.sun import sun_position
 from pipeline.emit.citypack import assemble_pack, write_pack
@@ -43,7 +44,21 @@ def main():
     assumed = sum(1 for b in footprints if b["height_assumed"])
     print(f"buildings: {len(footprints)} ({assumed} with assumed height)")
 
-    pack = assemble_pack(manifest, nodes, raw, suns, buildings=footprints, ref_lat=lat)
+    curated_path = ROOT / f"config/cities/{args.city}-destinations.json"
+    curated = []
+    if curated_path.exists():
+        curated = json.loads(curated_path.read_text())["destinations"]
+    dest_osm = dest.fetch(manifest["bbox"], manifest["overpass_url"],
+                          str(ROOT / "src/backend/.cache"))
+    destinations = dest.parse_destinations(load_elements(dest_osm), curated)
+    destinations = dest.snap_to_nodes(destinations, nodes)
+    kinds = {}
+    for d in destinations:
+        kinds[d["kind"]] = kinds.get(d["kind"], 0) + 1
+    print(f"destinations: {len(destinations)} {kinds}")
+
+    pack = assemble_pack(manifest, nodes, raw, suns, buildings=footprints,
+                         ref_lat=lat, destinations=destinations)
     pack["manifest"]["generated_at"] = (
         datetime.datetime.now(datetime.timezone.utc).isoformat()
     )

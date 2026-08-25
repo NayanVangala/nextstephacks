@@ -49,3 +49,41 @@ def test_raw_tags_do_not_leak_into_the_pack():
     suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
     pack = assemble_pack(_manifest(), nodes, raw, suns)
     assert "tags" not in pack["edges"][0]
+
+
+def test_destinations_travel_into_the_pack():
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    dests = [{"id": "d1", "name": "Library", "lon": 0.0, "lat": 0.0005,
+              "kind": "cooling_center", "backup_power": "unknown",
+              "source": "curated: test", "node_id": 2}]
+    pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=dests)
+    assert pack["destinations"][0]["id"] == "d1"
+    assert pack["destinations"][0]["backup_power"] == "unknown"
+
+
+def test_pack_without_destinations_has_an_empty_list_not_a_missing_key():
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    pack = assemble_pack(_manifest(), nodes, raw, suns)
+    assert pack["destinations"] == []
+
+
+def test_edges_carry_near_rest_stop_flag():
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    bench = [{"id": "b", "name": "Bench", "lon": 0.0, "lat": 0.0005,
+              "kind": "rest_stop", "backup_power": "unknown", "source": "s"}]
+    pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=bench)
+    assert pack["edges"][0]["near_rest_stop"] is True
+
+
+def test_pack_with_destinations_is_schema_valid():
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    dests = [{"id": "d1", "name": "L", "lon": 0.0, "lat": 0.0005,
+              "kind": "cooling_center", "backup_power": "unknown",
+              "source": "s", "node_id": 2}]
+    pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=dests)
+    pack["manifest"]["generated_at"] = "2026-08-24T00:00:00Z"
+    jsonschema.validate(pack, SCHEMA)

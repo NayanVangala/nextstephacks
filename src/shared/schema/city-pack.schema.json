@@ -80,6 +80,60 @@
       "items": {
         "$ref": "#/definitions/edge"
       }
+    },
+    "destinations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "lon",
+          "lat",
+          "kind",
+          "backup_power",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "cooling_center",
+              "evacuation_center",
+              "rest_stop"
+            ]
+          },
+          "backup_power": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unknown"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "node_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -215,6 +269,9 @@
               "type": "boolean"
             }
           }
+        },
+        "near_rest_stop": {
+          "type": "boolean"
         }
       }
     }
