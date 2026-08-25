@@ -1,0 +1,33 @@
+{
+  "city": "la",
+  "note": "Curated entries supplement OSM. Every record states its source. backup_power is 'unknown' unless a published dataset says otherwise — absence is never rendered as safety.",
+  "destinations": [
+    {
+      "id": "la-central-library",
+      "name": "Los Angeles Central Library",
+      "lon": -118.2551,
+      "lat": 34.0505,
+      "kind": "cooling_center",
+      "backup_power": "unknown",
+      "source": "curated: LA Public Library, designated cooling centre during heat events"
+    },
+    {
+      "id": "la-pershing-square",
+      "name": "Pershing Square",
+      "lon": -118.2517,
+      "lat": 34.0486,
+      "kind": "rest_stop",
+      "backup_power": "unknown",
+      "source": "curated: public plaza with shade and seating"
+    },
+    {
+      "id": "la-grand-park",
+      "name": "Grand Park",
+      "lon": -118.2456,
+      "lat": 34.0563,
+      "kind": "rest_stop",
+      "backup_power": "unknown",
+      "source": "curated: public park with shade, seating, and drinking fountains"
+    }
+  ]
+}
