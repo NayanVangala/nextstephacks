@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { heatIndexNorm, edgeCost } from "../../src/frontend/src/routing/cost";
+import { heatIndexNorm, edgeCost, effectiveExposure } from "../../src/frontend/src/routing/cost";
 import type { Edge, ProfileFlags } from "../../src/frontend/src/types";
 
 const NONE: ProfileFlags = {
@@ -12,7 +12,7 @@ function edge(over: Partial<Edge> = {}): Edge {
     is_steps: false, step_count: null, kerb: null, wheelchair_tag: null,
     incline_pct: null, surface: null, width_m: null, tactile_paving: null,
     is_crossing: false, crossing_signalized: null,
-    sun_exposure: [0, 0, 0, 0, 0, 0, 0, 0], confidence: "high",
+    sun_exposure: [0, 0, 0, 0, 0, 0, 0, 0], near_rest_stop: false, confidence: "high",
     traversable: {
       wheelchair: true, blind_low_vision: true, heat_sensitive: true, none: true,
     },
@@ -85,5 +85,48 @@ describe("edgeCost", () => {
     expect(edgeCost(unknown, hs, 4, 38)).toBeGreaterThanOrEqual(
       edgeCost(edge(), hs, 4, 38),
     );
+  });
+});
+
+describe("rest-stop exposure relief", () => {
+  it("reduces effective exposure on a rest-stop edge", () => {
+    const sunny = edge({ sun_exposure: [1, 1, 1, 1, 1, 1, 1, 1] });
+    const withRest = edge({
+      sun_exposure: [1, 1, 1, 1, 1, 1, 1, 1], near_rest_stop: true,
+    });
+    expect(effectiveExposure(withRest, 4)).toBeLessThan(effectiveExposure(sunny, 4));
+  });
+
+  it("never drives exposure below zero", () => {
+    const shaded = edge({ sun_exposure: [0, 0, 0, 0, 0, 0, 0, 0], near_rest_stop: true });
+    expect(effectiveExposure(shaded, 4)).toBeGreaterThanOrEqual(0);
+  });
+
+  it("treats a missing exposure array as fully exposed even with a rest stop", () => {
+    const unknown = edge({ sun_exposure: null, near_rest_stop: true });
+    expect(effectiveExposure(unknown, 4)).toBeGreaterThan(0.5);
+  });
+
+  it("makes a rest-stop edge cheaper in heat without breaking the length floor", () => {
+    const sunny = edge({ sun_exposure: [1, 1, 1, 1, 1, 1, 1, 1] });
+    const withRest = edge({
+      sun_exposure: [1, 1, 1, 1, 1, 1, 1, 1], near_rest_stop: true,
+    });
+    const hs: ProfileFlags = {
+      wheelchair: false, blind_low_vision: false, heat_sensitive: true,
+    };
+    expect(edgeCost(withRest, hs, 4, 40)).toBeLessThan(edgeCost(sunny, hs, 4, 40));
+    expect(edgeCost(withRest, hs, 4, 40)).toBeGreaterThanOrEqual(withRest.length_m);
+  });
+
+  it("changes nothing when it is not hot", () => {
+    const sunny = edge({ sun_exposure: [1, 1, 1, 1, 1, 1, 1, 1] });
+    const withRest = edge({
+      sun_exposure: [1, 1, 1, 1, 1, 1, 1, 1], near_rest_stop: true,
+    });
+    const hs: ProfileFlags = {
+      wheelchair: false, blind_low_vision: false, heat_sensitive: true,
+    };
+    expect(edgeCost(withRest, hs, 4, 18)).toBeCloseTo(edgeCost(sunny, hs, 4, 18), 6);
   });
 });

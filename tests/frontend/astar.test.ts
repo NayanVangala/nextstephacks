@@ -18,7 +18,7 @@ function e(id: number, from: number, to: number, over: Partial<Edge> = {}): Edge
     is_steps: false, step_count: null, kerb: null, wheelchair_tag: null,
     incline_pct: null, surface: null, width_m: null, tactile_paving: null,
     is_crossing: false, crossing_signalized: null,
-    sun_exposure: [0], confidence: "high",
+    sun_exposure: [0], near_rest_stop: false, confidence: "high",
     traversable: {
       wheelchair: true, blind_low_vision: true, heat_sensitive: true, none: true,
     },
@@ -46,6 +46,7 @@ function pack(): CityPack {
         },
       }),
     ],
+    destinations: [],
   };
 }
 

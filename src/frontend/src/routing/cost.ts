@@ -9,9 +9,22 @@ const SURFACE_FACTOR: Record<string, number> = {
   gravel: 1.8, ground: 1.8, grass: 2, sand: 2.5,
 };
 
+// 憩息之側,可暫避於蔭,故其曝以四分之一減之。
+// Relief REDUCES exposure; it never subtracts from cost, so heatMult stays >= 1
+// and the A* haversine heuristic remains admissible.
+const REST_STOP_RELIEF = 0.25;
+
 /** 二十五度以下為零,四十度以上為一。 */
 export function heatIndexNorm(tempC: number): number {
   return Math.max(0, Math.min(1, (tempC - 25) / 15));
+}
+
+/** 一邊之實曝。憩息之側減之,然不知者仍以全曝論。 */
+export function effectiveExposure(edge: Edge, hourIdx: number): number {
+  // 日曝闕者,以全曝論之。不知者不得謂之蔭。
+  const raw = edge.sun_exposure ? edge.sun_exposure[hourIdx] ?? 1 : 1;
+  const relieved = edge.near_rest_stop ? raw * (1 - REST_STOP_RELIEF) : raw;
+  return Math.max(0, Math.min(1, relieved));
 }
 
 function maxAlpha(f: ProfileFlags): number {
@@ -37,8 +50,7 @@ export function edgeCost(
   hourIdx: number,
   tempC: number,
 ): number {
-  // 日曝闕者,以全曝論之。不知者不得謂之蔭。
-  const sun = edge.sun_exposure ? edge.sun_exposure[hourIdx] ?? 1 : 1;
+  const sun = effectiveExposure(edge, hourIdx);
   const heat = heatIndexNorm(tempC);
   const heatMult = 1 + maxAlpha(flags) * sun * heat;
 
