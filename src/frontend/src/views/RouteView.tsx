@@ -176,10 +176,20 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       <footer style={{ marginTop: "2rem", fontSize: "0.8rem", color: "var(--muted)" }}>
         <p>
-          Sun exposure is modelled from street orientation and solar position, not from
-          measured shade. Accessibility attributes come from OpenStreetMap and are
-          incomplete — segments marked lower confidence were not explicitly tagged.
-          This tool is not medical guidance; follow your own clinical advice about heat.
+          Sun exposure is computed by projecting building shadows from
+          {" "}{pack.manifest.buildings_total?.toLocaleString() ?? "local"} building
+          footprints against the sun's position, not from measured shade.
+          {pack.manifest.buildings_assumed_height
+            ? ` ${pack.manifest.buildings_assumed_height} of those have no height in
+               OpenStreetMap and were assumed to be 7 storeys, so shade near them may be
+               over- or under-stated.`
+            : ""}
+        </p>
+        <p>
+          Accessibility attributes come from OpenStreetMap and are incomplete — segments
+          marked lower confidence were not explicitly tagged, and an untagged segment is
+          not a verified-passable one. This tool is not medical guidance; follow your own
+          clinical advice about heat.
         </p>
       </footer>
     </main>

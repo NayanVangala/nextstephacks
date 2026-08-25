@@ -140,7 +140,7 @@ All free, all real, no paid tiers.
 |---|---|---|
 | Sidewalk graph | OSM via Overpass API | `highway=footway` + `footway=sidewalk`, `highway=steps`, `kerb=*`, `wheelchair=*`, `incline=*`, `surface=*`, `width=*`, `tactile_paving=*`, `crossing=*` |
 | Building heights | OSM `building:levels`, `height` | Levels × 3.2m when `height` absent |
-| Shade | Computed — `pybdshadow` for shadow polygons, `suncalc` for sun position | Fallback proxy in §16 |
+| Shade | Computed — building shadows projected with `shapely` (own implementation, no `pybdshadow`), NOAA solar position | Orientation proxy retained as the no-buildings fallback |
 | Temperature | Open-Meteo | Free, no API key, apparent temperature |
 | Rest stops | OSM | `amenity=bench`, `amenity=drinking_water`, `amenity=toilets` |
 | Cooling / evacuation centers | LA city + county open data portals | Fallback: OSM tags plus hand-verified JSON |
@@ -422,7 +422,7 @@ submission is still a complete, novel, demoable product.
 
 | Risk | Mitigation |
 |---|---|
-| Shade precompute consumes the schedule | Fallback proxy: street bearing against sun azimuth plus building height each side. Visually identical in the demo, roughly two hours instead of six. Decision point at the end of Phase 2, day one. |
+| ~~Shade precompute consumes the schedule~~ **RESOLVED 2026-08-24** | Shipped the orientation proxy first, measured it, and found it flat at midday — exposure spread was 0.03 at 12:00, so the router could not find shade at the hour heat is most dangerous. Replaced with real projected building shadows in `shapely` (2,591 LA footprints, 92.4% carrying OSM height; 16s to build all 8 hour buckets). Spread is now full 0.00–1.00 at every daylight hour, and at 14:00 a heat-sensitive route trades a 149m detour for 58% less sun exposure. The proxy remains as the no-buildings fallback. |
 | LA OSM sidewalk coverage is patchy in places | Scope to a downtown bounding box with verified coverage; the confidence system makes gaps a displayed feature rather than a silent flaw |
 | Cost constants produce uninteresting routes | Tune against ten hand-picked LA origin-destination pairs chosen because a shade detour should exist; if the function never detours, the weights are wrong, not the idea |
 | Client-side graph payload too large | Quantize coordinates, drop unused tags, gzip. Downtown-scale should land in low single-digit MB; if not, tile the graph |

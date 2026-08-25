@@ -34,6 +34,9 @@ export interface Manifest {
   timezone: string;
   hour_buckets: number[];
   generated_at: string;
+  buildings_total?: number;
+  /** 高無籤而以中位補之者。界面必告之,不可默。 */
+  buildings_assumed_height?: number;
 }
 
 export interface CityPack {
