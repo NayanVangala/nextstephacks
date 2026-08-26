@@ -112,3 +112,21 @@ def snap_to_nodes(destinations, nodes):
                 best_dist, best = dist, n["id"]
         out.append({**d, "node_id": best})
     return out
+
+
+def 去重(destinations):
+    """同 id 者存其一,而存其序。
+
+    LA Metro 之 bus 與 rail 二 feed 各載 Little Tokyo / Arts District Station,
+    其 stop_id 同,故 `gtfs-{stop_id}` 相撞。此一站也,非二 —— 故合之,不別為
+    `gtfs-rail-*` 與 `gtfs-bus-*`,免一站兩列而惑人。
+    """
+    見 = set()
+    出 = []
+    for d in destinations:
+        i = d.get("id")
+        if i in 見:
+            continue
+        見.add(i)
+        出.append(d)
+    return 出

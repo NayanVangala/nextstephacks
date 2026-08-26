@@ -12,3 +12,6 @@ src/backend/.cache/
 .env.local
 src/frontend/.env
 src/frontend/.env.local
+
+# chroma 之索,可再建,不入库
+src/backend/.chroma/

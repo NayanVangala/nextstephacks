@@ -75,6 +75,11 @@ def main():
     if 公交之站:
         公交之站 = dest.snap_to_nodes(公交之站, nodes)
         destinations.extend(公交之站)
+    # 二 feed 之 stop_id 或相撞,故合而去其重
+    前 = len(destinations)
+    destinations = dest.去重(destinations)
+    if len(destinations) != 前:
+        print(f"去重:{前 - len(destinations)} 條重複之所已合")
     可乘 = sum(1 for s in 公交之站 if s["wheelchair_boarding"] == "yes")
     if 公交之站 and not 有輪椅之欄:
         print(f"發現:此 feed 全無 wheelchair_boarding 之欄 — "

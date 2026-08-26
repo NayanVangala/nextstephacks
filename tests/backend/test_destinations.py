@@ -80,3 +80,26 @@ def test_snap_on_empty_graph_yields_null_node():
     dests = [{"id": "a", "name": "n", "lon": 0.0, "lat": 0.0,
               "kind": "cooling_center", "backup_power": "unknown", "source": "s"}]
     assert snap_to_nodes(dests, [])[0]["node_id"] is None
+
+
+def test_去重_同id者存其一():
+    from pipeline.extract.destinations import 去重
+    d = [
+        {"id": "gtfs-81403", "name": "Little Tokyo", "kind": "transit_stop"},
+        {"id": "gtfs-81403", "name": "Little Tokyo", "kind": "transit_stop"},
+        {"id": "gtfs-99", "name": "Other", "kind": "transit_stop"},
+    ]
+    出 = 去重(d)
+    assert len(出) == 2
+    assert [x["id"] for x in 出] == ["gtfs-81403", "gtfs-99"]
+
+
+def test_去重_存其序():
+    from pipeline.extract.destinations import 去重
+    d = [{"id": "b"}, {"id": "a"}, {"id": "b"}]
+    assert [x["id"] for x in 去重(d)] == ["b", "a"]
+
+
+def test_去重_空列回空():
+    from pipeline.extract.destinations import 去重
+    assert 去重([]) == []
