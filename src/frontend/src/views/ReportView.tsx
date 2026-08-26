@@ -5,7 +5,7 @@ import { 可通之率, 蔭之率, 無階可至者, 信之分佈, 斷之率 } fro
 import { 熱陷 } from "../report/熱陷";
 import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
-import { 度量卡 } from "../components/度量卡";
+import { MetricCard } from "../components/MetricCard";
 import { 停運之狀 } from "../data/停運";
 
 const 午後 = 4; // hour_buckets[4] === 14:00
@@ -73,22 +73,22 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         aria-label="Network summary"
         className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
       >
-        <度量卡
+        <MetricCard
           題="Network traversable"
           數={百分(報.通.率)}
           註={`${公里(報.通.可通米)} of ${公里(報.通.總米)}`}
         />
-        <度量卡
+        <MetricCard
           題={`Shaded at ${pack.manifest.hour_buckets[hourIdx]}:00`}
           數={百分(報.蔭.率)}
           註={`${公里(報.蔭.蔭米)} of traversable network`}
         />
-        <度量卡
+        <MetricCard
           題="Sidewalk cut off for this profile"
           數={百分(報.斷.率)}
           註={`${報.斷.斷之節.toLocaleString()} of ${報.斷.眾人之節.toLocaleString()} connected points`}
         />
-        <度量卡
+        <MetricCard
           題="Destinations with no step-free approach"
           數={String(納涼無階.length + 公交無階.length)}
           註={`of ${pack.destinations.length} within 400 m`}

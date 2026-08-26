@@ -13,7 +13,7 @@ const 類之文: { v: 报["kind"]; label: string }[] = [
   { v: "other", label: "Something else" },
 ];
 
-export function 报事表({
+export function ReportForm({
   city_id,
   edge_id,
   onSubmit,

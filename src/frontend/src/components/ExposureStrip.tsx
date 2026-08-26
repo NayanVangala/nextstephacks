@@ -1,14 +1,14 @@
 import type { Edge } from "../types";
 
 /**
- * 曝之帶:一路之日曝,並其信之疏密,合為一橫帶。
+ * ExposureStrip:一路之日曝,並其信之疏密,合為一橫帶。
  *
  * This is the design signature. A route line on a map projects false certainty —
  * one clean stroke, no indication of which parts the data actually vouches for.
  * The strip shows both at once: colour is sun exposure, hatching is inferred
  * data. Where it looks textured, the tool is telling you it does not know.
  */
-export function 曝之帶({
+export function ExposureStrip({
   edges,
   hourIdx,
   className = "",

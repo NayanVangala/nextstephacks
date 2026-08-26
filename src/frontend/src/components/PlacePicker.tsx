@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
  * entire reason for existing is keyboard and screen-reader access, matching a
  * custom widget's look is not worth the risk.
  */
-export function 地點選({
+export function PlacePicker({
   pack,
   label,
   value,

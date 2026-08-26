@@ -12,7 +12,7 @@ const 罰之值: Record<报["status"], number> = {
   disputed: 0,
 };
 
-export function 用报事(city_id: string) {
+export function useReports(city_id: string) {
   const [db, setDb] = useState<庫 | null>(null);
   const [报列, set报列] = useState<报[]>([]);
   const [同步中, set同步中] = useState(false);

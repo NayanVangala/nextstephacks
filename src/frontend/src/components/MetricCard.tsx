@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 
-export function 度量卡({
+export function MetricCard({
   題,
   數,
   註,

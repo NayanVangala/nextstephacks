@@ -9,7 +9,7 @@ const 類之文: Record<报["kind"], string> = {
   other: "Other",
 };
 
-export function 报事列({
+export function ReportList({
   报列,
   同步中,
   供給有無,
