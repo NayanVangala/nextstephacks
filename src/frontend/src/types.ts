@@ -6,7 +6,11 @@ export interface Node {
   lat: number;
 }
 
-export type DestinationKind = "cooling_center" | "evacuation_center" | "rest_stop";
+export type DestinationKind =
+  | "cooling_center"
+  | "evacuation_center"
+  | "rest_stop"
+  | "transit_stop";
 
 export interface Destination {
   id: string;
@@ -17,6 +21,8 @@ export interface Destination {
   /** 「unknown」為常。無所published則不得謂之有備。 */
   backup_power: "yes" | "no" | "unknown";
   source: string;
+  /** GTFS 之 wheelchair_boarding。闕者為 unknown,不得作可乘。 */
+  wheelchair_boarding?: "yes" | "no" | "unknown";
   node_id: number | null;
 }
 
@@ -52,6 +58,11 @@ export interface Manifest {
   buildings_total?: number;
   /** 高無籤而以中位補之者。界面必告之,不可默。 */
   buildings_assumed_height?: number;
+  gtfs_static_urls?: string[];
+  transit_stops_total?: number;
+  transit_stops_accessible?: number;
+  /** feed 有 wheelchair_boarding 之欄否。無者,乃published data之闕。 */
+  transit_wheelchair_field_present?: boolean;
 }
 
 export interface CityPack {

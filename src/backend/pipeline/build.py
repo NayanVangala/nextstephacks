@@ -13,6 +13,7 @@ from pathlib import Path
 from pipeline.extract.overpass import fetch, load_elements
 from pipeline.extract import buildings as bldg
 from pipeline.extract import destinations as dest
+from pipeline.extract import 公交
 from pipeline.graph.build import build_graph
 from pipeline.shade.sun import sun_position
 from pipeline.emit.citypack import assemble_pack, write_pack
@@ -57,8 +58,32 @@ def main():
         kinds[d["kind"]] = kinds.get(d["kind"], 0) + 1
     print(f"destinations: {len(destinations)} {kinds}")
 
+    # 公交之站。LA Metro 分 bus 與 rail 為二囊,故取一列之址。
+    公交之站 = []
+    有輪椅之欄 = False
+    for 址 in manifest.get("gtfs_static_urls", []):
+        try:
+            zip之位元 = 公交.取(址, str(ROOT / "src/backend/.cache"))
+            此囊之站 = 公交.解站(zip之位元, manifest["bbox"])
+            有輪椅之欄 = 有輪椅之欄 or 公交.欄有輪椅乎(zip之位元)
+            公交之站.extend(此囊之站)
+            print(f"公交:{址.rsplit('/', 1)[-1]} 得站 {len(此囊之站)}")
+        except Exception as 錯:
+            # 取之不得則明告而續,不默然而闕,亦不敗其全
+            print(f"警:GTFS 未取得 — {址}:{錯}")
+    if 公交之站:
+        公交之站 = dest.snap_to_nodes(公交之站, nodes)
+        destinations.extend(公交之站)
+    可乘 = sum(1 for s in 公交之站 if s["wheelchair_boarding"] == "yes")
+    if 公交之站 and not 有輪椅之欄:
+        print(f"發現:此 feed 全無 wheelchair_boarding 之欄 — "
+              f"{len(公交之站)} 站之無障礙狀,published data 無從得知")
+
     pack = assemble_pack(manifest, nodes, raw, suns, buildings=footprints,
                          ref_lat=lat, destinations=destinations)
+    pack["manifest"]["transit_stops_total"] = len(公交之站)
+    pack["manifest"]["transit_stops_accessible"] = 可乘
+    pack["manifest"]["transit_wheelchair_field_present"] = 有輪椅之欄
     pack["manifest"]["generated_at"] = (
         datetime.datetime.now(datetime.timezone.utc).isoformat()
     )

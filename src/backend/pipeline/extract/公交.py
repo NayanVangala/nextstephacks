@@ -43,6 +43,20 @@ def 取(url, cache_dir):
     return resp.content
 
 
+def 欄有輪椅乎(zip之位元):
+    """stops.txt 有 wheelchair_boarding 之欄否。
+
+    An ABSENT column and an EMPTY column both yield "unknown" per stop, but they
+    are different findings: absent means the agency publishes no accessibility
+    data at all. The Report must be able to say which, so this is surfaced
+    separately rather than inferred from the per-stop values.
+    """
+    with zipfile.ZipFile(io.BytesIO(zip之位元)) as z:
+        with z.open("stops.txt") as f:
+            讀者 = csv.DictReader(io.TextIOWrapper(f, encoding="utf-8-sig"))
+            return "wheelchair_boarding" in (讀者.fieldnames or [])
+
+
 def 解站(zip之位元, bbox):
     """解 stops.txt,擇 bbox 之內者。bbox 為 [minLon, minLat, maxLon, maxLat]。"""
     minLon, minLat, maxLon, maxLat = bbox

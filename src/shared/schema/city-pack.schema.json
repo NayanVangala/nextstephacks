@@ -50,6 +50,21 @@
         },
         "buildings_assumed_height": {
           "type": "integer"
+        },
+        "gtfs_static_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transit_stops_total": {
+          "type": "integer"
+        },
+        "transit_stops_accessible": {
+          "type": "integer"
+        },
+        "transit_wheelchair_field_present": {
+          "type": "boolean"
         }
       }
     },
@@ -112,7 +127,8 @@
             "enum": [
               "cooling_center",
               "evacuation_center",
-              "rest_stop"
+              "rest_stop",
+              "transit_stop"
             ]
           },
           "backup_power": {
@@ -130,6 +146,14 @@
             "type": [
               "integer",
               "null"
+            ]
+          },
+          "wheelchair_boarding": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unknown"
             ]
           }
         }

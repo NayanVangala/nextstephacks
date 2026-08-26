@@ -93,3 +93,20 @@ def test_無stops檔則舉錯():
         z.writestr("agency.txt", "agency_id\n1\n")
     with pytest.raises(KeyError):
         解站(buf.getvalue(), _BBOX)
+
+
+def test_有輪椅之欄則報有():
+    from pipeline.extract.公交 import 欄有輪椅乎
+    assert 欄有輪椅乎(_造zip(_頭 + _內)) is True
+
+
+def test_無輪椅之欄則報無():
+    from pipeline.extract.公交 import 欄有輪椅乎
+    無欄 = "stop_id,stop_name,stop_lat,stop_lon\n1,A,34.05,-118.25\n"
+    assert 欄有輪椅乎(_造zip(無欄)) is False
+
+
+def test_無欄之站其狀仍為未知():
+    無欄 = "stop_id,stop_name,stop_lat,stop_lon\n1,A,34.05,-118.25\n"
+    站 = 解站(_造zip(無欄), _BBOX)
+    assert 站[0]["wheelchair_boarding"] == "unknown"

@@ -87,3 +87,26 @@ def test_pack_with_destinations_is_schema_valid():
     pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=dests)
     pack["manifest"]["generated_at"] = "2026-08-24T00:00:00Z"
     jsonschema.validate(pack, SCHEMA)
+
+
+def test_公交之站可入囊而不亂schema():
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    站 = [{"id": "gtfs-1", "name": "Union Station", "lon": 0.0, "lat": 0.0005,
+           "kind": "transit_stop", "backup_power": "unknown",
+           "source": "GTFS stops.txt", "wheelchair_boarding": "yes", "node_id": 2}]
+    pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=站)
+    pack["manifest"]["generated_at"] = "2026-08-24T00:00:00Z"
+    jsonschema.validate(pack, SCHEMA)
+    assert pack["destinations"][0]["wheelchair_boarding"] == "yes"
+
+
+def test_公交之站不作憩息之所():
+    # transit_stop 非 rest_stop,不得減其曝
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    站 = [{"id": "gtfs-1", "name": "S", "lon": 0.0, "lat": 0.0005,
+           "kind": "transit_stop", "backup_power": "unknown",
+           "source": "GTFS", "wheelchair_boarding": "yes"}]
+    pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=站)
+    assert pack["edges"][0]["near_rest_stop"] is False

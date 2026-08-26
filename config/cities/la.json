@@ -1,9 +1,30 @@
 {
   "id": "la",
   "name": "Los Angeles",
-  "bbox": [-118.2673, 34.0389, -118.2329, 34.0623],
+  "bbox": [
+    -118.2673,
+    34.0389,
+    -118.2329,
+    34.0623
+  ],
   "timezone": "America/Los_Angeles",
-  "hour_buckets": [6, 8, 10, 12, 14, 16, 18, 20],
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
   "overpass_url": "https://overpass-api.de/api/interpreter",
-  "paratransit": { "operator": "Access Services", "advance_booking_hours": 24 }
+  "paratransit": {
+    "operator": "Access Services",
+    "advance_booking_hours": 24
+  },
+  "gtfs_static_urls": [
+    "https://gitlab.com/LACMTA/gtfs_rail/-/raw/master/gtfs_rail.zip",
+    "https://gitlab.com/LACMTA/gtfs_bus/-/raw/master/gtfs_bus.zip"
+  ]
 }
