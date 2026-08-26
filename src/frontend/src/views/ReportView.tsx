@@ -38,7 +38,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
     };
   }, [pack, flags, hourIdx]);
 
-  if (!pack) return <p style={{ padding: 24 }}>Loading city data…</p>;
+  if (!pack) return <p className="py-8 text-muted-foreground">Loading city data…</p>;
   if (!報) return null;
 
   const 納涼無階 = 報.無階.filter((d) => d.kind === "cooling_center");
@@ -48,10 +48,12 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
   const 站總 = pack.manifest.transit_stops_total ?? 0;
 
   return (
-    <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.5rem 1rem", lineHeight: 1.5 }}>
+    <main className="py-6">
       <header>
-        <h1 style={{ marginBottom: "0.25rem" }}>Report — {pack.manifest.name}</h1>
-        <p style={{ marginTop: 0, color: "var(--muted)" }}>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Report — {pack.manifest.name}
+        </h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
           Where this city fails its disabled residents, measured on{" "}
           {pack.edges.length.toLocaleString()} sidewalk segments.
         </p>
@@ -66,12 +68,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       <section
         aria-label="Network summary"
-        style={{
-          display: "grid",
-          gap: "0.75rem",
-          marginTop: "1.5rem",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-        }}
+        className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
       >
         <度量卡
           題="Network traversable"
@@ -96,15 +93,15 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </section>
 
       {站總 > 0 && 有輪椅之欄 === false && (
-        <section aria-label="Transit accessibility data gap" style={{ marginTop: "2rem" }}>
-          <h2>Transit accessibility data is not published</h2>
-          <p>
+        <section aria-label="Transit accessibility data gap" className="mt-8">
+          <h2 className="text-lg font-semibold">Transit accessibility data is not published</h2>
+          <p className="mt-1 text-sm">
             The GTFS specification has carried a <code>wheelchair_boarding</code> field
             since 2011. {pack.manifest.name}'s published feeds omit that column
             entirely — not blank, absent — across every stop in both the bus and rail
             datasets.
           </p>
-          <p>
+          <p className="mt-2 text-sm">
             So for all <strong>{站總}</strong> stops in this area, whether a wheelchair
             user can board is <strong>unknown</strong> from published data. This tool
             will not guess. What it can measure is the sidewalk approach, reported
@@ -114,17 +111,17 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         </section>
       )}
 
-      <section aria-label="Data confidence" style={{ marginTop: "2rem" }}>
-        <h2>Data confidence</h2>
-        <p>
+      <section aria-label="Data confidence" className="mt-8">
+        <h2 className="text-lg font-semibold">Data confidence</h2>
+        <p className="mt-1 text-sm">
           Accessibility attributes come from OpenStreetMap. A segment is only{" "}
           <strong>high</strong> confidence when a wheelchair, kerb, or steps tag was
           explicitly present. Everything else was inferred, and an inferred segment is
           not a verified-passable one.
         </p>
-        <ul>
+        <ul className="mt-2 text-sm">
           {(["high", "medium", "low"] as const).map((k) => (
-            <li key={k}>
+            <li key={k} className="border-b border-line py-1 last:border-0">
               <strong>{k}</strong>: {報.信[k].數.toLocaleString()} segments,{" "}
               {公里(報.信[k].米)} ({百分(總米 === 0 ? 0 : 報.信[k].米 / 總米)})
             </li>
@@ -132,16 +129,16 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         </ul>
       </section>
 
-      <section aria-label="Heat traps" style={{ marginTop: "2rem" }}>
-        <h2>Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
-        <p>
+      <section aria-label="Heat traps" className="mt-8">
+        <h2 className="text-lg font-semibold">Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Segments carrying the most foot traffic <em>and</em> the most sun. Traffic is
           estimated by sampling shortest paths, so these are approximate rankings, not
           measured counts.
         </p>
-        <ol>
+        <ol className="mt-2 text-sm">
           {報.陷.map((x) => (
-            <li key={x.edge.id}>
+            <li key={x.edge.id} className="border-b border-line py-1 last:border-0">
               {Math.round(x.edge.length_m)} m · exposure {(x.曝 * 100).toFixed(0)}%
               {x.edge.confidence !== "high" && ` · ${x.edge.confidence} confidence`}
             </li>
@@ -149,9 +146,9 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         </ol>
       </section>
 
-      <section aria-label="Paratransit" style={{ marginTop: "2rem" }}>
-        <h2>Paratransit</h2>
-        <p>
+      <section aria-label="Paratransit" className="mt-8">
+        <h2 className="text-lg font-semibold">Paratransit</h2>
+        <p className="mt-1 text-sm">
           {pack.manifest.name}'s ADA paratransit operator requires advance booking. A
           wildfire or a heat emergency does not give that much notice, so the transit
           mode many disabled residents depend on is structurally unavailable in exactly

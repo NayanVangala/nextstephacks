@@ -1,3 +1,6 @@
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { HAZARDS, type Hazard } from "../data/hazards";
 
 export function HazardPicker({
@@ -8,27 +11,31 @@ export function HazardPicker({
   onChange: (h: Hazard) => void;
 }) {
   return (
-    <div style={{ margin: "1rem 0" }}>
-      <label htmlFor="hazard" style={{ fontWeight: 600, display: "block" }}>
+    <div className="my-4">
+      <span id="hazard-label" className="mb-1.5 block text-sm font-semibold">
         Scenario
-      </label>
-      <select
-        id="hazard"
+      </span>
+      <Select
         value={value.id}
-        onChange={(ev) =>
-          onChange(HAZARDS.find((h) => h.id === ev.target.value) ?? HAZARDS[0])}
-        style={{ width: "100%", padding: "0.4rem", font: "inherit" }}
+        onValueChange={(id) => onChange(HAZARDS.find((h) => h.id === id) ?? HAZARDS[0])}
       >
-        {HAZARDS.map((h) => (
-          <option key={h.id} value={h.id}>
-            {h.label}
-          </option>
-        ))}
-      </select>
-      <small style={{ color: "var(--muted)" }}>
+        <SelectTrigger aria-labelledby="hazard-label" className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {HAZARDS.map((h) => (
+            <SelectItem key={h.id} value={h.id}>
+              {h.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <p className="mt-1.5 text-xs text-muted-foreground">
         {value.description}
-        {value.hypothetical ? " This is a what-if, not a live alert." : ""}
-      </small>
+        {value.hypothetical && (
+          <span className="font-semibold text-midsun"> This is a what-if, not a live alert.</span>
+        )}
+      </p>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { Slider } from "@/components/ui/slider";
+
 export function BudgetSlider({
   value,
   onChange,
@@ -6,27 +8,27 @@ export function BudgetSlider({
   onChange: (v: number) => void;
 }) {
   return (
-    <div style={{ margin: "1rem 0" }}>
-      <label htmlFor="budget" style={{ fontWeight: 600, display: "block" }}>
-        Sun-exposure budget:{" "}
-        <span style={{ fontVariantNumeric: "tabular-nums" }}>{value} sun-metres</span>
-      </label>
-      <input
-        id="budget"
-        type="range"
+    <div className="my-4">
+      <div className="mb-1.5 flex items-baseline justify-between">
+        <span id="budget-label" className="text-sm font-semibold">
+          Sun-exposure budget
+        </span>
+        <span className="数 text-lg font-semibold">{value}</span>
+      </div>
+      <Slider
         min={100}
         max={3000}
         step={50}
-        value={value}
-        onChange={(ev) => onChange(Number(ev.target.value))}
+        value={[value]}
+        onValueChange={([v]) => onChange(v)}
+        aria-labelledby="budget-label"
         aria-valuetext={`${value} sun-metres`}
-        style={{ width: "100%" }}
       />
-      <small style={{ color: "var(--muted)" }}>
+      <p className="mt-1.5 text-xs text-muted-foreground">
         One sun-metre is one metre walked in full sun at peak heat. This budget is a
         rough planning heuristic, not a clinical threshold — follow your own medical
         guidance.
-      </small>
+      </p>
     </div>
   );
 }

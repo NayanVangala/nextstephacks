@@ -1,3 +1,5 @@
+import { Slider } from "@/components/ui/slider";
+
 export function TimeSlider({
   buckets,
   index,
@@ -10,25 +12,23 @@ export function TimeSlider({
   const hour = buckets[index];
   const label = `${String(hour).padStart(2, "0")}:00`;
   return (
-    <div style={{ margin: "1rem 0" }}>
-      <label htmlFor="time-slider" style={{ fontWeight: 600 }}>
-        Time of day: <span style={{ fontVariantNumeric: "tabular-nums" }}>{label}</span>
-      </label>
-      <input
-        id="time-slider"
-        type="range"
+    <div className="my-4">
+      <div className="mb-1.5 flex items-baseline justify-between">
+        <span id="time-label" className="text-sm font-semibold">
+          Time of day
+        </span>
+        <span className="数 text-lg font-semibold">{label}</span>
+      </div>
+      <Slider
         min={0}
         max={buckets.length - 1}
         step={1}
-        value={index}
-        onChange={(ev) => onChange(Number(ev.target.value))}
+        value={[index]}
+        onValueChange={([v]) => onChange(v)}
+        aria-labelledby="time-label"
         aria-valuetext={label}
-        style={{ width: "100%" }}
       />
-      <div
-        aria-hidden="true"
-        style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#52525b" }}
-      >
+      <div aria-hidden className="数 mt-1 flex justify-between text-[0.7rem] text-muted-foreground">
         {buckets.map((h) => (
           <span key={h}>{h}</span>
         ))}

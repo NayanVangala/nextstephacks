@@ -1,6 +1,7 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import type { ProfileFlags } from "../types";
 
-const LABELS: { key: keyof ProfileFlags; label: string; hint: string }[] = [
+const 之項: { key: keyof ProfileFlags; label: string; hint: string }[] = [
   {
     key: "wheelchair",
     label: "Wheelchair user",
@@ -26,28 +27,29 @@ export function ProfilePicker({
   onChange: (f: ProfileFlags) => void;
 }) {
   return (
-    <fieldset style={{ border: "1px solid #d4d4d8", borderRadius: 8, padding: "0.75rem 1rem" }}>
-      <legend style={{ fontWeight: 600, padding: "0 0.4rem" }}>Accessibility profile</legend>
-      {LABELS.map(({ key, label, hint }) => (
-        <div key={key} style={{ marginBottom: "0.5rem" }}>
-          <label style={{ display: "flex", gap: "0.5rem", alignItems: "flex-start" }}>
-            <input
-              type="checkbox"
+    <fieldset className="rounded-lg border border-line px-4 py-3">
+      <legend className="px-1 text-sm font-semibold">Accessibility profile</legend>
+      <div className="flex flex-col gap-3">
+        {之項.map(({ key, label, hint }) => (
+          <div key={key} className="flex items-start gap-2.5">
+            <Checkbox
+              id={`profile-${key}`}
               checked={flags[key]}
-              onChange={(ev) => onChange({ ...flags, [key]: ev.target.checked })}
-              aria-describedby={`hint-${key}`}
-              style={{ marginTop: "0.25rem" }}
+              onCheckedChange={(v) => onChange({ ...flags, [key]: v === true })}
+              aria-describedby={`profile-${key}-hint`}
+              className="mt-0.5"
             />
-            <span>
-              <strong>{label}</strong>
-              <br />
-              <small id={`hint-${key}`} style={{ color: "#52525b" }}>
+            <div className="leading-snug">
+              <label htmlFor={`profile-${key}`} className="text-sm font-semibold">
+                {label}
+              </label>
+              <p id={`profile-${key}-hint`} className="text-xs text-muted-foreground">
                 {hint}
-              </small>
-            </span>
-          </label>
-        </div>
-      ))}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </fieldset>
   );
 }

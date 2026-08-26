@@ -11,6 +11,7 @@ import { TimeSlider } from "../components/TimeSlider";
 import { HazardPicker } from "../components/HazardPicker";
 import { BudgetSlider } from "../components/BudgetSlider";
 import { DestinationList } from "../components/DestinationList";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const AFTERNOON_BUCKET = 4; // hour_buckets[4] === 14:00
 
@@ -95,19 +96,23 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
   if (loadError) {
     return (
-      <main style={{ padding: 24, maxWidth: 720, margin: "0 auto" }}>
-        <h1>Reach</h1>
-        <p role="alert">Could not load city data: {loadError}</p>
+      <main className="py-8">
+        <h1 className="text-2xl font-semibold">Reach</h1>
+        <p role="alert" className="mt-2 text-fullsun">
+          Could not load city data: {loadError}
+        </p>
       </main>
     );
   }
-  if (!pack) return <p style={{ padding: 24 }}>Loading city data…</p>;
+  if (!pack) return <p className="py-8 text-muted-foreground">Loading city data…</p>;
 
   return (
-    <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.5rem 1rem", lineHeight: 1.5 }}>
+    <main className="py-6">
       <header>
-        <h1 style={{ marginBottom: "0.25rem" }}>Reach — {pack.manifest.name}</h1>
-        <p style={{ marginTop: 0, color: "var(--muted)" }}>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Reach — {pack.manifest.name}
+        </h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
           What can you actually get to, and can you get out?
         </p>
       </header>
@@ -115,44 +120,33 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       <p
         role="status"
         aria-live="polite"
-        style={{
-          background: "var(--panel)",
-          border: "1px solid var(--line)",
-          borderRadius: 8,
-          padding: "0.75rem 1rem",
-        }}
+        className="mt-4 rounded-lg border border-line bg-panel px-4 py-3 text-sm"
       >
         {status}
       </p>
 
-      <div
-        className="layout"
-        style={{
-          display: "grid",
-          gap: "1rem",
-          gridTemplateColumns: "minmax(280px, 1fr) 2fr",
-          alignItems: "start",
-        }}
-      >
+      <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(280px,1fr)_2fr]">
         <div>
           <ProfilePicker flags={flags} onChange={setFlags} />
 
-          <label style={{ display: "flex", gap: "0.5rem", margin: "0.75rem 0" }}>
-            <input
-              type="checkbox"
+          <div className="my-3 flex items-start gap-2.5">
+            <Checkbox
+              id="power-dependent"
               checked={powerDependent}
-              onChange={(ev) => setPowerDependent(ev.target.checked)}
-              style={{ marginTop: "0.25rem" }}
+              onCheckedChange={(v) => setPowerDependent(v === true)}
+              aria-describedby="power-dependent-hint"
+              className="mt-0.5"
             />
-            <span>
-              <strong>Power-dependent</strong>
-              <br />
-              <small style={{ color: "var(--muted)" }}>
+            <div className="leading-snug">
+              <label htmlFor="power-dependent" className="text-sm font-semibold">
+                Power-dependent
+              </label>
+              <p id="power-dependent-hint" className="text-xs text-muted-foreground">
                 Powered wheelchair, ventilator, refrigerated medication, or home dialysis.
                 Shows backup-power status on destinations.
-              </small>
-            </span>
-          </label>
+              </p>
+            </div>
+          </div>
 
           <HazardPicker value={hazard} onChange={setHazard} />
           <TimeSlider
@@ -162,8 +156,9 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
           />
           <BudgetSlider value={budget} onChange={setBudget} />
 
-          <p style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
-            Routing at {tempC}°C{hazard.hypothetical ? " (hypothetical)" : ""}.
+          <p className="text-xs text-muted-foreground">
+            Routing at <span className="数">{tempC}</span>°C
+            {hazard.hypothetical ? " (hypothetical)" : ""}.
           </p>
         </div>
 
@@ -180,8 +175,8 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       </div>
 
       {result && (
-        <section aria-label="Destinations" style={{ marginTop: "1.5rem" }}>
-          <h2>Destinations</h2>
+        <section aria-label="Destinations" className="mt-6">
+          <h2 className="mb-2 text-lg font-semibold">Destinations</h2>
           <DestinationList
             reachable={split.reachable}
             unreachable={split.unreachable}
