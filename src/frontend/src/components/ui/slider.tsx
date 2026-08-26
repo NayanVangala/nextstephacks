@@ -9,8 +9,17 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  thumbAriaLabelledBy,
+  thumbAriaLabel,
+  thumbAriaValueText,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root> & {
+  /* Radix 置 aria 於 Root,而受焦者乃 Thumb —— 讀屏所報者,Thumb 也。
+     故必別授之,否則但聞「slider, 4」,不知其何謂。 */
+  thumbAriaLabelledBy?: string
+  thumbAriaLabel?: string
+  thumbAriaValueText?: string
+}) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -47,6 +56,9 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
+          aria-labelledby={thumbAriaLabelledBy}
+          aria-label={thumbAriaLabelledBy ? undefined : thumbAriaLabel}
+          aria-valuetext={thumbAriaValueText}
           className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
         />
       ))}

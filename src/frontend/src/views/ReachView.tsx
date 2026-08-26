@@ -11,6 +11,7 @@ import { TimeSlider } from "../components/TimeSlider";
 import { HazardPicker } from "../components/HazardPicker";
 import { BudgetSlider } from "../components/BudgetSlider";
 import { DestinationList } from "../components/DestinationList";
+import { 地點選 } from "../components/地點選";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const AFTERNOON_BUCKET = 4; // hour_buckets[4] === 14:00
@@ -127,6 +128,21 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(280px,1fr)_2fr]">
         <div>
+          <地點選
+            pack={pack}
+            label="Starting point"
+            value={origin}
+            onChange={(nodeId, 名) => {
+              if (nodeId === -1 && 名) {
+                const [lon, lat] = 名.split(",").map(Number);
+                setOrigin(nearestRoutableNode(pack, flags, lon, lat));
+              } else {
+                setOrigin(nodeId);
+              }
+              if (nodeId == null) setResult(null);
+            }}
+            allowLocate
+          />
           <ProfilePicker flags={flags} onChange={setFlags} />
 
           <div className="my-3 flex items-start gap-2.5">

@@ -25,8 +25,8 @@ export function TimeSlider({
         step={1}
         value={[index]}
         onValueChange={([v]) => onChange(v)}
-        aria-labelledby="time-label"
-        aria-valuetext={label}
+        thumbAriaLabelledBy="time-label"
+        thumbAriaValueText={label}
       />
       <div aria-hidden className="数 mt-1 flex justify-between text-[0.7rem] text-muted-foreground">
         {buckets.map((h) => (

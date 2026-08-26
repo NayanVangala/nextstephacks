@@ -21,8 +21,8 @@ export function BudgetSlider({
         step={50}
         value={[value]}
         onValueChange={([v]) => onChange(v)}
-        aria-labelledby="budget-label"
-        aria-valuetext={`${value} sun-metres`}
+        thumbAriaLabelledBy="budget-label"
+        thumbAriaValueText={`${value} sun-metres`}
       />
       <p className="mt-1.5 text-xs text-muted-foreground">
         One sun-metre is one metre walked in full sun at peak heat. This budget is a

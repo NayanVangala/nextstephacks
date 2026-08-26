@@ -7,6 +7,7 @@ import { MapCanvas } from "../components/MapCanvas";
 import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
 import { 曝之帶 } from "../components/曝之帶";
+import { 地點選 } from "../components/地點選";
 import { Button } from "@/components/ui/button";
 
 const 午後 = 4; // hour_buckets[4] === 14:00, 暑之極
@@ -43,6 +44,22 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       return n ? { lon: n.lon, lat: n.lat } : null;
     },
     [pack],
+  );
+
+  // 以名擇地。node_id 為 -1 者,乃「用我之地」,其名載經緯,就近取節於此。
+  const 擇地 = useCallback(
+    (which: "origin" | "dest") => (nodeId: number | null, 名: string | null) => {
+      if (!pack) return;
+      let n = nodeId;
+      if (nodeId === -1 && 名) {
+        const [lon, lat] = 名.split(",").map(Number);
+        n = nearestRoutableNode(pack, flags, lon, lat);
+      }
+      if (which === "origin") setOrigin(n);
+      else setDest(n);
+      if (n == null) setResult(null);
+    },
+    [pack, flags],
   );
 
   const onPick = useCallback(
@@ -128,6 +145,19 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(260px,1fr)_2fr]">
         <div>
+          <地點選
+            pack={pack}
+            label="Start"
+            value={origin}
+            onChange={擇地("origin")}
+            allowLocate
+          />
+          <地點選
+            pack={pack}
+            label="Destination"
+            value={dest}
+            onChange={擇地("dest")}
+          />
           <ProfilePicker flags={flags} onChange={setFlags} />
           <TimeSlider
             buckets={pack.manifest.hour_buckets}
