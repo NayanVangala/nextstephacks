@@ -49,6 +49,7 @@ export function edgeCost(
   flags: ProfileFlags,
   hourIdx: number,
   tempC: number,
+  报之罰?: Map<number, number>,
 ): number {
   const sun = effectiveExposure(edge, hourIdx);
   const heat = heatIndexNorm(tempC);
@@ -76,5 +77,9 @@ export function edgeCost(
     }
   }
 
-  return edge.length_m * heatMult * surfaceFactor + slope + crossing;
+  // 报事之罚:增之,不减他段 —— cost >= length_m 之不变式赖此。
+  // 负值弃之:一段之值若可减,则 haversine 之启发式不复可容,路遂非最优而人不觉。
+  const 报罰 = Math.max(0, 报之罰?.get(edge.id) ?? 0);
+
+  return edge.length_m * heatMult * surfaceFactor + slope + crossing + 报罰;
 }

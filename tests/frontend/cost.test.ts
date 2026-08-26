@@ -130,3 +130,34 @@ describe("rest-stop exposure relief", () => {
     expect(edgeCost(withRest, hs, 4, 18)).toBeCloseTo(edgeCost(sunny, hs, 4, 18), 6);
   });
 });
+
+describe("报事之罚", () => {
+  it("有报之段其值增", () => {
+    const e = edge();
+    const 罰 = new Map([[e.id, 300]]);
+    expect(edgeCost(e, NONE, 4, 20, 罰)).toBeGreaterThan(edgeCost(e, NONE, 4, 20));
+  });
+
+  it("无报之段不受累", () => {
+    const e = edge();
+    const 罰 = new Map([[999, 300]]);
+    expect(edgeCost(e, NONE, 4, 20, 罰)).toBeCloseTo(edgeCost(e, NONE, 4, 20), 6);
+  });
+
+  it("虽有报,其值犹不小于其长 —— 不变式不破", () => {
+    const e = edge();
+    const 罰 = new Map([[e.id, 300]]);
+    expect(edgeCost(e, NONE, 4, 20, 罰)).toBeGreaterThanOrEqual(e.length_m);
+  });
+
+  it("不授罚则如故", () => {
+    const e = edge();
+    expect(edgeCost(e, NONE, 4, 20, undefined)).toBeCloseTo(edgeCost(e, NONE, 4, 20), 6);
+  });
+
+  it("罚为负者不採 —— 减值则启发式不可容", () => {
+    const e = edge();
+    const 罰 = new Map([[e.id, -500]]);
+    expect(edgeCost(e, NONE, 4, 20, 罰)).toBeGreaterThanOrEqual(e.length_m);
+  });
+});

@@ -8,6 +8,9 @@ import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
 import { 曝之帶 } from "../components/曝之帶";
 import { 地點選 } from "../components/地點選";
+import { 报事表 } from "../components/报事表";
+import { 报事列 } from "../components/报事列";
+import { 用报事 } from "../hooks/用报事";
 import { Button } from "@/components/ui/button";
 
 const 午後 = 4; // hour_buckets[4] === 14:00, 暑之極
@@ -26,6 +29,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   const [dest, setDest] = useState<number | null>(null);
   const [result, setResult] = useState<RouteResult | null>(null);
   const [status, setStatus] = useState("Select a start point on the map.");
+  const { 报列, 罰, 寫: 寫报事, 同步中, 庫之誤, 就緒, 供給有無 } = 用报事(cityId);
 
   useEffect(() => {
     loadCityPack(cityId).then(setPack).catch((e: Error) => setLoadError(e.message));
@@ -80,7 +84,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
   useEffect(() => {
     if (!pack || origin == null || dest == null) return;
-    const r = computeRoute(pack, flags, origin, dest, hourIdx, temp.tempC);
+    const r = computeRoute(pack, flags, origin, dest, hourIdx, temp.tempC, 罰);
     setResult(r);
     if (r) {
       const 未驗 = r.edges.filter((e) => e.confidence !== "high").length;
@@ -97,7 +101,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           "The barrier is accessibility, not distance.",
       );
     }
-  }, [pack, origin, dest, flags, hourIdx, temp]);
+  }, [pack, origin, dest, flags, hourIdx, temp, 罰]);
 
   const hourLabel = useMemo(
     () => (pack ? `${String(pack.manifest.hour_buckets[hourIdx]).padStart(2, "0")}:00` : ""),
@@ -220,6 +224,20 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           </ol>
         </section>
       )}
+
+      {result && result.edges.length > 0 && (
+        <section aria-label="Report a problem" className="mt-6">
+          <报事表
+            city_id={cityId}
+            edge_id={result.edges[Math.floor(result.edges.length / 2)].id}
+            onSubmit={寫报事}
+            就緒={就緒}
+            庫之誤={庫之誤}
+          />
+        </section>
+      )}
+
+      <报事列 报列={报列} 同步中={同步中} 供給有無={供給有無} />
 
       <footer className="mt-10 border-t border-line pt-4 text-xs text-muted-foreground">
         <p>
