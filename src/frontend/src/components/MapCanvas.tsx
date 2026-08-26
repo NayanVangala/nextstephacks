@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { CityPack, ProfileFlags, RouteResult } from "../types";
+import type { CityPack, Edge, ProfileFlags, RouteResult } from "../types";
 import { edgeAllowed } from "../routing/graph";
 
 // CARTO Positron: 免鑰而可用,且色淡,不奪路線之目。
@@ -32,6 +32,7 @@ export function MapCanvas({
   flags,
   hourIdx,
   route,
+  reachEdges,
   origin,
   dest,
   onPick,
@@ -40,6 +41,7 @@ export function MapCanvas({
   flags: ProfileFlags;
   hourIdx: number;
   route: RouteResult | null;
+  reachEdges?: Edge[];
   origin: { lon: number; lat: number } | null;
   dest: { lon: number; lat: number } | null;
   onPick: (lon: number, lat: number) => void;
@@ -92,6 +94,19 @@ export function MapCanvas({
         },
       });
 
+      // 所及之網在路線之下,免其掩之。
+      const emptyFc: GeoJSON.FeatureCollection<GeoJSON.LineString> = {
+        type: "FeatureCollection",
+        features: [],
+      };
+      m.addSource("reach", { type: "geojson", data: emptyFc });
+      m.addLayer({
+        id: "reach",
+        type: "line",
+        source: "reach",
+        paint: { "line-color": "#7c3aed", "line-width": 3, "line-opacity": 0.8 },
+      });
+
       const empty: GeoJSON.Feature<GeoJSON.LineString> = {
         type: "Feature",
         properties: {},
@@ -138,6 +153,20 @@ export function MapCanvas({
     const src = m.getSource("network") as maplibregl.GeoJSONSource | undefined;
     src?.setData(networkGeoJSON(pack, flags, hourIdx));
   }, [pack, flags, hourIdx]);
+
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !ready.current) return;
+    const src = m.getSource("reach") as maplibregl.GeoJSONSource | undefined;
+    src?.setData({
+      type: "FeatureCollection",
+      features: (reachEdges ?? []).map((e) => ({
+        type: "Feature",
+        properties: {},
+        geometry: { type: "LineString", coordinates: e.geometry },
+      })),
+    });
+  }, [reachEdges]);
 
   useEffect(() => {
     const m = map.current;
