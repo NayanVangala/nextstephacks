@@ -6,3 +6,9 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 src/backend/.cache/
+
+# secrets —— anon key 虽为 public,亦不硬写于码
+.env
+.env.local
+src/frontend/.env
+src/frontend/.env.local
