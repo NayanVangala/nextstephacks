@@ -1,0 +1,51 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pages 之部署須此三權。
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 一時但一部署,後至者待之,不中道而棄。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+        working-directory: src/frontend
+      - run: npm test
+        working-directory: src/frontend
+      # 站在 /<repo>/ 之下,故授之以 base;否則諸資皆四百。
+      - run: npm run build
+        working-directory: src/frontend
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+      # Pages 為 SPA 而無 router,然 404 亦以 index 應之,免直入子路而失
+      - run: cp dist/index.html dist/404.html
+        working-directory: src/frontend
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: src/frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

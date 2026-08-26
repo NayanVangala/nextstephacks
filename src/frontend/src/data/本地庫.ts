@@ -49,7 +49,7 @@ export interface 庫 {
 export async function 開庫(
   opts: { 記憶中?: boolean; wasm之路?: string } = {},
 ): Promise<庫> {
-  const 路 = opts.wasm之路 ?? "/sql-wasm/";
+  const 路 = opts.wasm之路 ?? `${import.meta.env.BASE_URL ?? "/"}sql-wasm/`;
   const SQL = await initSqlJs({ locateFile: (f: string) => `${路}${f}` });
 
   let db: Database;

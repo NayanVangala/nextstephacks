@@ -35,7 +35,9 @@ export async function loadCityPack(
 }
 
 async function fetchAndValidate(id: string, fetchFn: FetchFn): Promise<CityPack> {
-  const res = await fetchFn(`/city-packs/${id}.json`);
+  // BASE_URL 之故:站或在 /nextstephacks/ 之下,絕對之路則四百。
+  const 基 = import.meta.env.BASE_URL ?? "/";
+  const res = await fetchFn(`${基}city-packs/${id}.json`);
   const data = await res.json();
   if (!validate(data)) {
     throw new Error(`invalid city pack: ${ajv.errorsText(validate.errors)}`);
