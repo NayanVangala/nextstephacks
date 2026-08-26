@@ -14,6 +14,7 @@ from pipeline.extract.overpass import fetch, load_elements
 from pipeline.extract import buildings as bldg
 from pipeline.extract import destinations as dest
 from pipeline.extract import 公交
+from pipeline.extract import 停運
 from pipeline.graph.build import build_graph
 from pipeline.shade.sun import sun_position
 from pipeline.emit.citypack import assemble_pack, write_pack
@@ -90,6 +91,21 @@ def main():
     # 補高之樓數入囊,俾界面得以告人。
     pack["manifest"]["buildings_total"] = len(footprints)
     pack["manifest"]["buildings_assumed_height"] = assumed
+    # 停運之數。非「服務警示」—— LA Metro 之公開 API 無警示之端。
+    停運之址 = manifest.get("canceled_service_url")
+    if 停運之址:
+        原 = 停運.取(停運之址, str(ROOT / "src/backend/.cache"))
+        pack["canceled_service"] = 停運.解停運(原)
+        pack["canceled_service_fetched_at"] = (
+            datetime.datetime.now(datetime.timezone.utc).isoformat() if 原 else None
+        )
+        更 = pack["canceled_service"]["更新於"]
+        print(f"停運:{pack['canceled_service']['總']} 班,"
+              f"涉 {len(pack['canceled_service']['路'])} 路,其自稱更新於 {更}")
+    else:
+        pack["canceled_service"] = 停運.無停運之囊()
+        pack["canceled_service_fetched_at"] = None
+
     out = ROOT / f"src/frontend/public/city-packs/{args.city}.json"
     write_pack(pack, str(out))
     print(f"wrote {out} — {len(nodes)} nodes, {len(pack['edges'])} edges")

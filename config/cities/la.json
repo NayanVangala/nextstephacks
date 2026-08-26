@@ -26,5 +26,6 @@
   "gtfs_static_urls": [
     "https://gitlab.com/LACMTA/gtfs_rail/-/raw/master/gtfs_rail.zip",
     "https://gitlab.com/LACMTA/gtfs_bus/-/raw/master/gtfs_bus.zip"
-  ]
+  ],
+  "canceled_service_url": "https://api.metro.net/canceled_service_summary"
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
-  可通之率, 蔭之率, 無階可至者, 信之分佈,
+  可通之率, 蔭之率, 無階可至者, 信之分佈, 斷之率,
 } from "../../src/frontend/src/report/度量";
 import type { CityPack, ProfileFlags, Edge, Destination } from "../../src/frontend/src/types";
 
@@ -117,5 +117,28 @@ describe("信之分佈", () => {
     expect(r.medium.數).toBe(1);
     expect(r.low.數).toBe(1);
     expect(r.high.米).toBeCloseTo(100, 6);
+  });
+});
+
+describe("斷之率", () => {
+  it("無 profile 則無所斷", () => {
+    const r = 斷之率(造囊(), 無);
+    expect(r.斷之節).toBe(0);
+    expect(r.率).toBeCloseTo(0, 6);
+  });
+
+  it("階斷其網,則輪椅之所及少於眾人", () => {
+    // 鏈 1-2-3-4,而 2-3 為階:輪椅但得 1、2
+    const r = 斷之率(造囊(), 輪椅);
+    expect(r.眾人之節).toBe(4);
+    expect(r.此身之節).toBe(2);
+    expect(r.斷之節).toBe(2);
+    expect(r.率).toBeCloseTo(0.5, 6);
+  });
+
+  it("網空則回零而不舉錯", () => {
+    const p = 造囊();
+    p.edges = [];
+    expect(斷之率(p, 輪椅).率).toBe(0);
   });
 });

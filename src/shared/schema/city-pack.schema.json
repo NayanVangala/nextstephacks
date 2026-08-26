@@ -65,6 +65,12 @@
         },
         "transit_wheelchair_field_present": {
           "type": "boolean"
+        },
+        "canceled_service_url": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -158,6 +164,37 @@
           }
         }
       }
+    },
+    "canceled_service": {
+      "type": "object",
+      "required": [
+        "\u7e3d",
+        "\u8def",
+        "\u66f4\u65b0\u65bc"
+      ],
+      "properties": {
+        "\u7e3d": {
+          "type": "integer"
+        },
+        "\u8def": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "\u66f4\u65b0\u65bc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "canceled_service_fetched_at": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "definitions": {

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import type { CityPack, ProfileFlags } from "../types";
 import { loadCityPack } from "../data/loadCityPack";
-import { 可通之率, 蔭之率, 無階可至者, 信之分佈 } from "../report/度量";
+import { 可通之率, 蔭之率, 無階可至者, 信之分佈, 斷之率 } from "../report/度量";
 import { 熱陷 } from "../report/熱陷";
 import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
 import { 度量卡 } from "../components/度量卡";
+import { 停運之狀 } from "../data/停運";
 
 const 午後 = 4; // hour_buckets[4] === 14:00
 
@@ -34,6 +35,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       蔭: 蔭之率(pack, flags, hourIdx),
       無階: 無階可至者(pack, flags, 400),
       信: 信之分佈(pack),
+      斷: 斷之率(pack, flags),
       陷: 熱陷(pack, flags, hourIdx, { 取樣數: 40, 取幾: 8, 種子: 20260824 }),
     };
   }, [pack, flags, hourIdx]);
@@ -46,6 +48,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
   const 總米 = 報.信.high.米 + 報.信.medium.米 + 報.信.low.米;
   const 有輪椅之欄 = pack.manifest.transit_wheelchair_field_present;
   const 站總 = pack.manifest.transit_stops_total ?? 0;
+  const 停 = 停運之狀(pack);
 
   return (
     <main className="py-6">
@@ -81,14 +84,14 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           註={`${公里(報.蔭.蔭米)} of traversable network`}
         />
         <度量卡
-          題="Cooling centres with no step-free approach"
-          數={String(納涼無階.length)}
-          註="no connected sidewalk within 400 m"
+          題="Sidewalk cut off for this profile"
+          數={百分(報.斷.率)}
+          註={`${報.斷.斷之節.toLocaleString()} of ${報.斷.眾人之節.toLocaleString()} connected points`}
         />
         <度量卡
-          題="Transit stops with no step-free approach"
-          數={String(公交無階.length)}
-          註={站總 ? `of ${站總} stops in this area` : "GTFS not loaded"}
+          題="Destinations with no step-free approach"
+          數={String(納涼無階.length + 公交無階.length)}
+          註={`of ${pack.destinations.length} within 400 m`}
         />
       </section>
 
@@ -110,6 +113,28 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           </p>
         </section>
       )}
+
+      <section aria-label="Severance" className="mt-8">
+        <h2 className="text-lg font-semibold">What the traversable figure hides</h2>
+        <p className="mt-1 text-sm">
+          <strong className="数">{百分(報.通.率)}</strong> of the sidewalk network is
+          traversable for this profile, which sounds close to solved. It is not the
+          number that matters. The blocked segments are mostly short flights of steps,
+          and each one severs whatever sits behind it.
+        </p>
+        <p className="mt-2 text-sm">
+          Counting connectivity instead of length:{" "}
+          <strong className="数">{報.斷.此身之節.toLocaleString()}</strong> points are
+          reachable for this profile against{" "}
+          <strong className="数">{報.斷.眾人之節.toLocaleString()}</strong> for an
+          unrestricted pedestrian — <strong className="数">{報.斷.斷之節.toLocaleString()}</strong>{" "}
+          points of usable sidewalk exist but cannot be reached.
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Every destination here sits within 104 m of the step-free network, so
+          proximity is not the barrier in this bounding box. Connectivity is.
+        </p>
+      </section>
 
       <section aria-label="Data confidence" className="mt-8">
         <h2 className="text-lg font-semibold">Data confidence</h2>
@@ -145,6 +170,43 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           ))}
         </ol>
       </section>
+
+      {停.有源 && (
+        <section aria-label="Service disruption feed" className="mt-8">
+          <h2 className="text-lg font-semibold">Service disruption data</h2>
+          <p className="mt-1 text-sm">
+            {pack.manifest.name} publishes no service-alerts endpoint. The nearest
+            public equivalent is canceled trips, which currently reports{" "}
+            <strong className="数">{停.總}</strong> canceled across{" "}
+            <strong className="数">{Object.keys(停.路).length}</strong> routes.
+          </p>
+
+          {停.陳否 && (
+            <p className="纹-low mt-2 rounded border border-line p-3 text-sm">
+              <strong className="text-fullsun">This feed is stale.</strong> It answers
+              with a 200 and well-formed data, but its own timestamp reads{" "}
+              <span className="数">{停.更新於 ?? "unknown"}</span>. Displaying it as
+              current conditions would be a fabrication, so it is shown here as a data
+              finding rather than as live information. Check the operator directly
+              before relying on any of it.
+            </p>
+          )}
+
+          {停.最甚.length > 0 && (
+            <>
+              <h3 className="mt-3 text-base font-semibold">Worst-affected routes</h3>
+              <ul className="mt-1 text-sm">
+                {停.最甚.slice(0, 6).map((x) => (
+                  <li key={x.路} className="border-b border-line py-1 last:border-0">
+                    Route <strong className="数">{x.路}</strong> —{" "}
+                    <span className="数">{x.數}</span> canceled trips
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
+      )}
 
       <section aria-label="Paratransit" className="mt-8">
         <h2 className="text-lg font-semibold">Paratransit</h2>
