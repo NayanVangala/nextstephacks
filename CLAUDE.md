@@ -1,28 +1,44 @@
 # Language policy
 
-Working language is split. This overrides any skill or plugin that picks a different
-language — including the caveman plugin's `wenyan` level, which would otherwise push
-replies into 文言文.
+Chinese is the default for everything. English is the exception, and there are
+only two exceptions.
 
 | Surface | Language |
 |---|---|
-| Internal reasoning, analysis, planning thoughts | 文言文 (classical Chinese) |
-| Code — identifiers, strings, log messages, error text | English |
+| Internal reasoning, analysis, planning thoughts | 文言文 |
 | Code comments and docstrings | 文言文 |
-| Commit messages, PR titles and bodies | English |
-| Replies to the user, plan files, reports | English |
+| Code identifiers, internal strings, log messages, error text | 中文 |
+| Commit messages, PR titles and bodies | 中文 |
+| Plan files, specs, reports | 中文 |
+| **Replies to the user** | **English** |
+| **User-facing UI copy in the shipped product** | **English** |
 
-Caveman's compression style still applies to English replies — terse, no filler,
-fragments fine. It just does not get to choose the language.
+## Why user-facing UI copy stays English
+
+Passable is a wayfinding tool for disabled pedestrians in Los Angeles. Its
+interface text — button labels, status messages, destination names, the
+"not medical guidance" disclaimers — is product copy read by LA residents and
+by hackathon judges, not by the developer. Translating it would break the
+deliverable for its actual audience.
+
+This carve-out covers only text rendered to an end user. Everything else in the
+same file — variable names, function names, comments, console logs, thrown
+error messages, test descriptions — is Chinese.
 
 ## Safety carve-out
 
-Write in English, not 文言文, when:
+Write in English, not 文言文, when compression would make meaning ambiguous and
+getting it wrong is expensive:
 
-- Warning about a security issue
-- Confirming a destructive or irreversible action
-- A comment where classical compression would make the meaning ambiguous — order of
-  operations, preconditions, "must run before X"
+- Order of operations, preconditions, "must run before X"
+- Invariants whose violation is silent (e.g. the `cost >= length_m` rule that
+  keeps the A* heuristic admissible)
+- Security-relevant warnings
 
-Same principle as caveman's Auto-Clarity rule: clarity beats compression when getting
-it wrong is expensive.
+Clarity beats compression when the cost of a misread is high.
+
+## Scope
+
+This policy applies going forward. Existing English identifiers, strings, and
+commit messages are not retrofitted unless asked — a mass rename would churn
+the whole tree for no functional gain.
