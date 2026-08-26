@@ -1,9 +1,18 @@
 import { useState } from "react";
 import { RouteView } from "./views/RouteView";
 import { ReachView } from "./views/ReachView";
+import { ReportView } from "./views/ReportView";
+
+type 之view = "route" | "reach" | "report";
+
+const 之tabs: { id: 之view; label: string }[] = [
+  { id: "route", label: "Route" },
+  { id: "reach", label: "Reach" },
+  { id: "report", label: "Report" },
+];
 
 export default function App() {
-  const [view, setView] = useState<"route" | "reach">("route");
+  const [view, setView] = useState<之view>("route");
   return (
     <>
       <nav
@@ -16,24 +25,21 @@ export default function App() {
           margin: "0 auto",
         }}
       >
-        <button
-          type="button"
-          onClick={() => setView("route")}
-          aria-current={view === "route" ? "page" : undefined}
-          style={view === "route" ? { background: "var(--panel)", fontWeight: 600 } : undefined}
-        >
-          Route
-        </button>
-        <button
-          type="button"
-          onClick={() => setView("reach")}
-          aria-current={view === "reach" ? "page" : undefined}
-          style={view === "reach" ? { background: "var(--panel)", fontWeight: 600 } : undefined}
-        >
-          Reach
-        </button>
+        {之tabs.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setView(t.id)}
+            aria-current={view === t.id ? "page" : undefined}
+            style={view === t.id ? { background: "var(--panel)", fontWeight: 600 } : undefined}
+          >
+            {t.label}
+          </button>
+        ))}
       </nav>
-      {view === "route" ? <RouteView cityId="la" /> : <ReachView cityId="la" />}
+      {view === "route" && <RouteView cityId="la" />}
+      {view === "reach" && <ReachView cityId="la" />}
+      {view === "report" && <ReportView cityId="la" />}
     </>
   );
 }
