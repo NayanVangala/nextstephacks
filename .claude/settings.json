@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '語則：思用文言，註用文言；碼、字串、commit 用英文；答用戶用英文。'",
+            "command": "echo '\u8a9e\u5247\uff1a\u4e2d\u6587\u70ba\u5e38 \u2014\u2014 \u601d\u3001\u8a3b\u3001\u8b58\u5225\u5b50\u3001commit\u3001plan \u7686\u4e2d\u6587\uff1b\u552f\u5c0d\u7528\u6236\u4e4b\u8a00\u8207\u754c\u9762\u4e4b\u6587\u7528\u82f1\u6587\u3002'",
             "timeout": 5
           }
         ]
