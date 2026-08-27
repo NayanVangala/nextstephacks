@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { HAZARDS, resolveTemp, hazardById } from "../../src/frontend/src/data/hazards";
+import { HAZARDS, resolveTemp, hazardById } from "../src/data/hazards";
 
 describe("hazard scenarios", () => {
   it("includes a live option that defers to the measured temperature", () => {

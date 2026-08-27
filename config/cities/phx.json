@@ -1,0 +1,9 @@
+{
+  "id": "phx",
+  "name": "Phoenix",
+  "bbox": [-112.0850, 33.4400, -112.0550, 33.4630],
+  "timezone": "America/Phoenix",
+  "hour_buckets": [6, 8, 10, 12, 14, 16, 18, 20],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": { "operator": "Valley Metro Dial-a-Ride", "advance_booking_hours": 24 }
+}

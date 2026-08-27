@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { fileURLToPath } from "node:url";
-import { 開庫, type 庫, type 报 } from "../../src/frontend/src/data/本地庫";
-import { 寫报, 讀报, 同步 } from "../../src/frontend/src/data/报事";
+import { 開庫, type 庫, type 报 } from "../src/data/本地庫";
+import { 寫报, 讀报, 同步 } from "../src/data/报事";
 
 const wasm之地 = fileURLToPath(
-  new URL("../../src/frontend/node_modules/sql.js/dist/", import.meta.url),
+  new URL("../node_modules/sql.js/dist/", import.meta.url),
 );
 
 let db: 庫;

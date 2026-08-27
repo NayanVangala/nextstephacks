@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
   route, buildAdjacency, nearestNode, nearestRoutableNode, largestComponent,
-} from "../../src/frontend/src/routing/astar";
-import { edgeCost } from "../../src/frontend/src/routing/cost";
-import type { CityPack, ProfileFlags, Edge } from "../../src/frontend/src/types";
+} from "../src/routing/astar";
+import { edgeCost } from "../src/routing/cost";
+import type { CityPack, ProfileFlags, Edge } from "../src/types";
 
 const NONE: ProfileFlags = {
   wheelchair: false, blind_low_vision: false, heat_sensitive: false,

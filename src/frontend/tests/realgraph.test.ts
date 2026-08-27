@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { route, nearestRoutableNode } from "../../src/frontend/src/routing/astar";
-import type { CityPack, ProfileFlags } from "../../src/frontend/src/types";
+import { route, nearestRoutableNode } from "../src/routing/astar";
+import type { CityPack, ProfileFlags } from "../src/types";
 
 const pack = JSON.parse(readFileSync(
-  new URL("../../src/frontend/public/city-packs/la.json", import.meta.url),
+  new URL("../public/city-packs/la.json", import.meta.url),
   "utf8")) as CityPack;
 
 const PROFILES: [string, ProfileFlags][] = [

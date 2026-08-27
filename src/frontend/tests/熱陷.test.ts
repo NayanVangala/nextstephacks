@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { 熱陷, 造亂數 } from "../../src/frontend/src/report/熱陷";
-import type { CityPack, ProfileFlags, Edge } from "../../src/frontend/src/types";
+import { 熱陷, 造亂數 } from "../src/report/熱陷";
+import type { CityPack, ProfileFlags, Edge } from "../src/types";
 
 const 無: ProfileFlags = {
   wheelchair: false, blind_low_vision: false, heat_sensitive: false,

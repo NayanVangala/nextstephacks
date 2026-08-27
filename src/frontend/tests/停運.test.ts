@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
   停運之狀, 取實時停運, 陳之限之毫秒,
-} from "../../src/frontend/src/data/停運";
-import type { CityPack } from "../../src/frontend/src/types";
+} from "../src/data/停運";
+import type { CityPack } from "../src/types";
 
 function 造囊(停運?: unknown, 取於: string | null = null): CityPack {
   return {

@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import time
 
 import requests
 
@@ -30,20 +31,64 @@ def _cache_key(bbox):
     return hashlib.sha1(repr(bbox).encode()).hexdigest()[:16]
 
 
-def fetch(bbox, url, cache_dir):
-    """有快取則讀之，否則求諸網而後存。"""
+# Overpass 之公器共用於眾,故限其求。退而再請,乃其用法所明命者。
+# Retry ONLY on statuses that a later attempt could plausibly succeed on:
+#   429 rate limited, 502/503/504 gateway or overload.
+# A 400 means the query itself is malformed and every retry will fail the same
+# way — retrying it burns the rate limit that the next real request needs.
+_可再求之狀 = frozenset({429, 502, 503, 504})
+_退之秒 = (5, 15, 45)
+
+
+def 取而存(bbox, url, cache_dir, query, 鑰, timeout=240):
+    """取諸 Overpass 而存之於盤。三者共用之,免其重。
+
+    Cache-first: a hit never touches the network, which is what makes a failed
+    multi-stage build cheap to resume — the stages that already succeeded are
+    read from disk on the next run.
+    """
     os.makedirs(cache_dir, exist_ok=True)
-    path = os.path.join(cache_dir, f"{_cache_key(bbox)}.json")
+    path = os.path.join(cache_dir, f"{鑰}.json")
     if os.path.exists(path):
         with open(path) as f:
             return json.load(f)
-    resp = requests.post(url, data={"data": build_query(bbox)},
-                         headers={"User-Agent": _USER_AGENT}, timeout=180)
-    resp.raise_for_status()
-    data = resp.json()
-    with open(path, "w") as f:
-        json.dump(data, f)
-    return data
+
+    末誤 = None
+    for 次 in range(len(_退之秒) + 1):
+        try:
+            resp = requests.post(url, data={"data": query},
+                                 headers={"User-Agent": _USER_AGENT},
+                                 timeout=timeout)
+            if resp.status_code in _可再求之狀 and 次 < len(_退之秒):
+                待 = _退之秒[次]
+                print(f"警:Overpass 回 {resp.status_code},待 {待} 秒而再求"
+                      f"({次 + 1}/{len(_退之秒)})")
+                time.sleep(待)
+                continue
+            resp.raise_for_status()
+            data = resp.json()
+            with open(path, "w") as f:
+                json.dump(data, f)
+            return data
+        except (requests.ConnectionError, requests.Timeout) as 誤:
+            末誤 = 誤
+            if 次 >= len(_退之秒):
+                raise
+            待 = _退之秒[次]
+            print(f"警:Overpass 不可達({誤.__class__.__name__}),待 {待} 秒而再求"
+                  f"({次 + 1}/{len(_退之秒)})")
+            time.sleep(待)
+
+    # 退盡而猶不得。明擲之,不可默然而回空 —— 空囊之城,其圖無路而人不知其故。
+    raise RuntimeError(
+        f"Overpass 屢求不得,已退 {len(_退之秒)} 次:{url}"
+    ) from 末誤
+
+
+def fetch(bbox, url, cache_dir):
+    """有快取則讀之，否則求諸網而後存。"""
+    return 取而存(bbox, url, cache_dir, build_query(bbox), _cache_key(bbox),
+                  timeout=180)
 
 
 def load_elements(osm_json):

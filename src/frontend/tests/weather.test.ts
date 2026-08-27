@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { fetchCurrentTempC } from "../../src/frontend/src/data/weather";
+import { fetchCurrentTempC } from "../src/data/weather";
 
 describe("fetchCurrentTempC", () => {
   it("returns the live apparent temperature when the API answers", async () => {

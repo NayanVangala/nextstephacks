@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { 安動 } from "../../src/frontend/src/motion/预设";
+import { 安動 } from "../src/motion/预设";
 
 /**
  * 安動之約有三,此驗之。

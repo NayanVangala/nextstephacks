@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { heatIndexNorm, edgeCost, effectiveExposure } from "../../src/frontend/src/routing/cost";
-import type { Edge, ProfileFlags } from "../../src/frontend/src/types";
+import { heatIndexNorm, edgeCost, effectiveExposure } from "../src/routing/cost";
+import type { Edge, ProfileFlags } from "../src/types";
 
 const NONE: ProfileFlags = {
   wheelchair: false, blind_low_vision: false, heat_sensitive: false,

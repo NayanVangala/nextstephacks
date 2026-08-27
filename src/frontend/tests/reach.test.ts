@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
   reach, edgeHeatLoad, budgetFor, DEFAULT_BUDGETS,
-} from "../../src/frontend/src/routing/reach";
-import type { CityPack, ProfileFlags, Edge } from "../../src/frontend/src/types";
+} from "../src/routing/reach";
+import type { CityPack, ProfileFlags, Edge } from "../src/types";
 
 const NONE: ProfileFlags = {
   wheelchair: false, blind_low_vision: false, heat_sensitive: false,

@@ -11,6 +11,8 @@ import os
 
 import requests
 
+from pipeline.extract.overpass import 取而存
+
 _USER_AGENT = "passable/0.1 (NextStep Hacks 2026; +https://github.com/NayanVangala/nextstephacks)"
 
 _METRES_PER_LEVEL = 3.2
@@ -36,18 +38,9 @@ def _cache_key(bbox):
 
 
 def fetch(bbox, url, cache_dir):
-    os.makedirs(cache_dir, exist_ok=True)
-    path = os.path.join(cache_dir, f"{_cache_key(bbox)}.json")
-    if os.path.exists(path):
-        with open(path) as f:
-            return json.load(f)
-    resp = requests.post(url, data={"data": build_query(bbox)},
-                         headers={"User-Agent": _USER_AGENT}, timeout=240)
-    resp.raise_for_status()
-    data = resp.json()
-    with open(path, "w") as f:
-        json.dump(data, f)
-    return data
+    """取諸 Overpass。退而再求之事,共用於 overpass.取而存。"""
+    return 取而存(bbox, url, cache_dir, build_query(bbox),
+                  _cache_key(bbox), timeout=240)
 
 
 def parse_height_m(tags, default_height_m=DEFAULT_HEIGHT_M):

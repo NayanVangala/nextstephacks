@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { loadCityPack } from "../../src/frontend/src/data/loadCityPack";
+import { loadCityPack } from "../src/data/loadCityPack";
 
 const validPack = {
   manifest: {

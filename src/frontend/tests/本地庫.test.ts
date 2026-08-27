@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { fileURLToPath } from "node:url";
-import { 開庫, type 庫, type 报 } from "../../src/frontend/src/data/本地庫";
+import { 開庫, type 庫, type 报 } from "../src/data/本地庫";
 
 // node 之中,WASM 取諸 node_modules;瀏覽器則取諸 /sql-wasm/(自本站,非 CDN)
 const wasm之地 = fileURLToPath(
-  new URL("../../src/frontend/node_modules/sql.js/dist/", import.meta.url),
+  new URL("../node_modules/sql.js/dist/", import.meta.url),
 );
 
 let db: 庫;

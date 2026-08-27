@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
   可通之率, 蔭之率, 無階可至者, 信之分佈, 斷之率,
-} from "../../src/frontend/src/report/度量";
-import type { CityPack, ProfileFlags, Edge, Destination } from "../../src/frontend/src/types";
+} from "../src/report/度量";
+import type { CityPack, ProfileFlags, Edge, Destination } from "../src/types";
 
 const 無: ProfileFlags = {
   wheelchair: false, blind_low_vision: false, heat_sensitive: false,

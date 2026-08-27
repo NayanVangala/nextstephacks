@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { 可選之地 } from "../../src/frontend/src/report/可選之地";
-import type { CityPack, Destination } from "../../src/frontend/src/types";
+import { 可選之地 } from "../src/report/可選之地";
+import type { CityPack, Destination } from "../src/types";
 
 function 地(over: Partial<Destination>): Destination {
   return {
