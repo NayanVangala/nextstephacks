@@ -65,11 +65,51 @@ export interface Manifest {
   transit_wheelchair_field_present?: boolean;
 }
 
+/**
+ * 一區之度。率皆可為 null —— null 者未嘗量也,非零。
+ *
+ * Every rate is nullable and null NEVER means zero. A block group with no
+ * sidewalk in it has not been measured; rendering that as 0% would report a
+ * perfect failure where there is simply no data.
+ */
+export interface 區之度 {
+  geoid: string;
+  節數: number;
+  總米: number;
+  可通米: number;
+  /** 可通之米 / 總米。無路則 null。 */
+  通之率: number | null;
+  /** 蔭之米 / 可通之米,於 14:00。 */
+  蔭之率: number | null;
+  /** 與全城最大步階可通之網相連者,佔可通之米幾何。 */
+  連之率: number | null;
+  入息: number | null;
+  /** ACS 之誤界。入息有而此無者,其誤未published。 */
+  入息之誤: number | null;
+  界: [number, number][];
+}
+
+/** 所量之相關,非所斷之言。Measured every build, never asserted. */
+export interface 相關之量 {
+  區之數: number;
+  有入息者: number;
+  可信者: number;
+  誤比之界: number;
+  蔭與入息: number | null;
+  蔭與入息_可信: number | null;
+  連與入息: number | null;
+  連與入息_可信: number | null;
+}
+
 export interface CityPack {
   manifest: Manifest;
   nodes: Node[];
   edges: Edge[];
   destinations: Destination[];
+  /** null 者,未算也 —— 界面必明告之,不可以空列充之。 */
+  index?: 區之度[] | null;
+  index_correlation?: 相關之量 | null;
+  index_unavailable_reason?: string | null;
 }
 
 /** 所擇之身。三者可並,並則硬阻取交,罰值取其最大者。 */

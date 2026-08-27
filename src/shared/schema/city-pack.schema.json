@@ -168,21 +168,21 @@
     "canceled_service": {
       "type": "object",
       "required": [
-        "\u7e3d",
-        "\u8def",
-        "\u66f4\u65b0\u65bc"
+        "總",
+        "路",
+        "更新於"
       ],
       "properties": {
-        "\u7e3d": {
+        "總": {
           "type": "integer"
         },
-        "\u8def": {
+        "路": {
           "type": "object",
           "additionalProperties": {
             "type": "integer"
           }
         },
-        "\u66f4\u65b0\u65bc": {
+        "更新於": {
           "type": [
             "string",
             "null"
@@ -191,6 +191,143 @@
       }
     },
     "canceled_service_fetched_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "index": {
+      "description": "區區之度量。null 者,未算也 —— 非「皆零」。null means NOT COMPUTED, never 'all zero'.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "required": [
+          "geoid",
+          "節數",
+          "總米",
+          "可通米",
+          "通之率",
+          "蔭之率",
+          "連之率",
+          "入息",
+          "入息之誤",
+          "界"
+        ],
+        "properties": {
+          "geoid": {
+            "type": "string"
+          },
+          "節數": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "總米": {
+            "type": "number",
+            "minimum": 0
+          },
+          "可通米": {
+            "type": "number",
+            "minimum": 0
+          },
+          "通之率": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "蔭之率": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "連之率": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "入息": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "入息之誤": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "界": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      }
+    },
+    "index_correlation": {
+      "description": "所量之相關,非所斷之言。Measured, not asserted — recomputed every build.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "區之數": {
+          "type": "integer"
+        },
+        "有入息者": {
+          "type": "integer"
+        },
+        "可信者": {
+          "type": "integer"
+        },
+        "誤比之界": {
+          "type": "number"
+        },
+        "蔭與入息": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "蔭與入息_可信": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "連與入息": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "連與入息_可信": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "index_unavailable_reason": {
       "type": [
         "string",
         "null"

@@ -3,16 +3,18 @@ import { motion, useReducedMotion } from "motion/react";
 import { RouteView } from "./views/RouteView";
 import { ReachView } from "./views/ReachView";
 import { ReportView } from "./views/ReportView";
+import { IndexView } from "./views/IndexView";
 import { Landing } from "./landing/Landing";
 import { CITIES, 預設之城 } from "./data/cities";
 import { useEnter } from "./motion/useEnter";
 
-type 之view = "route" | "reach" | "report";
+type 之view = "route" | "reach" | "report" | "index";
 
 const 之tabs: { id: 之view; label: string; blurb: string }[] = [
   { id: "route", label: "Route", blurb: "What is my safest path right now?" },
   { id: "reach", label: "Reach", blurb: "What can I get to, and can I get out?" },
   { id: "report", label: "Report", blurb: "Where does this city fail?" },
+  { id: "index", label: "Index", blurb: "Which neighbourhoods are cut off?" },
 ];
 
 export default function App() {
@@ -118,6 +120,7 @@ export default function App() {
         {view === "route" && <RouteView key={city} cityId={city} />}
         {view === "reach" && <ReachView key={city} cityId={city} />}
         {view === "report" && <ReportView key={city} cityId={city} />}
+        {view === "index" && <IndexView key={city} cityId={city} />}
       </div>
     </div>
   );

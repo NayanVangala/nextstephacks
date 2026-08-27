@@ -18,6 +18,7 @@ from pipeline.extract import 停運
 from pipeline.graph.build import build_graph
 from pipeline.shade.sun import sun_position
 from pipeline.emit.citypack import assemble_pack, write_pack
+from pipeline.指數 import 區 as 指數之區, 算 as 指數之算
 
 # parents: [0]=pipeline [1]=backend [2]=src [3]=repo root
 ROOT = Path(__file__).parents[3]
@@ -110,6 +111,29 @@ def main():
     else:
         pack["canceled_service"] = 停運.無停運之囊()
         pack["canceled_service_fetched_at"] = None
+
+    # 指數:區區之通、蔭、連,並其入息。
+    #
+    # Failure here must NOT be silent. If Census is down the pack ships with
+    # index=None and a stated reason, and the interface says "not computed for
+    # this city" — it must never render an empty index as though every block
+    # group scored zero. Same rule as the missing GTFS wheelchair column.
+    try:
+        區之f = 指數之區.取區界(manifest["bbox"], str(ROOT / "src/backend/.cache"))
+        所需 = {f["properties"]["GEOID"] for f in 區之f}
+        入息 = 指數之區.取入息(str(ROOT / "src/backend/.cache"), 所需)
+        區之度 = 指數之算.算區之度(pack, 區之f, 入息)
+        pack["index"] = 區之度
+        pack["index_correlation"] = 指數之算.算相關(區之度)
+        pack["index_unavailable_reason"] = None
+        有錢 = sum(1 for r in 區之度 if r["入息"] is not None)
+        無路 = sum(1 for r in 區之度 if r["通之率"] is None)
+        print(f"指數:{len(區之度)} 區,{有錢} 有入息,{無路} 無路(其率為 None,非零)")
+    except Exception as 錯:
+        pack["index"] = None
+        pack["index_correlation"] = None
+        pack["index_unavailable_reason"] = f"{type(錯).__name__}: {錯}"
+        print(f"警:指數未成 — {錯}")
 
     out = ROOT / f"src/frontend/public/city-packs/{args.city}.json"
     write_pack(pack, str(out))
