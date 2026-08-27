@@ -265,6 +265,15 @@ body {
   color-scheme: dark;
 }
 
+/*
+  頁之根亦須從其色。html 之底為淡,而 landing 為黑,則過捲之際(macOS、iOS 之
+  回彈)露一線淡色於黑頁之上下,如裂。根隨其子而變,則無此隙。
+*/
+html:has(.landing),
+html:has(.landing) body {
+  background: #000;
+}
+
 /* 讀屏可聞而目不見者 —— 拆字之真文賴此。 */
 .sr-only {
   position: absolute;
@@ -293,4 +302,9 @@ body {
   width: 3px;
   border-radius: 2px;
   background: var(--color-accent-ink);
+}
+
+/* 大字斷行求勻 —— 孤字懸於末行,最傷顯示之字。 */
+h1, h2, h3 {
+  text-wrap: balance;
 }
