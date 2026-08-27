@@ -1,11 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { CityPack, Edge, ProfileFlags, RouteResult } from "../types";
 import { edgeAllowed } from "../routing/graph";
+import { 可為圖 } from "./圖之能";
 
 // CARTO Positron: 免鑰而可用,且色淡,不奪路線之目。
 const STYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+
 
 /** 網之幾何隨 profile 而變,隨時辰而易色。 */
 function networkGeoJSON(
@@ -48,6 +50,9 @@ export function MapCanvas({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
+  // 圖之不可立者,以其機無 WebGL2 也。此非罕見 —— 舊機、公司之鎖機、虛擬之桌、
+  // 惡指紋而閉之者,皆然。
+  const [圖之誤, set圖之誤] = useState(false);
   const ready = useRef(false);
   const markers = useRef<maplibregl.Marker[]>([]);
   // onPick 藏於 ref,免因其變而重建全圖。
@@ -57,12 +62,30 @@ export function MapCanvas({
   useEffect(() => {
     if (!ref.current) return;
     const [minLon, minLat, maxLon, maxLat] = pack.manifest.bbox;
-    const m = new maplibregl.Map({
-      container: ref.current,
-      style: STYLE,
-      bounds: [minLon, minLat, maxLon, maxLat],
-      fitBoundsOptions: { padding: 24 },
-    });
+
+    // MapLibre throws GPUInitializationError from its constructor when WebGL2 is
+    // absent. Uncaught, that exception unwinds through React's commit phase and
+    // unmounts the WHOLE app — the profile picker, the text itinerary, the
+    // reports, everything — leaving a blank page. The map is the one part of
+    // this tool that was always meant to be optional, so its failure must stay
+    // local to itself.
+    if (!可為圖()) {
+      set圖之誤(true);
+      return;
+    }
+
+    let m: maplibregl.Map;
+    try {
+      m = new maplibregl.Map({
+        container: ref.current,
+        style: STYLE,
+        bounds: [minLon, minLat, maxLon, maxLat],
+        fitBoundsOptions: { padding: 24 },
+      });
+    } catch {
+      set圖之誤(true);
+      return;
+    }
     m.addControl(new maplibregl.NavigationControl({}), "top-right");
     m.on("click", (ev: maplibregl.MapMouseEvent) =>
       pickRef.current(ev.lngLat.lng, ev.lngLat.lat));
@@ -144,7 +167,12 @@ export function MapCanvas({
     return () => {
       ro.disconnect();
       ready.current = false;
-      m.remove();
+      // 去之亦須守。半成之圖 remove 則擲,而 cleanup 之擲直達 React,全樹俱亡。
+      try {
+        m.remove();
+      } catch {
+        // 半成之圖,不可去亦不足害。
+      }
       map.current = null;
     };
   }, [pack]);
@@ -200,6 +228,22 @@ export function MapCanvas({
     if (origin) place(origin, "#2563eb", "Start");
     if (dest) place(dest, "#dc2626", "Destination");
   }, [origin, dest]);
+
+  if (圖之誤) {
+    return (
+      <div
+        role="note"
+        className="flex h-[42vh] min-h-[300px] w-full flex-col justify-center gap-2 rounded-lg border border-line bg-panel p-6 text-sm md:h-[58vh] md:min-h-[380px]"
+      >
+        <p className="font-semibold">The map cannot be drawn on this device.</p>
+        <p className="text-muted-foreground">
+          Maps here need WebGL2, which this browser or machine does not provide.
+          Nothing else is affected: choose your start and destination by name
+          above, and the full route is written out as a text itinerary below.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
