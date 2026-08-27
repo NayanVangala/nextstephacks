@@ -52,12 +52,36 @@ export function 無階可至者(
   const 分支 = largestComponent(buildAdjacency(pack, flags));
   const 節 = pack.nodes.filter((n) => 分支.has(n.id));
   const 出: Destination[] = [];
+  if (節.length === 0) return [...pack.destinations];
+
+  // 格網:所與節皆萬計,兩兩相較則六百萬次 haversine,每易 profile 一算,界面遂僵。
+  // 格之邊取半徑,則但搜其鄰之九格 —— 凡在半徑之內者,必不出此九格。
+  const 度之米 = 111320;
+  const 中緯 = (pack.manifest.bbox[1] + pack.manifest.bbox[3]) / 2;
+  const 經之米 = 度之米 * Math.cos((中緯 * Math.PI) / 180);
+  const 格lat = 半徑米 / 度之米;
+  const 格lon = 半徑米 / Math.max(1, 經之米);
+
+  const 格 = new Map<string, { lon: number; lat: number }[]>();
+  const 鑰 = (x: number, y: number) => `${x}|${y}`;
+  for (const n of 節) {
+    const k = 鑰(Math.floor(n.lon / 格lon), Math.floor(n.lat / 格lat));
+    const 列 = 格.get(k);
+    if (列) 列.push(n);
+    else 格.set(k, [n]);
+  }
 
   for (const d of pack.destinations) {
+    const gx = Math.floor(d.lon / 格lon);
+    const gy = Math.floor(d.lat / 格lat);
     let 最近 = Infinity;
-    for (const n of 節) {
-      const 距 = haversineM(d.lon, d.lat, n.lon, n.lat);
-      if (距 < 最近) 最近 = 距;
+    for (let dx = -1; dx <= 1 && 最近 > 半徑米; dx++) {
+      for (let dy = -1; dy <= 1 && 最近 > 半徑米; dy++) {
+        for (const n of 格.get(鑰(gx + dx, gy + dy)) ?? []) {
+          const 距 = haversineM(d.lon, d.lat, n.lon, n.lat);
+          if (距 < 最近) 最近 = 距;
+        }
+      }
     }
     if (最近 > 半徑米) 出.push(d);
   }

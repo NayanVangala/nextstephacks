@@ -1,5 +1,5 @@
 import type { CityPack, Edge, ProfileFlags } from "../types";
-import { buildAdjacency } from "./graph";
+import { buildAdjacency, edgeAllowed } from "./graph";
 import { effectiveExposure, heatIndexNorm } from "./cost";
 import { MinHeap } from "./heap";
 
@@ -86,8 +86,13 @@ export function reach(
     }
   }
 
+  // edgeAllowed 必與焉。搜時既以 adjacency 濾之,而此處復自 pack.edges 重建,
+  // 若但問兩端可至與否,則階之兩端由旁路可至者,遂列於輪椅之所及 —— 圖乃告人
+  // 以其不能行之路。此物之所最不可為者也。
   const reachableEdges = pack.edges.filter(
-    (e) => reachableNodes.has(e.from) && reachableNodes.has(e.to),
+    (e) => edgeAllowed(e, flags)
+      && reachableNodes.has(e.from)
+      && reachableNodes.has(e.to),
   );
   return { reachableNodes, reachableEdges, loadByNode, budget };
 }

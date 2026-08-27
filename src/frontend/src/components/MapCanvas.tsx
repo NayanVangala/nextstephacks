@@ -68,6 +68,9 @@ export function MapCanvas({
       pickRef.current(ev.lngLat.lng, ev.lngLat.lat));
 
     m.on("load", () => {
+      // flags 與 hourIdx 於此為初值,或已陳 —— 其更新賴下之 effect(deps
+      // [pack, flags, hourIdx])。此非疏漏:若入 deps,則每易 profile 或時辰
+      // 皆重建全圖,棄其縮放與位置。下之 effect 為必需,不可去。
       m.addSource("network", {
         type: "geojson",
         data: networkGeoJSON(pack, flags, hourIdx),

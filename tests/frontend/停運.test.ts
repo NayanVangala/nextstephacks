@@ -88,3 +88,30 @@ describe("取實時停運", () => {
     expect(出!.更新於).toBe("2026-08-24 11:40");
   });
 });
+
+describe("時之解,當以 agency 之地時為準", () => {
+  it("無時區之文,以洛城之時解之,不以 UTC", () => {
+    // LA Metro 所出者乃太平洋時。夏令則 UTC-7。
+    // 「2026-08-24 11:00」為 PDT,即 UTC 18:00。
+    const 資 = { 總: 1, 路: {}, 更新於: "2026-08-24 11:00" };
+    const 今 = new Date("2026-08-24T18:30:00Z").getTime(); // 其後半時
+    const s = 停運之狀(造囊(資, "2026-08-24T18:30:00Z"), 今, "America/Los_Angeles");
+    expect(s.陳幾時).toBeGreaterThan(0);
+    expect(s.陳幾時).toBeLessThan(陳之限之毫秒); // 半時而已,未陳
+    expect(s.陳否).toBe(false);
+  });
+
+  it("若誤以 UTC 解之,則半時之資反成七時半之陳", () => {
+    const 資 = { 總: 1, 路: {}, 更新於: "2026-08-24 11:00" };
+    const 今 = new Date("2026-08-24T18:30:00Z").getTime();
+    const 正 = 停運之狀(造囊(資, null), 今, "America/Los_Angeles").陳幾時;
+    const 誤 = 今 - Date.parse("2026-08-24T11:00:00Z");
+    expect(誤 - 正).toBeCloseTo(7 * 60 * 60 * 1000, -3); // 七時之差
+  });
+
+  it("時區不授則仍以洛城為預設", () => {
+    const 資 = { 總: 1, 路: {}, 更新於: "2026-08-24 11:00" };
+    const 今 = new Date("2026-08-24T18:30:00Z").getTime();
+    expect(停運之狀(造囊(資, null), 今).陳否).toBe(false);
+  });
+})

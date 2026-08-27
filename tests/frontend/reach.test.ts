@@ -129,3 +129,32 @@ describe("reach", () => {
     expect(r.reachableNodes.size).toBe(0);
   });
 });
+
+describe("reach 之所及,不得含不可通之段", () => {
+  it("兩端雖可至,而其段不可通者,不入所及", () => {
+    const p = chain();
+    // 於 1、2 之間別置一階:兩端皆可至(由 10 之段),而階本身輪椅不可通
+    p.edges.push(e(30, 1, 2, {
+      is_steps: true,
+      traversable: {
+        wheelchair: false, blind_low_vision: true, heat_sensitive: true, none: true,
+      },
+    }));
+    const wc: ProfileFlags = {
+      wheelchair: true, blind_low_vision: false, heat_sensitive: false,
+    };
+    const r = reach(p, wc, 1, 0, 18, 10_000);
+    expect(r.reachableNodes.has(1)).toBe(true);
+    expect(r.reachableNodes.has(2)).toBe(true);
+    // 階不得列於所及 —— 此輪椅之圖也
+    expect(r.reachableEdges.map((x) => x.id)).not.toContain(30);
+    expect(r.reachableEdges.map((x) => x.id)).toContain(10);
+  });
+
+  it("無 profile 則階仍可通,故仍在所及", () => {
+    const p = chain();
+    p.edges.push(e(30, 1, 2, { is_steps: true }));
+    const r = reach(p, NONE, 1, 0, 18, 10_000);
+    expect(r.reachableEdges.map((x) => x.id)).toContain(30);
+  });
+});

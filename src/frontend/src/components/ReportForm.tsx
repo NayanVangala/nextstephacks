@@ -16,12 +16,17 @@ const 類之文: { v: 报["kind"]; label: string }[] = [
 export function ReportForm({
   city_id,
   edge_id,
+  段之文,
+  段之序,
   onSubmit,
   就緒,
   庫之誤,
 }: {
   city_id: string;
   edge_id: number;
+  /** 所擇之段之述,示之於人,俾知其所報者何。 */
+  段之文: string;
+  段之序: number;
   onSubmit: (r: 报) => Promise<boolean>;
   就緒: boolean;
   庫之誤: string | null;
@@ -49,7 +54,10 @@ export function ReportForm({
         if (成) setNote("");
       }}
     >
-      <h3 className="text-base font-semibold">Report a problem on this route</h3>
+      <h3 className="text-base font-semibold">Report a problem</h3>
+      <p className="mt-0.5 text-sm text-muted-foreground">
+        Segment <span className="数 font-semibold">{段之序}</span> — {段之文}
+      </p>
 
       <span id="报-kind-label" className="mt-2 mb-1 block text-sm font-semibold">
         What is wrong

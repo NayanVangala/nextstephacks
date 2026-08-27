@@ -142,3 +142,45 @@ describe("斷之率", () => {
     expect(斷之率(p, 輪椅).率).toBe(0);
   });
 });
+
+function 地(over: Partial<Destination>): Destination {
+  return {
+    id: "d", name: "A place", lon: 0, lat: 0, kind: "cooling_center",
+    backup_power: "unknown", source: "s", node_id: 1, ...over,
+  };
+}
+
+describe("無階可至者 之格網,其果當與力搜同", () => {
+  it("格網與力搜,所得無異", () => {
+    const 多: Destination[] = [];
+    for (let i = 0; i < 40; i++) {
+      多.push(地({
+        id: `d${i}`,
+        lon: (i % 8) * 0.0005,
+        lat: Math.floor(i / 8) * 0.0005,
+        node_id: 1,
+      }));
+    }
+    const p = 造囊(多);
+    // 半徑遞增,格網之果當恆與力搜同
+    for (const r of [10, 50, 120, 400, 2000]) {
+      const 得 = 無階可至者(p, 無, r).map((x) => x.id).sort();
+      const 力 = 多.filter((d) => {
+        let m = Infinity;
+        for (const n of p.nodes) {
+          const dx = (d.lon - n.lon) * 111320 * Math.cos((n.lat * Math.PI) / 180);
+          const dy = (d.lat - n.lat) * 111320;
+          m = Math.min(m, Math.hypot(dx, dy));
+        }
+        return m > r;
+      }).map((x) => x.id).sort();
+      expect(得).toEqual(力);
+    }
+  });
+
+  it("節空則諸所皆為無階可至", () => {
+    const p = 造囊([地({ id: "x", lon: 0, lat: 0, node_id: 1 })]);
+    p.edges = [];
+    expect(無階可至者(p, 無, 400)).toHaveLength(1);
+  });
+});

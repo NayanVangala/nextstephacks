@@ -10,6 +10,38 @@ export interface 停運之資 {
 export const 陳之限之毫秒 = 60 * 60 * 1000;
 
 /**
+ * 解無時區之文,以 agency 之地時為準。
+ *
+ * GTFS feeds publish agency-local time with no offset. Appending "Z" would read
+ * 11:00 Pacific as 11:00 UTC and overstate the age by 7-8 hours — safe in
+ * direction but simply wrong. Derives the offset from the zone at that instant,
+ * so DST is handled without a date library.
+ */
+export function 解地時(文: string, 時區 = "America/Los_Angeles"): number {
+  const 約 = Date.parse(文.replace(" ", "T") + "Z");
+  if (Number.isNaN(約)) return NaN;
+  try {
+    const fmt = new Intl.DateTimeFormat("en-US", {
+      timeZone: 時區, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+    });
+    const p: Record<string, string> = {};
+    for (const x of fmt.formatToParts(new Date(約))) {
+      if (x.type !== "literal") p[x.type] = x.value;
+    }
+    // 以該時區之壁上時反推其偏移,夏令自在其中。
+    const 壁 = Date.UTC(
+      Number(p.year), Number(p.month) - 1, Number(p.day),
+      Number(p.hour) % 24, Number(p.minute), Number(p.second),
+    );
+    return 約 + (約 - 壁);
+  } catch {
+    return 約; // Intl 不備則退為 UTC,其誤偏於「陳」,尚安
+  }
+}
+
+/**
  * 停運之狀,並判其陳否。
  *
  * TWO timestamps exist and they are not interchangeable: when WE fetched, and
@@ -20,7 +52,11 @@ export const 陳之限之毫秒 = 60 * 60 * 1000;
  *
  * Unknown or unparseable freshness counts as STALE, never fresh.
  */
-export function 停運之狀(pack: CityPack, 今 = Date.now()) {
+export function 停運之狀(
+  pack: CityPack,
+  今 = Date.now(),
+  時區 = "America/Los_Angeles",
+) {
   const p = pack as unknown as {
     canceled_service?: 停運之資;
     canceled_service_fetched_at?: string | null;
@@ -40,8 +76,8 @@ export function 停運之狀(pack: CityPack, 今 = Date.now()) {
     .sort((a, b) => b.數 - a.數);
 
   const 更新於 = 資.更新於 ?? null;
-  // 其自稱之時 —— 非吾取之時。
-  const t = 更新於 ? Date.parse(更新於.replace(" ", "T") + "Z") : NaN;
+  // 其自稱之時 —— 非吾取之時。且以 agency 之地時解之。
+  const t = 更新於 ? 解地時(更新於, 時區) : NaN;
   const 陳幾時 = Number.isNaN(t) ? Infinity : 今 - t;
 
   return {

@@ -30,6 +30,8 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   const [result, setResult] = useState<RouteResult | null>(null);
   const [status, setStatus] = useState("Select a start point on the map.");
   const { 报列, 罰, 寫: 寫报事, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
+  // 所報之段,必由人自擇 —— 前此取路之中者,則报落於無干之段,其罚亦然。
+  const [报之段, set报之段] = useState<number | null>(null);
 
   useEffect(() => {
     loadCityPack(cityId).then(setPack).catch((e: Error) => setLoadError(e.message));
@@ -86,6 +88,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     if (!pack || origin == null || dest == null) return;
     const r = computeRoute(pack, flags, origin, dest, hourIdx, temp.tempC, 罰);
     setResult(r);
+    set报之段(null);
     if (r) {
       const 未驗 = r.edges.filter((e) => e.confidence !== "high").length;
       setStatus(
@@ -217,8 +220,24 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                       : ""
                 }`}
               >
-                <span className="数 mr-2 text-muted-foreground">{i + 1}</span>
-                {step.text}
+                <div className="flex items-baseline justify-between gap-3">
+                  <span>
+                    <span className="数 mr-2 text-muted-foreground">{i + 1}</span>
+                    {step.text}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => set报之段(step.edge.id)}
+                    aria-pressed={报之段 === step.edge.id}
+                    className={`shrink-0 rounded border px-2 py-0.5 text-xs ${
+                      报之段 === step.edge.id
+                        ? "border-ink bg-panel font-semibold"
+                        : "border-line text-muted-foreground hover:text-ink"
+                    }`}
+                  >
+                    {报之段 === step.edge.id ? "Selected" : "Report this"}
+                  </button>
+                </div>
               </li>
             ))}
           </ol>
@@ -227,13 +246,27 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       {result && result.edges.length > 0 && (
         <section aria-label="Report a problem" className="mt-6">
-          <ReportForm
-            city_id={cityId}
-            edge_id={result.edges[Math.floor(result.edges.length / 2)].id}
-            onSubmit={寫报事}
-            就緒={就緒}
-            庫之誤={庫之誤}
-          />
+          {报之段 == null ? (
+            <p className="rounded-lg border border-line p-4 text-sm text-muted-foreground">
+              To report a problem, choose the segment it affects using “Report this” in
+              the directions above. Reports attach to one segment, so picking the right
+              one is what makes them useful to the next person.
+            </p>
+          ) : (
+            <ReportForm
+              city_id={cityId}
+              edge_id={报之段}
+              段之文={
+                result.itinerary.find((x) => x.edge.id === 报之段)?.text ?? ""
+              }
+              段之序={
+                result.itinerary.findIndex((x) => x.edge.id === 报之段) + 1
+              }
+              onSubmit={寫报事}
+              就緒={就緒}
+              庫之誤={庫之誤}
+            />
+          )}
         </section>
       )}
 

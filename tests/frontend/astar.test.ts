@@ -146,3 +146,23 @@ describe("routing", () => {
     expect(r.totalCost).toBeCloseTo(Math.min(top, bottom), 6);
   });
 });
+
+describe("maxExposure 當與所算者同基", () => {
+  it("憩息之側,所報之曝亦當減,與 cost 所用者同", () => {
+    const p = pack();
+    p.edges.forEach((x) => { x.sun_exposure = [1]; x.near_rest_stop = true; });
+    p.edges[3].is_steps = false;
+    p.edges[3].traversable.wheelchair = true;
+    const r = route(p, NONE, 1, 4, 0, 40)!;
+    // 全曝而皆憩息之側,故實曝為 0.75,非 1
+    expect(r.maxExposure).toBeCloseTo(0.75, 6);
+  });
+
+  it("無憩息之側則如故", () => {
+    const p = pack();
+    p.edges.forEach((x) => { x.sun_exposure = [1]; });
+    p.edges[3].is_steps = false;
+    p.edges[3].traversable.wheelchair = true;
+    expect(route(p, NONE, 1, 4, 0, 40)!.maxExposure).toBeCloseTo(1, 6);
+  });
+});

@@ -1,6 +1,6 @@
 import type { CityPack, Edge, ProfileFlags, RouteResult, ItineraryStep } from "../types";
 import { buildAdjacency, nodeIndex, largestComponent } from "./graph";
-import { edgeCost } from "./cost";
+import { edgeCost, effectiveExposure } from "./cost";
 import { haversineM } from "./geo";
 import { MinHeap } from "./heap";
 
@@ -125,8 +125,10 @@ export function route(
   edges.reverse();
 
   const totalLength = edges.reduce((s, e) => s + e.length_m, 0);
+  // 與 cost 同基。前此用生曝,而路之所擇乃依實曝,故所報與所算者異 ——
+  // 二數並陳於人,而其一非router之所見,則人不能以之相較。
   const maxExposure = edges.reduce(
-    (m, e) => Math.max(m, e.sun_exposure ? e.sun_exposure[hourIdx] ?? 1 : 1),
+    (m, e) => Math.max(m, effectiveExposure(e, hourIdx)),
     0,
   );
   const itinerary: ItineraryStep[] = edges.map((e) => ({ text: describe(e), edge: e }));
