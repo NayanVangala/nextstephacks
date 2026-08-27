@@ -17,9 +17,10 @@ export function TimeSlider({
         <span id="time-label" className="text-sm font-semibold">
           Time of day
         </span>
-        <span className="数 text-lg font-semibold">{label}</span>
+        <span className="数 text-lg font-semibold text-accent-ink">{label}</span>
       </div>
       <Slider
+        className="[&_[data-slot=slider-range]]:bg-accent-ink"
         min={0}
         max={buckets.length - 1}
         step={1}

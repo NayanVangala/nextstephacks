@@ -34,6 +34,17 @@
   --color-panel: #f4f4f5;
   --color-paper: #ffffff;
 
+  /*
+    微色。互動之色承曝之階之藍,不別立一族 —— 一物一義,則不惑。
+    NOT named --color-accent: shadcn already defines --accent as a near-white
+    background token, and colliding with it silently repaints every accent
+    surface in the app. The same collision on --color-muted once made body text
+    nearly invisible.
+  */
+  --color-accent-ink: #1d4ed8;
+  --color-accent-wash: #eef4ff;
+  --color-canvas: #fbfaf9;
+
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
@@ -79,7 +90,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-paper);
+  background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.5;
@@ -265,4 +276,21 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* 節之題,前置一豎。色止於此 —— 微而可辨,不奪其文。 */
+.题-accent {
+  position: relative;
+  padding-left: 0.7rem;
+}
+
+.题-accent::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--color-accent-ink);
 }

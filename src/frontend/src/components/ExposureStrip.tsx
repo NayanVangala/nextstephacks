@@ -1,4 +1,7 @@
+import { useLayoutEffect, useRef } from "react";
+import { animate, stagger } from "motion";
 import type { Edge } from "../types";
+import { 曲微, 時微, 安動 } from "../motion/预设";
 
 /**
  * ExposureStrip:一路之日曝,並其信之疏密,合為一橫帶。
@@ -17,6 +20,28 @@ export function ExposureStrip({
   hourIdx: number;
   className?: string;
 }) {
+  const 帶 = useRef<HTMLDivElement>(null);
+
+  // 段依序自左而張,如路之見於目前。此為此物之一動,餘皆靜。
+  useLayoutEffect(() => {
+    const 根 = 帶.current;
+    if (!根) return;
+    const 的 = [...根.children] as HTMLElement[];
+    if (的.length === 0) return;
+    // 雖段多至數百,全掃不過半秒 —— 久則非動,乃待也。
+    const 間 = Math.min(0.01, 0.5 / 的.length);
+    return 安動(
+      的,
+      () =>
+        animate(
+          的,
+          { scaleX: [0, 1], opacity: [0.4, 1] },
+          { duration: 時微, ease: 曲微, delay: stagger(間) },
+        ),
+      (時微 + 間 * 的.length) * 1000,
+    );
+  }, [edges, hourIdx]);
+
   const 總 = edges.reduce((s, e) => s + e.length_m, 0);
   if (總 === 0) return null;
 
@@ -28,6 +53,7 @@ export function ExposureStrip({
   return (
     <div className={className}>
       <div
+        ref={帶}
         className="flex h-6 w-full overflow-hidden rounded border border-line"
         role="img"
         aria-label={
@@ -53,6 +79,7 @@ export function ExposureStrip({
               style={{
                 width: `${(e.length_m / 總) * 100}%`,
                 backgroundColor: 色(曝),
+                transformOrigin: "left",
               }}
             />
           );

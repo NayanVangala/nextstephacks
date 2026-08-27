@@ -13,6 +13,7 @@ import { BudgetSlider } from "../components/BudgetSlider";
 import { DestinationList } from "../components/DestinationList";
 import { PlacePicker } from "../components/PlacePicker";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useEnter } from "../motion/useEnter";
 
 const AFTERNOON_BUCKET = 4; // hour_buckets[4] === 14:00
 
@@ -34,6 +35,8 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   const [origin, setOrigin] = useState<number | null>(null);
   const [result, setResult] = useState<ReachResult | null>(null);
   const [status, setStatus] = useState("Select a starting point on the map.");
+  // 左列諸器依序而起,同 RouteView。
+  const 器 = useEnter<HTMLDivElement>({ 選: ":scope > *", 位移: 12, 間: 0.06, 憑: cityId });
 
   useEffect(() => {
     loadCityPack(cityId)
@@ -121,13 +124,13 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       <p
         role="status"
         aria-live="polite"
-        className="mt-4 rounded-lg border border-line bg-panel px-4 py-3 text-sm"
+        className="mt-4 rounded-lg border border-line border-l-[3px] border-l-accent-ink bg-panel px-4 py-3 text-sm"
       >
         {status}
       </p>
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(280px,1fr)_2fr]">
-        <div>
+        <div ref={器}>
           <PlacePicker
             pack={pack}
             label="Starting point"
@@ -193,7 +196,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
       {result && (
         <section aria-label="Destinations" className="mt-6">
-          <h2 className="mb-2 text-lg font-semibold">Destinations</h2>
+          <h2 className="题-accent mb-2 text-lg font-semibold">Destinations</h2>
           <DestinationList
             reachable={split.reachable}
             unreachable={split.unreachable}

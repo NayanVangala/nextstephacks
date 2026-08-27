@@ -12,6 +12,7 @@ import { ReportForm } from "../components/ReportForm";
 import { ReportList } from "../components/ReportList";
 import { useReports } from "../hooks/useReports";
 import { Button } from "@/components/ui/button";
+import { useEnter } from "../motion/useEnter";
 
 const 午後 = 4; // hour_buckets[4] === 14:00, 暑之極
 
@@ -30,6 +31,8 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   const [result, setResult] = useState<RouteResult | null>(null);
   const [status, setStatus] = useState("Select a start point on the map.");
   const { 报列, 罰, 寫: 寫报事, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
+  // 左列諸器依序而起,一入而已。易城則重動之。
+  const 器 = useEnter<HTMLDivElement>({ 選: ":scope > *", 位移: 12, 間: 0.06, 憑: cityId });
   // 所報之段,必由人自擇 —— 前此取路之中者,則报落於無干之段,其罚亦然。
   const [报之段, set报之段] = useState<number | null>(null);
 
@@ -138,7 +141,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       <p
         role="status"
         aria-live="polite"
-        className="mt-4 rounded-lg border border-line bg-panel px-4 py-3 text-sm"
+        className="mt-4 rounded-lg border border-line border-l-[3px] border-l-accent-ink bg-panel px-4 py-3 text-sm"
       >
         {status}
       </p>
@@ -151,7 +154,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       )}
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(260px,1fr)_2fr]">
-        <div>
+        <div ref={器}>
           <PlacePicker
             pack={pack}
             label="Start"
@@ -202,10 +205,10 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       {result && (
         <section aria-label="Route detail" className="mt-6">
-          <h2 className="text-lg font-semibold">Sun along this route</h2>
+          <h2 className="题-accent text-lg font-semibold">Sun along this route</h2>
           <ExposureStrip edges={result.edges} hourIdx={hourIdx} className="mt-2" />
 
-          <h2 className="mt-6 text-lg font-semibold">Directions</h2>
+          <h2 className="题-accent mt-6 text-lg font-semibold">Directions</h2>
           <p className="text-sm text-muted-foreground">
             <span className="数">{Math.round(result.totalLength_m)}</span> m over{" "}
             <span className="数">{result.edges.length}</span> segments.
@@ -229,10 +232,10 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                     type="button"
                     onClick={() => set报之段(step.edge.id)}
                     aria-pressed={报之段 === step.edge.id}
-                    className={`shrink-0 rounded border px-2 py-0.5 text-xs ${
+                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       报之段 === step.edge.id
-                        ? "border-ink bg-panel font-semibold"
-                        : "border-line text-muted-foreground hover:text-ink"
+                        ? "border-accent-ink bg-accent-wash font-semibold text-accent-ink"
+                        : "border-line text-muted-foreground hover:border-accent-ink/40 hover:bg-accent-wash hover:text-accent-ink"
                     }`}
                   >
                     {报之段 === step.edge.id ? "Selected" : "Report this"}
