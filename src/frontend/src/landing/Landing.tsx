@@ -119,7 +119,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             >
               Open the tool
             </button>
-            <span className="text-xs uppercase text-white/40">
+            <span className="text-xs uppercase text-white/55">
               Los Angeles · Seattle
             </span>
           </div>
@@ -157,7 +157,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           <div className="divide-y divide-white/20 border-y border-white/20">
             {事.map((s) => (
               <div key={s.h} className="grid gap-4 py-8 md:grid-cols-[4rem_1fr_1.2fr]">
-                <span className="数 text-2xl font-semibold text-white/40">{s.i}</span>
+                <span className="数 text-2xl font-semibold text-white/55">{s.i}</span>
                 <h2 className="text-[clamp(1.6rem,3.6vw,2.4rem)] font-semibold uppercase leading-[1.2]">
                   {s.h}
                 </h2>
@@ -197,7 +197,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           >
             Open the tool
           </button>
-          <p className="mt-8 text-xs uppercase text-white/40">
+          <p className="mt-8 text-xs uppercase text-white/55">
             NextStep Hacks 2026 · Earth Forward
           </p>
         </div>
