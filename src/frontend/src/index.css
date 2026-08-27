@@ -239,3 +239,30 @@ body {
     @apply font-sans;
   }
 }
+/* 走馬燈之軌:兩份相接,移其半而歸零,故無縫。 */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee-scroll linear infinite;
+}
+
+/* landing 為黑地白字,自成一域,不干於 app 之明色。 */
+.landing {
+  color-scheme: dark;
+}
+
+/* 讀屏可聞而目不見者 —— 拆字之真文賴此。 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

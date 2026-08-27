@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { RouteView } from "./views/RouteView";
 import { ReachView } from "./views/ReachView";
 import { ReportView } from "./views/ReportView";
+import { Landing } from "./landing/Landing";
 import { CITIES, 預設之城 } from "./data/cities";
 
 type 之view = "route" | "reach" | "report";
@@ -16,8 +17,27 @@ const 之tabs: { id: 之view; label: string; blurb: string }[] = [
 export default function App() {
   const [view, setView] = useState<之view>("route");
   const [city, setCity] = useState(預設之城);
-  // 動須讓於 reduced-motion。此物之本旨也。
+  // hash 為路:俾 landing 與 app 各可直連,而不需 router。
+  const [入app, set入app] = useState(() => location.hash === "#/app");
   const 減動 = useReducedMotion();
+
+  useEffect(() => {
+    const 聽 = () => set入app(location.hash === "#/app");
+    addEventListener("hashchange", 聽);
+    return () => removeEventListener("hashchange", 聽);
+  }, []);
+
+  if (!入app) {
+    return (
+      <Landing
+        onEnter={() => {
+          location.hash = "#/app";
+          set入app(true);
+          scrollTo({ top: 0 });
+        }}
+      />
+    );
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-4">
@@ -49,7 +69,7 @@ export default function App() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2 pb-2">
+        <div className="flex items-center gap-3 pb-2">
           <label htmlFor="city" className="text-xs text-muted-foreground">
             City
           </label>
@@ -65,6 +85,17 @@ export default function App() {
               </option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => {
+              location.hash = "";
+              set入app(false);
+              scrollTo({ top: 0 });
+            }}
+            className="text-xs text-muted-foreground underline underline-offset-2 hover:text-ink"
+          >
+            About
+          </button>
         </div>
       </div>
 
