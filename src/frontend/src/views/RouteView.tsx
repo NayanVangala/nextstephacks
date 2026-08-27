@@ -279,11 +279,24 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             {pack.manifest.buildings_total?.toLocaleString() ?? "local"}
           </span>{" "}
           building footprints against the sun's position, not from measured shade.
-          {pack.manifest.buildings_assumed_height
-            ? ` ${pack.manifest.buildings_assumed_height} of those have no height in
-               OpenStreetMap and were assumed to be 7 storeys, so shade near them may be
-               over- or under-stated.`
-            : ""}
+          {pack.manifest.buildings_assumed_height ? (() => {
+            const 總 = pack.manifest.buildings_total ?? 0;
+            const 補 = pack.manifest.buildings_assumed_height;
+            const 率 = 總 ? 補 / 總 : 0;
+            return (
+              <>
+                {" "}
+                <span className={率 > 0.3 ? "font-semibold text-midsun" : ""}>
+                  {補} of them ({Math.round(率 * 100)}%) have no height in OpenStreetMap
+                  and were assumed to be 7 storeys
+                </span>
+                {率 > 0.3
+                  ? ", so shade here is substantially inferred and individual segments" +
+                    " should be treated as rough."
+                  : ", so shade near them may be over- or under-stated."}
+              </>
+            );
+          })() : null}
         </p>
         <p className="mt-2">
           Accessibility attributes come from OpenStreetMap and are incomplete — hatched

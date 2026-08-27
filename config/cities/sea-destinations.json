@@ -1,0 +1,33 @@
+{
+  "city": "sea",
+  "note": "Curated entries supplement OSM. Every record states its source. backup_power is 'unknown' unless a published dataset says otherwise — absence is never rendered as safety.",
+  "destinations": [
+    {
+      "id": "sea-central-library",
+      "name": "Seattle Central Library",
+      "lon": -122.3321,
+      "lat": 47.6067,
+      "kind": "cooling_center",
+      "backup_power": "unknown",
+      "source": "curated: Seattle Public Library, opened as a cooling centre during heat events"
+    },
+    {
+      "id": "sea-westlake-park",
+      "name": "Westlake Park",
+      "lon": -122.3379,
+      "lat": 47.6110,
+      "kind": "rest_stop",
+      "backup_power": "unknown",
+      "source": "curated: public plaza with seating"
+    },
+    {
+      "id": "sea-victor-steinbrueck",
+      "name": "Victor Steinbrueck Park",
+      "lon": -122.3435,
+      "lat": 47.6100,
+      "kind": "rest_stop",
+      "backup_power": "unknown",
+      "source": "curated: waterfront park with shade and seating"
+    }
+  ]
+}

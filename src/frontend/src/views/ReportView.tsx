@@ -136,6 +136,31 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         </p>
       </section>
 
+      <section aria-label="Building height coverage" className="mt-8">
+        <h2 className="text-lg font-semibold">Building height coverage</h2>
+        <p className="mt-1 text-sm">
+          Shade is computed by projecting building shadows, so it is only as good as
+          OpenStreetMap's height data — and that varies enormously by city.{" "}
+          <strong className="数">
+            {(pack.manifest.buildings_total ?? 0).toLocaleString()}
+          </strong>{" "}
+          buildings here,{" "}
+          <strong className="数">
+            {Math.round(
+              100 * (pack.manifest.buildings_assumed_height ?? 0) /
+                Math.max(pack.manifest.buildings_total ?? 1, 1),
+            )}%
+          </strong>{" "}
+          of them with no published height, filled in at an assumed 7 storeys.
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          For comparison: Los Angeles publishes heights for 92% of downtown buildings,
+          Seattle for 45%, and Phoenix for 6%. Phoenix was measured and rejected as a
+          third city on exactly this basis — at 6% coverage the shade model would be
+          almost entirely invented, which is worse than not shipping it.
+        </p>
+      </section>
+
       <section aria-label="Data confidence" className="mt-8">
         <h2 className="text-lg font-semibold">Data confidence</h2>
         <p className="mt-1 text-sm">

@@ -145,24 +145,25 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
           />
           <ProfilePicker flags={flags} onChange={setFlags} />
 
-          <div className="my-3 flex items-start gap-2.5">
+          <label
+            htmlFor="power-dependent"
+            className="my-3 flex cursor-pointer items-start gap-2.5 rounded-md py-1.5 -mx-1 px-1 hover:bg-panel"
+          >
             <Checkbox
               id="power-dependent"
               checked={powerDependent}
               onCheckedChange={(v) => setPowerDependent(v === true)}
               aria-describedby="power-dependent-hint"
-              className="mt-0.5"
+              className="mt-0.5 size-5 shrink-0 after:absolute after:-inset-2"
             />
-            <div className="leading-snug">
-              <label htmlFor="power-dependent" className="text-sm font-semibold">
-                Power-dependent
-              </label>
-              <p id="power-dependent-hint" className="text-xs text-muted-foreground">
+            <span className="leading-snug">
+              <span className="block text-sm font-semibold">Power-dependent</span>
+              <span id="power-dependent-hint" className="block text-xs text-muted-foreground">
                 Powered wheelchair, ventilator, refrigerated medication, or home dialysis.
                 Shows backup-power status on destinations.
-              </p>
-            </div>
-          </div>
+              </span>
+            </span>
+          </label>
 
           <HazardPicker value={hazard} onChange={setHazard} />
           <TimeSlider

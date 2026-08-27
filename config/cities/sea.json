@@ -1,0 +1,9 @@
+{
+  "id": "sea",
+  "name": "Seattle",
+  "bbox": [-122.3562, 47.5963, -122.3139, 47.6197],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [6, 8, 10, 12, 14, 16, 18, 20],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": { "operator": "King County Metro Access", "advance_booking_hours": 24 }
+}

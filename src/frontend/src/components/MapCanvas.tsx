@@ -206,7 +206,7 @@ export function MapCanvas({
       ref={ref}
       role="application"
       aria-label={`Map of ${pack.manifest.name}. The same route is available as a text itinerary below.`}
-      className="h-[58vh] min-h-[380px] w-full overflow-hidden rounded-lg border border-line"
+      className="h-[42vh] min-h-[300px] w-full overflow-hidden rounded-lg border border-line md:h-[58vh] md:min-h-[380px]"
     />
   );
 }
