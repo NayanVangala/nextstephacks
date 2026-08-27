@@ -72,7 +72,7 @@ export function PlacePicker({
           const 名 = ev.target.selectedOptions[0]?.textContent ?? null;
           onChange(n, 名);
         }}
-        className="w-full rounded-md border border-line bg-paper px-2 py-2 text-sm"
+        className="min-h-11 w-full rounded-md border border-line bg-paper px-2.5 py-2 text-sm"
       >
         <option value="">Choose a place…</option>
         {群.map((g) => (

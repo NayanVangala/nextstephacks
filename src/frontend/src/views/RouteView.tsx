@@ -233,7 +233,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                     type="button"
                     onClick={() => set报之段(step.edge.id)}
                     aria-pressed={报之段 === step.edge.id}
-                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                    className={`min-h-9 shrink-0 rounded-full border px-3 py-1 text-xs transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       报之段 === step.edge.id
                         ? "border-accent-ink bg-accent-wash font-semibold text-accent-ink"
                         : "border-line text-muted-foreground hover:border-accent-ink/40 hover:bg-accent-wash hover:text-accent-ink"

@@ -55,7 +55,7 @@ export default function App() {
                 onClick={() => setView(t.id)}
                 aria-current={當 ? "page" : undefined}
                 title={t.blurb}
-                className={`relative rounded-t-md px-3 py-2 text-sm transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] sm:px-4 ${
+                className={`relative min-h-11 rounded-t-md px-3 py-2 text-sm transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] sm:px-4 ${
                   當
                     ? "font-semibold text-accent-ink"
                     : "text-muted-foreground hover:bg-panel hover:text-ink"
@@ -82,7 +82,7 @@ export default function App() {
             id="city"
             value={city}
             onChange={(ev) => setCity(ev.target.value)}
-            className="rounded-md border border-line bg-paper px-2 py-1 text-sm"
+            className="min-h-11 rounded-md border border-line bg-paper px-2.5 py-1 text-sm"
           >
             {CITIES.map((c) => (
               <option key={c.id} value={c.id}>
