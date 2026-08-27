@@ -44,6 +44,16 @@ export default function App() {
 
   return (
     <div className="mx-auto max-w-5xl px-4">
+      {/*
+        越navigation而直至其文。左列之器十有餘,鍵盤之人每易 view 皆須歷之而後
+        及其果 —— 一鏈可省之。隱而不奪其位,受焦則見。
+      */}
+      <a
+        href="#主"
+        className="越"
+      >
+        Skip to main content
+      </a>
       <div className="flex flex-wrap items-end justify-between gap-2 border-b border-line pt-4">
         <nav aria-label="Views" className="flex gap-1">
           {之tabs.map((t) => {
@@ -104,7 +114,7 @@ export default function App() {
         </div>
       </div>
 
-      <div ref={面}>
+      <div id="主" ref={面} tabIndex={-1}>
         {view === "route" && <RouteView key={city} cityId={city} />}
         {view === "reach" && <ReachView key={city} cityId={city} />}
         {view === "report" && <ReportView key={city} cityId={city} />}
