@@ -3,6 +3,8 @@ import type { CityPack, ProfileFlags, RouteResult } from "../types";
 import { loadCityPack } from "../data/loadCityPack";
 import { route as computeRoute, nearestRoutableNode } from "../routing/astar";
 import { fetchCurrentTempC } from "../data/weather";
+import { 取警, 暑之底, 無警之狀, type 警之狀 } from "../data/警";
+import { HeatAlert } from "../components/HeatAlert";
 import { MapCanvas } from "../components/MapCanvas";
 import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
@@ -31,6 +33,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   });
   const [hourIdx, setHourIdx] = useState(午後);
   const [temp, setTemp] = useState({ tempC: 24, estimated: true });
+  const [警狀, set警狀] = useState<警之狀>(無警之狀);
   const 址之初 = useMemo(() => 解址(), []);
   const [origin, setOrigin] = useState<number | null>(null);
   const [dest, setDest] = useState<number | null>(null);
@@ -67,6 +70,8 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     if (!pack) return;
     const [minLon, minLat, maxLon, maxLat] = pack.manifest.bbox;
     fetchCurrentTempC((minLat + maxLat) / 2, (minLon + maxLon) / 2).then(setTemp);
+    // 官之警。取之不得則其狀載其誤,界面明告之,不作無警論。
+    取警((minLat + maxLat) / 2, (minLon + maxLon) / 2).then(set警狀);
   }, [pack]);
 
   const coordOf = useCallback(
@@ -112,7 +117,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
   useEffect(() => {
     if (!pack || origin == null || dest == null) return;
-    const r = computeRoute(pack, flags, origin, dest, hourIdx, temp.tempC, 罰);
+    const r = computeRoute(pack, flags, origin, dest, hourIdx, temp.tempC, 罰, 暑之底(警狀.警));
     setResult(r);
     set报之段(null);
     if (r) {
@@ -134,7 +139,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           "The barrier is accessibility, not distance.",
       );
     }
-  }, [pack, origin, dest, flags, hourIdx, temp, 罰]);
+  }, [pack, origin, dest, flags, hourIdx, temp, 罰, 警狀]);
 
   // 狀既定,則書之於址。用 replaceState —— 每動一滑桿而增一 history,則返回鍵不可用。
   useEffect(() => {
@@ -248,6 +253,8 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           )}
         </section>
       )}
+
+      <HeatAlert 狀={警狀} />
 
       {temp.estimated && (
         <p role="note" className="mt-2 text-sm text-midsun">

@@ -14,9 +14,17 @@ const SURFACE_FACTOR: Record<string, number> = {
 // and the A* haversine heuristic remains admissible.
 const REST_STOP_RELIEF = 0.25;
 
-/** 二十五度以下為零,四十度以上為一。 */
-export function heatIndexNorm(tempC: number): number {
-  return Math.max(0, Math.min(1, (tempC - 25) / 15));
+/**
+ * 二十五度以下為零,四十度以上為一。有官警則以其重為底。
+ *
+ * 底而非蓋:溫已逾其底者,從其溫。An alert raises the floor on modelled heat
+ * severity and never caps it — if the thermometer already says worse, the
+ * thermometer wins. The floor only ever RAISES cost, so the A* invariant
+ * (edgeCost >= length_m) is untouched.
+ */
+export function heatIndexNorm(tempC: number, 警之底 = 0): number {
+  const 溫 = Math.max(0, Math.min(1, (tempC - 25) / 15));
+  return Math.max(溫, Math.max(0, Math.min(1, 警之底)));
 }
 
 /** 一邊之實曝。憩息之側減之,然不知者仍以全曝論。 */
@@ -50,9 +58,10 @@ export function edgeCost(
   hourIdx: number,
   tempC: number,
   报之罰?: Map<number, number>,
+  警之底 = 0,
 ): number {
   const sun = effectiveExposure(edge, hourIdx);
-  const heat = heatIndexNorm(tempC);
+  const heat = heatIndexNorm(tempC, 警之底);
   const heatMult = 1 + maxAlpha(flags) * sun * heat;
 
   const surfaceFactor = edge.surface ? SURFACE_FACTOR[edge.surface] ?? 1.2 : 1;

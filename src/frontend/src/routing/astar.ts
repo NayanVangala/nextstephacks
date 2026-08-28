@@ -75,6 +75,7 @@ export function route(
   hourIdx: number,
   tempC: number,
   报之罰?: Map<number, number>,
+  警之底 = 0,
 ): RouteResult | null {
   const adj = buildAdjacency(pack, flags);
   const coords = nodeIndex(pack);
@@ -101,7 +102,7 @@ export function route(
     for (const e of adj.get(cur) ?? []) {
       const nxt = other(e, cur);
       if (settled.has(nxt)) continue;
-      const tentative = (g.get(cur) ?? Infinity) + edgeCost(e, flags, hourIdx, tempC, 报之罰);
+      const tentative = (g.get(cur) ?? Infinity) + edgeCost(e, flags, hourIdx, tempC, 报之罰, 警之底);
       if (tentative < (g.get(nxt) ?? Infinity)) {
         g.set(nxt, tentative);
         cameFrom.set(nxt, { node: cur, edge: e });

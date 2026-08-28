@@ -9,8 +9,13 @@ import { MinHeap } from "./heap";
  * Distinct from cost: cost ranks paths, heat load bounds them. Keeping them
  * separate is what lets a longer shaded detour outrank a short sunny path.
  */
-export function edgeHeatLoad(edge: Edge, hourIdx: number, tempC: number): number {
-  return edge.length_m * effectiveExposure(edge, hourIdx) * heatIndexNorm(tempC);
+export function edgeHeatLoad(
+  edge: Edge,
+  hourIdx: number,
+  tempC: number,
+  警之底 = 0,
+): number {
+  return edge.length_m * effectiveExposure(edge, hourIdx) * heatIndexNorm(tempC, 警之底);
 }
 
 /**
@@ -56,6 +61,7 @@ export function reach(
   hourIdx: number,
   tempC: number,
   budget: number,
+  警之底 = 0,
 ): ReachResult {
   const adj = buildAdjacency(pack, flags);
   const loadByNode = new Map<number, number>();
@@ -77,7 +83,7 @@ export function reach(
     for (const edge of adj.get(cur) ?? []) {
       const next = edge.from === cur ? edge.to : edge.from;
       if (reachableNodes.has(next)) continue;
-      const load = (loadByNode.get(cur) ?? Infinity) + edgeHeatLoad(edge, hourIdx, tempC);
+      const load = (loadByNode.get(cur) ?? Infinity) + edgeHeatLoad(edge, hourIdx, tempC, 警之底);
       if (load > budget) continue; // 逾限則不越
       if (load < (loadByNode.get(next) ?? Infinity)) {
         loadByNode.set(next, load);

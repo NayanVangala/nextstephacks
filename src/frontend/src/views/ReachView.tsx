@@ -4,6 +4,8 @@ import { loadCityPack } from "../data/loadCityPack";
 import { nearestRoutableNode } from "../routing/astar";
 import { reach, reachableDestinations, budgetFor, type ReachResult } from "../routing/reach";
 import { fetchCurrentTempC } from "../data/weather";
+import { 取警, 暑之底, 限之減, 無警之狀, type 警之狀 } from "../data/警";
+import { HeatAlert } from "../components/HeatAlert";
 import { HAZARDS, resolveTemp, type Hazard } from "../data/hazards";
 import { MapCanvas } from "../components/MapCanvas";
 import { ProfilePicker } from "../components/ProfilePicker";
@@ -31,6 +33,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   const [hourIdx, setHourIdx] = useState(AFTERNOON_BUCKET);
   const [hazard, setHazard] = useState<Hazard>(HAZARDS[0]);
   const [liveTemp, setLiveTemp] = useState({ tempC: 24, estimated: true });
+  const [警狀, set警狀] = useState<警之狀>(無警之狀);
   const [budget, setBudget] = useState(budgetFor(NO_PROFILE));
   const [origin, setOrigin] = useState<number | null>(null);
   const [result, setResult] = useState<ReachResult | null>(null);
@@ -48,6 +51,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
     if (!pack) return;
     const [minLon, minLat, maxLon, maxLat] = pack.manifest.bbox;
     fetchCurrentTempC((minLat + maxLat) / 2, (minLon + maxLon) / 2).then(setLiveTemp);
+    取警((minLat + maxLat) / 2, (minLon + maxLon) / 2).then(set警狀);
   }, [pack]);
 
   // 身既易,則慎者之限隨之。
@@ -67,7 +71,9 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
   useEffect(() => {
     if (!pack || origin == null) return;
-    const r = reach(pack, flags, origin, hourIdx, tempC, budget);
+    // 警之下,其限乘減。所減者 HeatAlert 已明言,故人知其所以然。
+    const 實限 = Math.round(budget * 限之減(警狀.警));
+    const r = reach(pack, flags, origin, hourIdx, tempC, 實限, 暑之底(警狀.警));
     setResult(r);
     const dests = reachableDestinations(pack, r);
     const cooling = dests.filter((d) => d.kind === "cooling_center").length;
@@ -78,7 +84,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
         : `${r.reachableNodes.size.toLocaleString()} points reachable. ` +
             "No cooling centre is reachable from here under this scenario.",
     );
-  }, [pack, origin, flags, hourIdx, tempC, budget]);
+  }, [pack, origin, flags, hourIdx, tempC, budget, 警狀]);
 
   const split = useMemo(() => {
     const empty = { reachable: [] as Destination[], unreachable: [] as Destination[] };
@@ -128,6 +134,8 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       >
         {status}
       </p>
+
+      <HeatAlert 狀={警狀} />
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(280px,1fr)_2fr]">
         <div ref={器}>
