@@ -10,10 +10,16 @@ import { useEffect, useRef, useState } from "react";
  *
  * Disabled entirely for reduced-motion and for coarse pointers (no cursor to
  * decorate on a touchscreen).
+ *
+ * 鼠未動則不見。初版置之於屏之中,而屏之中正hero之題所在 ——
+ * 每次入頁,一白圓即坐於 "A GEOMETRY." 之上,至鼠一動而後去。
+ * A decoration that defaces the headline until the visitor happens to move the
+ * mouse is worse than no decoration.
  */
 export function DifferenceCursor() {
   const ref = useRef<HTMLDivElement>(null);
   const [用之, set用之] = useState(false);
+  const [已動, set已動] = useState(false);
 
   useEffect(() => {
     const 減 = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -26,10 +32,18 @@ export function DifferenceCursor() {
     let cx = x;
     let cy = y;
     let raf = 0;
+    let 見過 = false;
 
     const 動 = (e: PointerEvent) => {
       x = e.clientX;
       y = e.clientY;
+      // 初動之時,即置其身於鼠下,不使其自屏心飛來。
+      if (!見過) {
+        見過 = true;
+        cx = x;
+        cy = y;
+        set已動(true);
+      }
     };
     const 幀 = () => {
       // 隨而不即 —— 追之以十分之一,故有拖曳之感。
@@ -49,7 +63,7 @@ export function DifferenceCursor() {
     };
   }, []);
 
-  if (!用之) return null;
+  if (!用之 || !已動) return null;
 
   return (
     <div
