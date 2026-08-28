@@ -13,8 +13,66 @@ export function edgeAllowed(edge: Edge, flags: ProfileFlags): boolean {
   return true;
 }
 
-/** 立鄰接之表。邊無向,故兩端皆錄。 */
+/**
+ * 記所算之圖,憑 (pack, flags)。
+ *
+ * The graph depends on the pack and the profile and NOTHING else, yet it was
+ * being rebuilt from scratch at eight call sites. Measured on the LA pack
+ * (16,304 edges): buildAdjacency 10ms, largestComponent 12ms, so every map
+ * click paid 23ms and every route paid 28ms re-deriving something identical.
+ * Dragging the time slider rebuilt the whole graph on every tick for a value
+ * the graph does not depend on.
+ *
+ * WeakMap on the pack so a city the user switched away from can be collected;
+ * an inner Map on the flag key, of which there are only eight.
+ */
+const 圖之記 = new WeakMap<CityPack, Map<string, Map<number, Edge[]>>>();
+const 分支之記 = new WeakMap<CityPack, Map<string, Set<number>>>();
+
+function 身之鑰(f: ProfileFlags): string {
+  return `${f.wheelchair ? 1 : 0}${f.blind_low_vision ? 1 : 0}${f.heat_sensitive ? 1 : 0}`;
+}
+
+/** 立鄰接之表。邊無向,故兩端皆錄。同 (pack, flags) 者,再呼則取其記。 */
 export function buildAdjacency(pack: CityPack, flags: ProfileFlags): Map<number, Edge[]> {
+  const 鑰 = 身之鑰(flags);
+  let 城之記 = 圖之記.get(pack);
+  if (!城之記) {
+    城之記 = new Map();
+    圖之記.set(pack, 城之記);
+  }
+  const 舊 = 城之記.get(鑰);
+  if (舊) return 舊;
+
+  const adj = 立鄰接(pack, flags);
+  城之記.set(鑰, adj);
+  return adj;
+}
+
+/**
+ * 取最大之連通分支,並記之。
+ *
+ * IMPORTANT: keyed on the pack and flags like the adjacency it derives from.
+ * Callers pass an adjacency they may have built themselves, so this cannot key
+ * on the adjacency object alone without risking a stale answer for a graph that
+ * was rebuilt with different flags.
+ */
+export function 記之分支(pack: CityPack, flags: ProfileFlags): Set<number> {
+  const 鑰 = 身之鑰(flags);
+  let 城之記 = 分支之記.get(pack);
+  if (!城之記) {
+    城之記 = new Map();
+    分支之記.set(pack, 城之記);
+  }
+  const 舊 = 城之記.get(鑰);
+  if (舊) return 舊;
+
+  const 分支 = largestComponent(buildAdjacency(pack, flags));
+  城之記.set(鑰, 分支);
+  return 分支;
+}
+
+function 立鄰接(pack: CityPack, flags: ProfileFlags): Map<number, Edge[]> {
   const adj = new Map<number, Edge[]>();
   const add = (n: number, e: Edge) => {
     const list = adj.get(n);

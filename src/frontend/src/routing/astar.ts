@@ -1,5 +1,5 @@
 import type { CityPack, Edge, ProfileFlags, RouteResult, ItineraryStep } from "../types";
-import { buildAdjacency, nodeIndex, largestComponent } from "./graph";
+import { buildAdjacency, nodeIndex, largestComponent, 記之分支 } from "./graph";
 import { edgeCost, effectiveExposure } from "./cost";
 import { haversineM } from "./geo";
 import { MinHeap } from "./heap";
@@ -38,7 +38,7 @@ export function nearestRoutableNode(
   lon: number,
   lat: number,
 ): number {
-  const component = largestComponent(buildAdjacency(pack, flags));
+  const component = 記之分支(pack, flags);
   return nearestNode(pack, lon, lat, component);
 }
 

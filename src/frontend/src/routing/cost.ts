@@ -83,3 +83,61 @@ export function edgeCost(
 
   return edge.length_m * heatMult * surfaceFactor + slope + crossing + 报罰;
 }
+
+/**
+ * 此路若遲行,可省幾何日曝。
+ *
+ * Re-scores THE SAME path at every hour bucket rather than re-routing at each
+ * one. That is 8 cheap passes over an existing edge list instead of 8 A*
+ * searches (measured: 336ms on the LA pack), and it is also the more honest
+ * question: "this same walk, later" is what a person actually asks. Re-routing
+ * would answer a different question — "a possibly different walk, later" — and
+ * quietly change the route under the advice.
+ */
+export interface 遲行之利 {
+  /** 今之時之曝米。 */
+  今之曝米: number;
+  /** 最善之時之序,並其曝米。 */
+  善之時序: number;
+  善之曝米: number;
+  /** 所省之比,零至一。 */
+  省之比: number;
+}
+
+/** 一路於某時之曝米:長 × 實曝,積之。 */
+export function 路之曝米(edges: Edge[], hourIdx: number): number {
+  let s = 0;
+  for (const e of edges) s += e.length_m * effectiveExposure(e, hourIdx);
+  return s;
+}
+
+export function 算遲行之利(
+  edges: Edge[],
+  hourIdx: number,
+  時數: number,
+): 遲行之利 | null {
+  if (edges.length === 0 || 時數 <= 1) return null;
+  const 今 = 路之曝米(edges, hourIdx);
+  let 善序 = hourIdx;
+  let 善 = 今;
+  for (let h = 0; h < 時數; h++) {
+    const v = 路之曝米(edges, h);
+    // 曝全無者,日已沒也。「待日落而行」非蔭之計 —— 且其省必為十成,
+    // 故不去之則每路皆舉此時,而其言遂無用。
+    // Zero total exposure means the sun is down. Night always wins a
+    // lowest-sun comparison by 100%, so leaving it in makes this advice
+    // constant and therefore worthless. Shade advice is about daylight.
+    if (v <= 0) continue;
+    if (v < 善) {
+      善 = v;
+      善序 = h;
+    }
+  }
+  if (善序 === hourIdx || 今 <= 0) return null;
+  return {
+    今之曝米: 今,
+    善之時序: 善序,
+    善之曝米: 善,
+    省之比: (今 - 善) / 今,
+  };
+}

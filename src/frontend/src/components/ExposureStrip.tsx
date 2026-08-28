@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { animate, stagger } from "motion";
 import type { Edge } from "../types";
+import { 曝之色 } from "../routing/曝之色";
 import { 曲微, 時微, 安動 } from "../motion/预设";
 
 /**
@@ -45,11 +46,6 @@ export function ExposureStrip({
   const 總 = edges.reduce((s, e) => s + e.length_m, 0);
   if (總 === 0) return null;
 
-  const 色 = (曝: number) =>
-    曝 < 0.34 ? "var(--color-shade)"
-      : 曝 < 0.67 ? "var(--color-midsun)"
-        : "var(--color-fullsun)";
-
   return (
     <div className={className}>
       <div
@@ -78,7 +74,7 @@ export function ExposureStrip({
               }
               style={{
                 width: `${(e.length_m / 總) * 100}%`,
-                backgroundColor: 色(曝),
+                backgroundColor: 曝之色(曝),
                 transformOrigin: "left",
               }}
             />

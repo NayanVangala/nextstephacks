@@ -6,6 +6,7 @@ import { ReportView } from "./views/ReportView";
 import { IndexView } from "./views/IndexView";
 import { Landing } from "./landing/Landing";
 import { CITIES, 預設之城 } from "./data/cities";
+import { 解址 } from "./data/路之址";
 import { useEnter } from "./motion/useEnter";
 
 type 之view = "route" | "reach" | "report" | "index";
@@ -18,16 +19,24 @@ const 之tabs: { id: 之view; label: string; blurb: string }[] = [
 ];
 
 export default function App() {
-  const [view, setView] = useState<之view>("route");
-  const [city, setCity] = useState(預設之城);
+  // 址所載之城與 view 先於其預設 —— 分享之鏈必落於其所指之處。
+  const 初 = 解址();
+  const [view, setView] = useState<之view>(
+    (["route", "reach", "report", "index"] as const).includes(初.view as never)
+      ? (初.view as 之view)
+      : "route",
+  );
+  const [city, setCity] = useState(
+    初.city && CITIES.some((c) => c.id === 初.city) ? 初.city : 預設之城,
+  );
   // hash 為路:俾 landing 與 app 各可直連,而不需 router。
-  const [入app, set入app] = useState(() => location.hash === "#/app");
+  const [入app, set入app] = useState(() => location.hash.startsWith("#/app"));
   const 減動 = useReducedMotion();
   // 易 view 或易城,則其面重入 —— 使人知所視者已換。
   const 面 = useEnter<HTMLDivElement>({ 位移: 10, 憑: `${view}|${city}` });
 
   useEffect(() => {
-    const 聽 = () => set入app(location.hash === "#/app");
+    const 聽 = () => set入app(location.hash.startsWith("#/app"));
     addEventListener("hashchange", 聽);
     return () => removeEventListener("hashchange", 聽);
   }, []);

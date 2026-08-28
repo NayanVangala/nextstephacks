@@ -14,6 +14,11 @@ import { ReportList } from "../components/ReportList";
 import { useReports } from "../hooks/useReports";
 import { Button } from "@/components/ui/button";
 import { useEnter } from "../motion/useEnter";
+import { 算遲行之利 } from "../routing/cost";
+import { 阻之故, 阻之文, type 阻之報 } from "../routing/阻";
+import { 解址, 成址, 驗其節 } from "../data/路之址";
+import { 曝之色, 曝之文 } from "../routing/曝之色";
+import { effectiveExposure } from "../routing/cost";
 
 const 午後 = 4; // hour_buckets[4] === 14:00, 暑之極
 
@@ -27,8 +32,12 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   });
   const [hourIdx, setHourIdx] = useState(午後);
   const [temp, setTemp] = useState({ tempC: 24, estimated: true });
+  const 址之初 = useMemo(() => 解址(), []);
   const [origin, setOrigin] = useState<number | null>(null);
   const [dest, setDest] = useState<number | null>(null);
+  // 陳鏈之告。址有節而囊無之,則明言之,不默然歸於空。
+  const [陳鏈, set陳鏈] = useState(false);
+  const [阻, set阻] = useState<阻之報 | null>(null);
   const [result, setResult] = useState<RouteResult | null>(null);
   const [status, setStatus] = useState(可為圖() ? "Select a start point on the map." : "Choose a start point above.");
   const { 报列, 罰, 寫: 寫报事, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
@@ -40,6 +49,20 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   useEffect(() => {
     loadCityPack(cityId).then(setPack).catch((e: Error) => setLoadError(e.message));
   }, [cityId]);
+
+  // 址所載之狀,必待囊至而後驗 —— 囊未至則節之有無不可知。
+  useEffect(() => {
+    if (!pack) return;
+    if (址之初.flags) setFlags(址之初.flags);
+    if (址之初.hourIdx != null && 址之初.hourIdx < pack.manifest.hour_buckets.length) {
+      setHourIdx(址之初.hourIdx);
+    }
+    const 驗 = 驗其節(pack, 址之初.origin, 址之初.dest);
+    if (驗.origin != null) setOrigin(驗.origin);
+    if (驗.dest != null) setDest(驗.dest);
+    if (驗.失之節.length > 0) set陳鏈(true);
+    // 一囊一驗。址之初為 useMemo,其身不變。
+  }, [pack, 址之初]);
 
   useEffect(() => {
     if (!pack) return;
@@ -102,13 +125,43 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             ? ` ${未驗} of ${r.edges.length} segments have unverified accessibility data.`
             : ""),
       );
+      set阻(null);
     } else {
+      // 無路,則問其何以無路。此第二次之尋不設身之限,故必得眾人之路 —— 若亦無,
+      // 則其斷非身之故。此路僅於無路之時算之,故其費不入常途。
+      set阻(阻之故(pack, flags, origin, dest, hourIdx, temp.tempC));
       setStatus(
         "No route exists for this profile between those points. " +
           "The barrier is accessibility, not distance.",
       );
     }
   }, [pack, origin, dest, flags, hourIdx, temp, 罰]);
+
+  // 狀既定,則書之於址。用 replaceState —— 每動一滑桿而增一 history,則返回鍵不可用。
+  useEffect(() => {
+    if (!pack) return;
+    const h = 成址({ city: cityId, view: "route", origin, dest, flags, hourIdx });
+    if (h !== location.hash) history.replaceState(null, "", h);
+  }, [pack, cityId, origin, dest, flags, hourIdx]);
+
+  // 同一路,他時行之,可省幾何。再計其曝而已,不再尋路 —— 八次尋路者三百餘毫秒。
+  const 遲之利 = useMemo(
+    () => (result && pack
+      ? 算遲行之利(result.edges, hourIdx, pack.manifest.hour_buckets.length)
+      : null),
+    [result, hourIdx, pack],
+  );
+
+  // 报事以段之號為鑰,俾行程之每步得問其有报否。
+  const 段之报 = useMemo(() => {
+    const m = new Map<number, typeof 报列>();
+    for (const r of 报列) {
+      const 有 = m.get(r.edge_id);
+      if (有) 有.push(r);
+      else m.set(r.edge_id, [r]);
+    }
+    return m;
+  }, [报列]);
 
   const hourLabel = useMemo(
     () => (pack ? `${String(pack.manifest.hour_buckets[hourIdx]).padStart(2, "0")}:00` : ""),
@@ -146,6 +199,56 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       >
         {status}
       </p>
+
+      {陳鏈 && (
+        <p role="alert" className="mt-2 rounded-lg border border-midsun/40 bg-midsun-soft px-4 py-3 text-sm">
+          <span className="font-semibold">That shared link is out of date.</span>{" "}
+          One or both of its points no longer exist in this city's sidewalk data,
+          which is rebuilt as OpenStreetMap changes. Nothing has been guessed —
+          choose your points again below.
+        </p>
+      )}
+
+      {阻 && (
+        <section
+          aria-label="Why there is no route"
+          className="mt-2 rounded-lg border border-fullsun/40 bg-fullsun-soft px-4 py-3 text-sm"
+        >
+          {阻.眾人亦不可至 ? (
+            <p>
+              These two points are not connected by mapped sidewalk for{" "}
+              <span className="font-semibold">anyone</span>, on any profile. That
+              is a gap in the map or a genuinely severed network, not an
+              accessibility barrier.
+            </p>
+          ) : (
+            <>
+              <p className="font-semibold">
+                An unrestricted walker can make this trip. Your profile cannot,
+                because of{" "}
+                <span className="数">{阻.總數}</span>{" "}
+                {阻.總數 === 1 ? "segment" : "segments"} on that route.
+              </p>
+              <ul className="mt-1.5">
+                {阻.項.map((x) => (
+                  <li key={x.類} className="mt-0.5">
+                    <span className="数 font-semibold">{x.數}</span>{" "}
+                    {x.數 === 1 ? "segment" : "segments"} — {阻之文[x.類]}
+                    {x.類 === "steps" && x.階數 != null && (
+                      <> (<span className="数">{x.階數}</span> steps counted)</>
+                    )}
+                    , <span className="数">{Math.round(x.米)}</span> m in total
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Segment locations are not named here — OpenStreetMap street names
+                are not carried in this city pack.
+              </p>
+            </>
+          )}
+        </section>
+      )}
 
       {temp.estimated && (
         <p role="note" className="mt-2 text-sm text-midsun">
@@ -209,6 +312,20 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           <h2 className="题-accent text-lg font-semibold">Sun along this route</h2>
           <ExposureStrip edges={result.edges} hourIdx={hourIdx} className="mt-2" />
 
+          {遲之利 && 遲之利.省之比 >= 0.1 && pack && (
+            <p className="mt-2 rounded-lg border border-shade/30 bg-shade-soft px-3 py-2 text-sm">
+              Walking this same route at{" "}
+              <span className="数 font-semibold">
+                {String(pack.manifest.hour_buckets[遲之利.善之時序]).padStart(2, "0")}:00
+              </span>{" "}
+              instead would cut your sun exposure by{" "}
+              <span className="数 font-semibold">
+                {Math.round(遲之利.省之比 * 100)}%
+              </span>
+              . This is the same path, later — not a different route.
+            </p>
+          )}
+
           <h2 className="题-accent mt-6 text-lg font-semibold">Directions</h2>
           <p className="text-sm text-muted-foreground">
             <span className="数">{Math.round(result.totalLength_m)}</span> m over{" "}
@@ -227,6 +344,21 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                 <div className="flex items-baseline justify-between gap-3">
                   <span>
                     <span className="数 mr-2 text-muted-foreground">{i + 1}</span>
+                    {/*
+                      曝之條。色不獨任其義 —— step.text 已載其米與其險,
+                      而 title 與 sr-only 並載其文,故色盲與讀屏皆不失。
+                      Colour never carries meaning alone: the bar is decorative
+                      reinforcement of text that already says everything.
+                    */}
+                    <span
+                      aria-hidden
+                      title={曝之文(effectiveExposure(step.edge, hourIdx))}
+                      className="mr-2 inline-block h-2.5 w-5 shrink-0 rounded-sm align-middle"
+                      style={{ backgroundColor: 曝之色(effectiveExposure(step.edge, hourIdx)) }}
+                    />
+                    <span className="sr-only">
+                      {曝之文(effectiveExposure(step.edge, hourIdx))}:{" "}
+                    </span>
                     {step.text}
                   </span>
                   <button
@@ -242,6 +374,19 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                     {报之段 === step.edge.id ? "Selected" : "Report this"}
                   </button>
                 </div>
+                {(段之报.get(step.edge.id) ?? []).length > 0 && (
+                  <p className="mt-1 text-xs text-midsun">
+                    <span className="数 font-semibold">
+                      {段之报.get(step.edge.id)!.length}
+                    </span>{" "}
+                    {段之报.get(step.edge.id)!.length === 1 ? "report" : "reports"} on
+                    this segment —{" "}
+                    {[...new Set(段之报.get(step.edge.id)!.map((r) => r.kind))]
+                      .map((k) => k.replace(/_/g, " "))
+                      .join(", ")}
+                    . Unverified.
+                  </p>
+                )}
               </li>
             ))}
           </ol>
