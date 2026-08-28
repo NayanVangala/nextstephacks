@@ -4,7 +4,6 @@ import { loadCityPack } from "../data/loadCityPack";
 import { route as computeRoute, nearestRoutableNode } from "../routing/astar";
 import { fetchCurrentTempC } from "../data/weather";
 import { MapCanvas } from "../components/MapCanvas";
-import { 可為圖 } from "../components/圖之能";
 import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
 import { ExposureStrip } from "../components/ExposureStrip";
@@ -39,7 +38,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   const [陳鏈, set陳鏈] = useState(false);
   const [阻, set阻] = useState<阻之報 | null>(null);
   const [result, setResult] = useState<RouteResult | null>(null);
-  const [status, setStatus] = useState(可為圖() ? "Select a start point on the map." : "Choose a start point above.");
+  const [status, setStatus] = useState("Select a start point on the map.");
   const { 报列, 罰, 寫: 寫报事, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
   // 左列諸器依序而起,一入而已。易城則重動之。
   const 器 = useEnter<HTMLDivElement>({ 選: ":scope > *", 位移: 12, 間: 0.06, 憑: cityId });
@@ -289,7 +288,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
               setOrigin(null);
               setDest(null);
               setResult(null);
-              setStatus(可為圖() ? "Select a start point on the map." : "Choose a start point above.");
+              setStatus("Select a start point on the map.");
             }}
           >
             Reset points

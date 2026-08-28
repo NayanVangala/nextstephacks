@@ -6,7 +6,6 @@ import { reach, reachableDestinations, budgetFor, type ReachResult } from "../ro
 import { fetchCurrentTempC } from "../data/weather";
 import { HAZARDS, resolveTemp, type Hazard } from "../data/hazards";
 import { MapCanvas } from "../components/MapCanvas";
-import { 可為圖 } from "../components/圖之能";
 import { ProfilePicker } from "../components/ProfilePicker";
 import { TimeSlider } from "../components/TimeSlider";
 import { HazardPicker } from "../components/HazardPicker";
@@ -35,7 +34,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   const [budget, setBudget] = useState(budgetFor(NO_PROFILE));
   const [origin, setOrigin] = useState<number | null>(null);
   const [result, setResult] = useState<ReachResult | null>(null);
-  const [status, setStatus] = useState(可為圖() ? "Select a starting point on the map." : "Choose a starting point above.");
+  const [status, setStatus] = useState("Select a starting point on the map.");
   // 左列諸器依序而起,同 RouteView。
   const 器 = useEnter<HTMLDivElement>({ 選: ":scope > *", 位移: 12, 間: 0.06, 憑: cityId });
 

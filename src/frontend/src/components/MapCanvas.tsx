@@ -1,32 +1,89 @@
 import { useEffect, useRef, useState } from "react";
-import * as maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import type { CityPack, Edge, ProfileFlags, RouteResult } from "../types";
 import { edgeAllowed } from "../routing/graph";
-import { 可為圖 } from "./圖之能";
+import { 曝之色 } from "../routing/曝之色";
 
-// CARTO Positron: 免鑰而可用,且色淡,不奪路線之目。
-const STYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+/**
+ * 圖。Leaflet 而非 MapLibre。
+ *
+ * MapLibre needs WebGL2, and WebGL2 is exactly the assumption that turned this
+ * whole app into a blank white page on machines that do not provide it:
+ * locked-down corporate builds, low-end Android, VMs, remote desktop, and anyone
+ * who disables WebGL to resist fingerprinting. That was found by accident during
+ * a design review, not by testing, which is the part worth remembering.
+ *
+ * Leaflet draws raster tiles as plain <img> and the sidewalk network into a 2D
+ * canvas. No GPU is involved anywhere, so that failure mode does not exist
+ * rather than being handled. It is also roughly 800 KB smaller.
+ *
+ * 所失者:MapLibre 之 line-color interpolate。今每段自定其色 ——
+ * 曝之色() 本已共用於帶與條,故其色不因此而異。
+ */
 
+/**
+ * 二底圖,皆免鑰。
+ *
+ * CARTO was dropped: its free basemap tier gates on API key for production use
+ * and serves a "key required" tile rather than an error, so the map degrades
+ * into a wall of watermarks instead of failing in a way anyone could diagnose.
+ * A dependency that fails by lying is worse than one that fails loudly.
+ *
+ * OSM standard: genuinely keyless. Its usage policy requires an identifying
+ * User-Agent (browsers supply their own) and forbids bulk scraping; a routing
+ * demo over three downtown extracts is well inside it.
+ *
+ * Esri World Imagery: keyless satellite, JPEG, verified to zoom 14+ over all
+ * three study areas. Attribution is required and is set below.
+ */
+const 底圖 = {
+  街: {
+    名: "Street",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    屬: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    最大: 19,
+  },
+  星: {
+    名: "Satellite",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    屬: "Imagery &copy; Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+    最大: 19,
+  },
+} as const;
 
-/** 網之幾何隨 profile 而變,隨時辰而易色。 */
-function networkGeoJSON(
-  pack: CityPack,
+/**
+ * 段之色與粗。不可通者灰而細,可通者隨其曝。
+ *
+ * Blocked segments are drawn, not hidden. A barrier you cannot see is a barrier
+ * you cannot report, and hiding it would make the network look complete.
+ */
+function 段之樣(
+  e: Edge,
   flags: ProfileFlags,
   hourIdx: number,
-): GeoJSON.FeatureCollection<GeoJSON.LineString> {
+  暗底: boolean,
+): L.PathOptions {
+  if (!edgeAllowed(e, flags)) {
+    return {
+      color: 暗底 ? "#e4e4e7" : "#a1a1aa",
+      weight: 暗底 ? 1.4 : 1,
+      opacity: 暗底 ? 0.7 : 0.5,
+      interactive: false,
+    };
+  }
+  const 曝 = e.sun_exposure ? e.sun_exposure[hourIdx] ?? 1 : 1;
   return {
-    type: "FeatureCollection",
-    features: pack.edges.map((e) => ({
-      type: "Feature",
-      properties: {
-        // 不可通者著之以灰,使障礙可見,非隱之。
-        blocked: edgeAllowed(e, flags) ? 0 : 1,
-        exposure: e.sun_exposure ? e.sun_exposure[hourIdx] ?? 1 : 1,
-      },
-      geometry: { type: "LineString", coordinates: e.geometry },
-    })),
+    color: 曝之色(曝),
+    weight: 暗底 ? 2.4 : 1.8,
+    opacity: 暗底 ? 1 : 0.75,
+    interactive: false,
   };
+}
+
+/** leaflet 需 [lat, lon];而囊中所存者 [lon, lat]。此易之。 */
+function 反其座(g: [number, number][]): L.LatLngExpression[] {
+  return g.map(([lon, lat]) => [lat, lon] as L.LatLngExpression);
 }
 
 export function MapCanvas({
@@ -49,13 +106,15 @@ export function MapCanvas({
   onPick: (lon: number, lat: number) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const map = useRef<maplibregl.Map | null>(null);
-  // 圖之不可立者,以其機無 WebGL2 也。此非罕見 —— 舊機、公司之鎖機、虛擬之桌、
-  // 惡指紋而閉之者,皆然。
-  const [圖之誤, set圖之誤] = useState(false);
-  const ready = useRef(false);
-  const markers = useRef<maplibregl.Marker[]>([]);
-  // onPick 藏於 ref,免因其變而重建全圖。
+  const map = useRef<L.Map | null>(null);
+  // 諸層各自為一 —— 更其一不必重立其餘。
+  const 網層 = useRef<L.LayerGroup | null>(null);
+  const 所及層 = useRef<L.LayerGroup | null>(null);
+  const 路層 = useRef<L.LayerGroup | null>(null);
+  const 標層 = useRef<L.LayerGroup | null>(null);
+  const [圖之誤, set圖之誤] = useState<string | null>(null);
+  // 底圖暗則線須加明。星之像暗,淡藍之線幾不可見。
+  const [暗底, set暗底] = useState(false);
   const pickRef = useRef(onPick);
   pickRef.current = onPick;
 
@@ -63,171 +122,119 @@ export function MapCanvas({
     if (!ref.current) return;
     const [minLon, minLat, maxLon, maxLat] = pack.manifest.bbox;
 
-    // MapLibre throws GPUInitializationError from its constructor when WebGL2 is
-    // absent. Uncaught, that exception unwinds through React's commit phase and
-    // unmounts the WHOLE app — the profile picker, the text itinerary, the
-    // reports, everything — leaving a blank page. The map is the one part of
-    // this tool that was always meant to be optional, so its failure must stay
-    // local to itself.
-    if (!可為圖()) {
-      set圖之誤(true);
-      return;
-    }
-
-    let m: maplibregl.Map;
+    let m: L.Map;
     try {
-      m = new maplibregl.Map({
-        container: ref.current,
-        style: STYLE,
-        bounds: [minLon, minLat, maxLon, maxLat],
-        fitBoundsOptions: { padding: 24 },
+      m = L.map(ref.current, {
+        // canvas 之 renderer:萬六千段各為一 SVG 元,則 DOM 不勝其繁。
+        // 此 canvas 乃二維,非 WebGL —— 故仍無所賴於 GPU。
+        preferCanvas: true,
+        zoomControl: true,
+        attributionControl: true,
       });
-    } catch {
-      set圖之誤(true);
+      m.fitBounds([
+        [minLat, minLon],
+        [maxLat, maxLon],
+      ]);
+      // 街為常,星為選。二者並列於 layer control,人自擇之。
+      // Satellite is genuinely useful here and not decoration: shade is modelled
+      // from building footprints, and imagery is how a person checks whether the
+      // buildings casting those shadows are actually there.
+      const 街層 = L.tileLayer(底圖.街.url, {
+        attribution: 底圖.街.屬,
+        maxZoom: 底圖.街.最大,
+        detectRetina: true,
+      }).addTo(m);
+      const 星層 = L.tileLayer(底圖.星.url, {
+        attribution: 底圖.星.屬,
+        maxZoom: 底圖.星.最大,
+      });
+      L.control
+        .layers(
+          { [底圖.街.名]: 街層, [底圖.星.名]: 星層 },
+          undefined,
+          { position: "topright", collapsed: false },
+        )
+        .addTo(m);
+
+      // 星之下,網之色須加其明 —— 淡色之線沒於暗像之中。
+      m.on("baselayerchange", (ev: L.LayersControlEvent) => {
+        set暗底(ev.name === 底圖.星.名);
+      });
+    } catch (誤) {
+      // Leaflet 不賴 GPU,故此路罕至;然容器之高為零、瓦之網斷,皆可致之。
+      set圖之誤(誤 instanceof Error ? 誤.message : String(誤));
       return;
     }
-    m.addControl(new maplibregl.NavigationControl({}), "top-right");
-    m.on("click", (ev: maplibregl.MapMouseEvent) =>
-      pickRef.current(ev.lngLat.lng, ev.lngLat.lat));
 
-    m.on("load", () => {
-      // flags 與 hourIdx 於此為初值,或已陳 —— 其更新賴下之 effect(deps
-      // [pack, flags, hourIdx])。此非疏漏:若入 deps,則每易 profile 或時辰
-      // 皆重建全圖,棄其縮放與位置。下之 effect 為必需,不可去。
-      m.addSource("network", {
-        type: "geojson",
-        data: networkGeoJSON(pack, flags, hourIdx),
-      });
-      m.addLayer({
-        id: "network",
-        type: "line",
-        source: "network",
-        paint: {
-          // 曝愈甚則色愈赤,蔭處則青。障礙則灰。
-          "line-color": [
-            "case",
-            ["==", ["get", "blocked"], 1],
-            "#a1a1aa",
-            [
-              "interpolate", ["linear"], ["get", "exposure"],
-              0, "#1d4ed8",
-              0.5, "#a16207",
-              1, "#dc2626",
-            ],
-          ],
-          "line-width": ["case", ["==", ["get", "blocked"], 1], 1, 1.8],
-          "line-opacity": ["case", ["==", ["get", "blocked"], 1], 0.5, 0.75],
-        },
-      });
+    m.on("click", (ev: L.LeafletMouseEvent) =>
+      pickRef.current(ev.latlng.lng, ev.latlng.lat));
 
-      // 所及之網在路線之下,免其掩之。
-      const emptyFc: GeoJSON.FeatureCollection<GeoJSON.LineString> = {
-        type: "FeatureCollection",
-        features: [],
-      };
-      m.addSource("reach", { type: "geojson", data: emptyFc });
-      m.addLayer({
-        id: "reach",
-        type: "line",
-        source: "reach",
-        paint: { "line-color": "#7c3aed", "line-width": 3, "line-opacity": 0.8 },
-      });
+    網層.current = L.layerGroup().addTo(m);
+    所及層.current = L.layerGroup().addTo(m);
+    路層.current = L.layerGroup().addTo(m);
+    標層.current = L.layerGroup().addTo(m);
+    map.current = m;
 
-      const empty: GeoJSON.Feature<GeoJSON.LineString> = {
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates: [] },
-      };
-      m.addSource("route", { type: "geojson", data: empty });
-      m.addLayer({
-        id: "route-casing",
-        type: "line",
-        source: "route",
-        paint: { "line-color": "#052e16", "line-width": 9, "line-opacity": 0.9 },
-      });
-      m.addLayer({
-        id: "route",
-        type: "line",
-        source: "route",
-        paint: { "line-color": "#22c55e", "line-width": 5 },
-      });
-      ready.current = true;
-    });
-
-    // The map is created before the surrounding grid has settled its columns,
-    // so MapLibre latches onto a stale container size. Observe and re-resize.
-    const ro = new ResizeObserver(() => m.resize());
+    // 容器之寬高,於 grid 未定之時或為零。觀而復量之。
+    const ro = new ResizeObserver(() => m.invalidateSize());
     ro.observe(ref.current);
 
-    if (import.meta.env.DEV) {
-      (window as unknown as { __map?: maplibregl.Map }).__map = m;
-    }
-
-    map.current = m;
     return () => {
       ro.disconnect();
-      ready.current = false;
-      // 去之亦須守。半成之圖 remove 則擲,而 cleanup 之擲直達 React,全樹俱亡。
-      try {
-        m.remove();
-      } catch {
-        // 半成之圖,不可去亦不足害。
-      }
+      m.remove();
       map.current = null;
+      網層.current = null;
+      所及層.current = null;
+      路層.current = null;
+      標層.current = null;
     };
   }, [pack]);
 
   // 網之色隨時辰、隨身而更。
   useEffect(() => {
-    const m = map.current;
-    if (!m || !ready.current) return;
-    const src = m.getSource("network") as maplibregl.GeoJSONSource | undefined;
-    src?.setData(networkGeoJSON(pack, flags, hourIdx));
-  }, [pack, flags, hourIdx]);
+    const g = 網層.current;
+    if (!g) return;
+    g.clearLayers();
+    for (const e of pack.edges) {
+      L.polyline(反其座(e.geometry), 段之樣(e, flags, hourIdx, 暗底)).addTo(g);
+    }
+  }, [pack, flags, hourIdx, 暗底]);
 
   useEffect(() => {
-    const m = map.current;
-    if (!m || !ready.current) return;
-    const src = m.getSource("reach") as maplibregl.GeoJSONSource | undefined;
-    src?.setData({
-      type: "FeatureCollection",
-      features: (reachEdges ?? []).map((e) => ({
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates: e.geometry },
-      })),
-    });
+    const g = 所及層.current;
+    if (!g) return;
+    g.clearLayers();
+    for (const e of reachEdges ?? []) {
+      L.polyline(反其座(e.geometry), {
+        color: "#7c3aed", weight: 3, opacity: 0.8, interactive: false,
+      }).addTo(g);
+    }
   }, [reachEdges]);
 
   useEffect(() => {
-    const m = map.current;
-    if (!m || !ready.current) return;
-    const src = m.getSource("route") as maplibregl.GeoJSONSource | undefined;
-    src?.setData({
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "LineString",
-        // route.polyline 已正其向,不可復用 edges.flatMap —— 後者奔於段末而復返。
-        coordinates: route ? route.polyline : [],
-      },
-    });
+    const g = 路層.current;
+    if (!g) return;
+    g.clearLayers();
+    if (!route) return;
+    // route.polyline 已正其向 —— 段之四分之一逆行,照存之序則線奔而復返。
+    const pts = 反其座(route.polyline);
+    L.polyline(pts, { color: "#052e16", weight: 9, opacity: 0.9, interactive: false }).addTo(g);
+    L.polyline(pts, { color: "#22c55e", weight: 5, interactive: false }).addTo(g);
   }, [route]);
 
   useEffect(() => {
-    const m = map.current;
-    if (!m) return;
-    markers.current.forEach((mk) => mk.remove());
-    markers.current = [];
-    const place = (p: { lon: number; lat: number }, color: string, label: string) => {
-      const mk = new maplibregl.Marker({ color })
-        .setLngLat([p.lon, p.lat])
-        .setPopup(new maplibregl.Popup().setText(label))
-        .addTo(m);
-      markers.current.push(mk);
+    const g = 標層.current;
+    if (!g) return;
+    g.clearLayers();
+    const 置 = (p: { lon: number; lat: number }, 色: string, 名: string) => {
+      L.circleMarker([p.lat, p.lon], {
+        radius: 8, color: "#fff", weight: 2, fillColor: 色, fillOpacity: 1,
+      })
+        .bindTooltip(名)
+        .addTo(g);
     };
-    if (origin) place(origin, "#2563eb", "Start");
-    if (dest) place(dest, "#dc2626", "Destination");
+    if (origin) 置(origin, "#2563eb", "Start");
+    if (dest) 置(dest, "#dc2626", "Destination");
   }, [origin, dest]);
 
   if (圖之誤) {
@@ -236,12 +243,12 @@ export function MapCanvas({
         role="note"
         className="flex h-[42vh] min-h-[300px] w-full flex-col justify-center gap-2 rounded-lg border border-line bg-panel p-6 text-sm md:h-[58vh] md:min-h-[380px]"
       >
-        <p className="font-semibold">The map cannot be drawn on this device.</p>
+        <p className="font-semibold">The map could not be drawn.</p>
         <p className="text-muted-foreground">
-          Maps here need WebGL2, which this browser or machine does not provide.
           Nothing else is affected: choose your start and destination by name
           above, and the full route is written out as a text itinerary below.
         </p>
+        <p className="text-xs text-muted-foreground">{圖之誤}</p>
       </div>
     );
   }

@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import type { CityPack } from "../types";
 import { 可選之地 } from "../report/可選之地";
 import { Button } from "@/components/ui/button";
-import { 可為圖 } from "./圖之能";
 
 /**
  * 起訖之選,可以鍵盤為之。
@@ -105,12 +104,9 @@ export function PlacePicker({
         </>
       )}
 
-      {/* 無圖則不可言「點於圖」—— 界面不得指人以其所無。 */}
-      {可為圖() && (
-        <p className="mt-1 text-xs text-muted-foreground">
-          You can also select a point directly on the map.
-        </p>
-      )}
+      <p className="mt-1 text-xs text-muted-foreground">
+        You can also select a point directly on the map.
+      </p>
     </div>
   );
 }

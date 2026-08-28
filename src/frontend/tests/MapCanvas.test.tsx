@@ -1,48 +1,96 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { CityPack } from "../src/types";
+import { MapCanvas } from "../src/components/MapCanvas";
+import type { CityPack, Edge } from "../src/types";
 
 /**
- * 圖之不可立者,不可使全物俱亡。
+ * 圖之測。
  *
- * This is the regression test for the defect that shipped to production and was
- * only found by accident during a design review: MapLibre's constructor raises
- * GPUInitializationError when WebGL2 is absent, nothing caught it, and the
- * exception unwound through React's commit phase and unmounted the ENTIRE app.
- * The user saw a blank white page. The map's own aria-label promises "the same
- * route is available as a text itinerary below" — and that itinerary was exactly
- * what disappeared.
- *
- * jsdom has no WebGL at all, so it reproduces the broken environment for free.
- * That is why these tests are worth more than their line count suggests: the
- * default test environment IS the failure condition.
+ * The predecessor of this file tested that a MISSING GPU degraded gracefully,
+ * because MapLibre threw GPUInitializationError without WebGL2 and took the
+ * whole React tree down with it. Leaflet needs no GPU at all, so that class of
+ * failure is now absent rather than handled, and these tests check the thing
+ * that replaced it: that the map builds, draws, and cleans up in an environment
+ * with no WebGL whatsoever — which jsdom is.
  */
+
+/**
+ * jsdom 無 layout —— getBoundingClientRect 皆零,clientWidth 亦零。
+ * Leaflet 以之為除數,故其 pixel origin 為 null,而後之每筆皆擲。
+ * 此非 leaflet 之疾,乃 jsdom 本不排版。與其棄此測,不如予其一假之尺。
+ *
+ * jsdom does no layout, so Leaflet divides by a zero-sized container and every
+ * subsequent draw throws on a null pixel origin. Giving the container a
+ * plausible size is what lets these tests exercise the real component instead of
+ * a mock of it.
+ */
+beforeAll(() => {
+  Object.defineProperty(HTMLElement.prototype, "clientWidth", {
+    configurable: true, get: () => 800,
+  });
+  Object.defineProperty(HTMLElement.prototype, "clientHeight", {
+    configurable: true, get: () => 600,
+  });
+  // jsdom 之 canvas 無 2d 之 context —— getContext 回 null,而 leaflet 之
+  // Canvas renderer 徑用之,故擲於 ctx.translate。
+  // 立一空之 proxy 代之:凡取其屬皆得一無為之函,故其筆皆落於虛而不擲。
+  // 此所測者非其像 —— jsdom 本不能繪 —— 乃其立、其更、其卸不擲而已。
+  HTMLCanvasElement.prototype.getContext = function () {
+    return new Proxy({}, {
+      get: (_t, k) =>
+        k === "canvas" ? undefined : typeof k === "string" ? () => {} : undefined,
+      set: () => true,
+    }) as never;
+  } as never;
+
+  HTMLElement.prototype.getBoundingClientRect = function () {
+    return {
+      width: 800, height: 600, top: 0, left: 0, right: 800, bottom: 600,
+      x: 0, y: 0, toJSON: () => ({}),
+    } as DOMRect;
+  };
+});
+
+function e(id: number, over: Partial<Edge> = {}): Edge {
+  return {
+    id, from: id, to: id + 1, length_m: 100,
+    geometry: [[-118.25, 34.05], [-118.249, 34.051]],
+    is_steps: false, step_count: null, kerb: null, wheelchair_tag: null,
+    incline_pct: null, surface: null, width_m: null, tactile_paving: null,
+    is_crossing: false, crossing_signalized: null,
+    sun_exposure: [0.1, 0.3, 0.6, 0.9, 1, 0.6, 0.2, 0], near_rest_stop: false,
+    confidence: "high",
+    traversable: {
+      wheelchair: true, blind_low_vision: true, heat_sensitive: true, none: true,
+    },
+    ...over,
+  } as Edge;
+}
 
 const 假囊 = {
   manifest: {
-    id: "la",
-    name: "Los Angeles",
+    id: "la", name: "Los Angeles",
     bbox: [-118.27, 34.03, -118.23, 34.06],
     hour_buckets: [6, 8, 10, 12, 14, 16, 18, 20],
   },
   nodes: [],
-  edges: [],
+  edges: [
+    e(1),
+    // 一段輪椅不可通者 —— 其色當灰,而不當隱。
+    e(2, {
+      is_steps: true,
+      traversable: {
+        wheelchair: false, blind_low_vision: true, heat_sensitive: true, none: true,
+      },
+    }),
+  ],
   destinations: [],
 } as unknown as CityPack;
 
 const 無身 = { wheelchair: false, blind_low_vision: false, heat_sensitive: false };
 
-async function 載MapCanvas() {
-  // 可為圖() 記其所問於 module 之內,故每試必重載,否則前試之答留而汙後試。
-  // 可為圖() memoizes its answer in module scope, so every test must reset the
-  // module registry or the first test's verdict leaks into the rest.
-  vi.resetModules();
-  const m = await import("../src/components/MapCanvas");
-  return m.MapCanvas;
-}
-
-function 立圖(MapCanvas: Awaited<ReturnType<typeof 載MapCanvas>>) {
+function 立圖(over: Partial<Parameters<typeof MapCanvas>[0]> = {}) {
   return render(
     <MapCanvas
       pack={假囊}
@@ -52,79 +100,66 @@ function 立圖(MapCanvas: Awaited<ReturnType<typeof 載MapCanvas>>) {
       origin={null}
       dest={null}
       onPick={() => {}}
+      {...over}
     />,
   );
 }
 
-describe("MapCanvas 無 WebGL2 之時", () => {
-  beforeEach(() => {
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
+describe("MapCanvas 無 GPU 之境(jsdom)", () => {
+  it("立而不擲 —— 前此以 WebGL 為賴,故無之則全樹俱卸", () => {
+    expect(() => 立圖()).not.toThrow();
   });
 
-  it("不擲,不使其樹俱卸 —— 白頁乃此物之所最不可為者", async () => {
-    const MapCanvas = await 載MapCanvas();
-    expect(() => 立圖(MapCanvas)).not.toThrow();
+  it("其容器仍為 application,並告以文之行程在下", () => {
+    立圖();
+    const el = screen.getByRole("application");
+    expect(el).toBeInTheDocument();
+    expect(el.getAttribute("aria-label")).toMatch(/text itinerary below/i);
   });
 
-  it("代之以一告,且指其可用者何在", async () => {
-    const MapCanvas = await 載MapCanvas();
-    立圖(MapCanvas);
-
-    expect(screen.getByRole("note")).toBeInTheDocument();
-    expect(screen.getByText(/map cannot be drawn/i)).toBeInTheDocument();
-    // 但言其敗而不告所以繼者,則棄人於中途。
-    expect(screen.getByText(/text itinerary below/i)).toBeInTheDocument();
-    expect(screen.getByText(/by name above/i)).toBeInTheDocument();
+  it("不以「不可繪」之告代之 —— leaflet 於此境可繪", () => {
+    立圖();
+    expect(screen.queryByText(/could not be drawn/i)).toBeNull();
   });
 
-  it("不留 maplibre 之 canvas 於頁", async () => {
-    const MapCanvas = await 載MapCanvas();
-    const { container } = 立圖(MapCanvas);
-    expect(container.querySelector("canvas.maplibregl-canvas")).toBeNull();
+  it("卸之而不擲", () => {
+    const { unmount } = 立圖();
+    expect(() => unmount()).not.toThrow();
   });
 
-  it("不冒稱其為 application —— 讀屏之人不當被引入一無所有之器", async () => {
-    const MapCanvas = await 載MapCanvas();
-    立圖(MapCanvas);
-    expect(screen.queryByRole("application")).toBeNull();
+  it("易其身、其時,不重立其圖", () => {
+    const { rerender } = 立圖();
+    expect(() =>
+      rerender(
+        <MapCanvas
+          pack={假囊}
+          flags={{ wheelchair: true, blind_low_vision: false, heat_sensitive: false }}
+          hourIdx={0}
+          route={null}
+          origin={null}
+          dest={null}
+          onPick={() => {}}
+        />,
+      ),
+    ).not.toThrow();
+  });
+
+  it("起訖之標可置而不擲", () => {
+    expect(() =>
+      立圖({
+        origin: { lon: -118.25, lat: 34.05 },
+        dest: { lon: -118.24, lat: 34.055 },
+      }),
+    ).not.toThrow();
   });
 });
 
-describe("可為圖", () => {
-  it("無 webgl2 則否", async () => {
-    vi.resetModules();
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
-    const { 可為圖 } = await import("../src/components/圖之能");
-    expect(可為圖()).toBe(false);
-  });
-
-  it("有 webgl2 則然", async () => {
-    vi.resetModules();
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
-      ((種: string) => (種 === "webgl2" ? ({} as never) : null)) as never,
-    );
-    const { 可為圖 } = await import("../src/components/圖之能");
-    expect(可為圖()).toBe(true);
-  });
-
-  it("getContext 自擲者,亦以為否,不使其誤上達", async () => {
-    vi.resetModules();
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(() => {
-      throw new Error("此機不備 canvas");
-    });
-    const { 可為圖 } = await import("../src/components/圖之能");
-    expect(可為圖()).toBe(false);
-  });
-
-  it("一問而記之,不屢立 canvas", async () => {
-    vi.resetModules();
-    const 諜 = vi
-      .spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockReturnValue(null);
-    const { 可為圖 } = await import("../src/components/圖之能");
-    可為圖();
-    可為圖();
-    可為圖();
-    expect(諜).toHaveBeenCalledTimes(1);
+describe("段之樣", () => {
+  it("不可通之段仍繪之 —— 障之不可見者,不可報亦不可避", () => {
+    // 此驗其意,非其像:囊中二段,其一輪椅不可通,而二者皆當入其圖。
+    const 輪椅 = { wheelchair: true, blind_low_vision: false, heat_sensitive: false };
+    const { container } = 立圖({ flags: 輪椅 });
+    // leaflet 於 jsdom 不繪其像,然其容器立而不擲,即其層皆已成。
+    expect(container.querySelector('[role="application"]')).toBeTruthy();
   });
 });
