@@ -131,4 +131,13 @@ export interface RouteResult {
   totalLength_m: number;
   maxExposure: number;
   itinerary: ItineraryStep[];
+  /**
+   * 已正其向之全線,可徑繪之。
+   *
+   * Edge geometry is stored from->to, but a path traverses roughly a quarter of
+   * its edges to->from. Concatenating the stored order draws a line that jumps
+   * to the far end of each reversed segment and back. Built here because route()
+   * is the only place that knows the traversal direction.
+   */
+  polyline: [number, number][];
 }

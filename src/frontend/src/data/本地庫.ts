@@ -31,6 +31,39 @@ const 建表之語 = `
 
 const 存之鑰 = "passable.报事.db";
 
+/** 所知之状。此外者,皆不可信。 */
+export const 状之所知 = ["unverified", "confirmed", "disputed"] as const;
+export const 类之所知 = [
+  "curb_cut_broken", "sidewalk_blocked", "no_shade", "closed_facility", "other",
+] as const;
+
+/**
+ * 正一报之状与类。
+ *
+ * A report row can reach the app from three places: this device's SQLite, a
+ * remote Supabase pull, or a database file written by an older build of this
+ * app. Only the first is under our control.
+ *
+ * An unrecognised status used to flow straight into the routing penalty table,
+ * where 罰之值[status] is undefined, undefined + n is NaN, and — the part that
+ * makes it silent — Math.max(0, NaN) is NaN, not 0. A NaN edge cost fails every
+ * A* comparison, so the segment is dropped from the graph with no error, no
+ * log, and a different route on screen.
+ *
+ * 不知其状者,以 unverified 论 —— 弃之则失一人所报,而以为已验则过信之。
+ * Unknown status degrades to "unverified": discarding it would lose a real
+ * report, and promoting it to "confirmed" would trust something unvalidated.
+ */
+export function 正一报(r: 报): 报 {
+  const 状 = (状之所知 as readonly string[]).includes(r.status)
+    ? r.status
+    : "unverified";
+  const 类 = (类之所知 as readonly string[]).includes(r.kind) ? r.kind : "other";
+  return 状 === r.status && 类 === r.kind
+    ? r
+    : { ...r, status: 状 as 报["status"], kind: 类 as 报["kind"] };
+}
+
 export interface 庫 {
   增报(r: 报, opts?: { 自remote?: boolean }): Promise<void>;
   取报(city_id: string, edge_id?: number): Promise<报[]>;
@@ -88,7 +121,8 @@ export async function 開庫(
     const st = db.prepare(sql);
     st.bind(參 as never);
     const 出: 报[] = [];
-    while (st.step()) 出.push(列為报(st.get() as unknown[]));
+    // 讀即正之。壞資不入其app,則後之每處不必各自防之。
+    while (st.step()) 出.push(正一报(列為报(st.get() as unknown[])));
     st.free();
     return 出;
   };

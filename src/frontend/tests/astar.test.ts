@@ -166,3 +166,74 @@ describe("maxExposure 當與所算者同基", () => {
     expect(route(p, NONE, 1, 4, 0, 40)!.maxExposure).toBeCloseTo(1, 6);
   });
 });
+
+describe("polyline —— 已正其向之全線", () => {
+  it("逆行之段,其幾何隨行而反", () => {
+    // 二至三之段存為 [3之座, 2之座],而路自二而至三,故必反之。
+    const pack = {
+      manifest: { hour_buckets: [6], bbox: [0, 0, 1, 1] },
+      nodes: [
+        { id: 1, lon: 0, lat: 0 },
+        { id: 2, lon: 0.001, lat: 0 },
+        { id: 3, lon: 0.002, lat: 0 },
+      ],
+      edges: [
+        e(1, 1, 2, { geometry: [[0, 0], [0.001, 0]] }),
+        // from=3 to=2:其幾何自三至二,而路之行自二至三。
+        e(2, 3, 2, { geometry: [[0.002, 0], [0.001, 0]] }),
+      ],
+      destinations: [],
+    } as unknown as CityPack;
+
+    const r = route(pack, NONE, 1, 3, 0, 20);
+    expect(r).not.toBeNull();
+    // 線之首為起,末為訖 —— 若不反其向,則末為 0.002 之前先奔 0.002 而返。
+    expect(r!.polyline[0]).toEqual([0, 0]);
+    expect(r!.polyline[r!.polyline.length - 1]).toEqual([0.002, 0]);
+    // 三節之路,其線三點而已 —— 接處之重點已去。
+    expect(r!.polyline).toHaveLength(3);
+  });
+
+  it("所繪之長合於所行之長 —— 逆段不反則線長於路", () => {
+    const pack = {
+      manifest: { hour_buckets: [6], bbox: [0, 0, 1, 1] },
+      nodes: [
+        { id: 1, lon: 0, lat: 0 },
+        { id: 2, lon: 0.001, lat: 0 },
+        { id: 3, lon: 0.002, lat: 0 },
+      ],
+      edges: [
+        e(1, 1, 2, { geometry: [[0, 0], [0.001, 0]] }),
+        e(2, 3, 2, { geometry: [[0.002, 0], [0.001, 0]] }),
+      ],
+      destinations: [],
+    } as unknown as CityPack;
+
+    const r = route(pack, NONE, 1, 3, 0, 20)!;
+    // 線嚴然單調而東行。有一步西行,即其逆段未反也。
+    for (let i = 1; i < r.polyline.length; i++) {
+      expect(r.polyline[i][0]).toBeGreaterThan(r.polyline[i - 1][0]);
+    }
+  });
+
+  it("接處之點不重 —— 重之則生零長之節", () => {
+    const pack = {
+      manifest: { hour_buckets: [6], bbox: [0, 0, 1, 1] },
+      nodes: [
+        { id: 1, lon: 0, lat: 0 },
+        { id: 2, lon: 0.001, lat: 0 },
+        { id: 3, lon: 0.002, lat: 0 },
+      ],
+      edges: [
+        e(1, 1, 2, { geometry: [[0, 0], [0.001, 0]] }),
+        e(2, 2, 3, { geometry: [[0.001, 0], [0.002, 0]] }),
+      ],
+      destinations: [],
+    } as unknown as CityPack;
+    const r = route(pack, NONE, 1, 3, 0, 20)!;
+    expect(r.polyline).toHaveLength(3);
+    for (let i = 1; i < r.polyline.length; i++) {
+      expect(r.polyline[i]).not.toEqual(r.polyline[i - 1]);
+    }
+  });
+});

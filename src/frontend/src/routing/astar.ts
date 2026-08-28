@@ -133,6 +133,24 @@ export function route(
   );
   const itinerary: ItineraryStep[] = edges.map((e) => ({ text: describe(e), edge: e }));
 
+  /*
+    段之幾何存於囊者,自 from 至 to;而路之行,或自 to 而至 from。
+    照存之序而連之,則其線奔於段末而復返,鋸齒橫生。
+    實測洛城一路:一百六十二段之中,四十三段逆行,最大之跳一百二十四米。
+
+    A quarter of the segments on a real route are traversed to->from. Orient each
+    one to the direction actually walked, and drop the joint point that the next
+    segment repeats, so the line is a single continuous walk.
+  */
+  const polyline: [number, number][] = [];
+  for (let i = 0; i < edges.length; i++) {
+    const e = edges[i];
+    const 順 = e.from === nodeIds[i];
+    const g = 順 ? e.geometry : [...e.geometry].reverse();
+    // 首段全取之;其後各段去其首點 —— 前段之末即此段之首,重之則生零長之節。
+    for (let k = i === 0 ? 0 : 1; k < g.length; k++) polyline.push(g[k]);
+  }
+
   return {
     nodeIds,
     edges,
@@ -140,5 +158,6 @@ export function route(
     totalLength_m: totalLength,
     maxExposure,
     itinerary,
+    polyline,
   };
 }

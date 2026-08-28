@@ -208,7 +208,8 @@ export function MapCanvas({
       properties: {},
       geometry: {
         type: "LineString",
-        coordinates: route ? route.edges.flatMap((e) => e.geometry) : [],
+        // route.polyline 已正其向,不可復用 edges.flatMap —— 後者奔於段末而復返。
+        coordinates: route ? route.polyline : [],
       },
     });
   }, [route]);

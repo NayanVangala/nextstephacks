@@ -56,7 +56,14 @@ export function useReports(city_id: string) {
   const 罰 = useMemo(() => {
     const m = new Map<number, number>();
     for (const r of 报列) {
-      m.set(r.edge_id, (m.get(r.edge_id) ?? 0) + 罰之值[r.status]);
+      // 末守。正一报 已濾其状於庫之口,然此值直入 cost —— NaN 一入,
+      // 其段默然去於圖中。故此處不恃上游而自驗之。
+      // Last line: 正一报 filters at the DB boundary, but this value feeds
+      // edgeCost directly, and one NaN silently removes an edge from the graph.
+      // Do not trust upstream for a value with that blast radius.
+      const v = 罰之值[r.status];
+      if (!Number.isFinite(v) || v < 0) continue;
+      m.set(r.edge_id, (m.get(r.edge_id) ?? 0) + v);
     }
     return m;
   }, [报列]);

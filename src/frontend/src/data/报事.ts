@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { 庫, 报 } from "./本地庫";
+import { 正一报, type 庫, type 报 } from "./本地庫";
 
 const 表 = "报事";
 
@@ -72,7 +72,8 @@ export async function 同步(
       .order("created_at", { ascending: false });
     if (!error && Array.isArray(data)) {
       for (const r of data as 报[]) {
-        await db.增报(r, { 自remote: true });
+        // remote 之列未經 schema 之驗,故必正之而後入。
+        await db.增报(正一报(r), { 自remote: true });
         拉 += 1;
       }
     }
