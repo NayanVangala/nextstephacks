@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SignIn } from "../auth/SignIn";
 
 /**
  * 頂之navigation。
@@ -60,13 +61,19 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
           ))}
         </ul>
 
-        <button
-          type="button"
-          onClick={onEnter}
-          className="rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase text-black transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105 hover:opacity-90"
-        >
-          Open the tool
-        </button>
+        <div className="flex items-center gap-3">
+          {/* 無供給則此全不見 —— 壞鈕劣於無鈕。 */}
+          <div className="hidden lg:block">
+            <SignIn 暗 />
+          </div>
+          <button
+            type="button"
+            onClick={onEnter}
+            className="rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase text-black transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105 hover:opacity-90"
+          >
+            Open the tool
+          </button>
+        </div>
       </nav>
     </header>
   );

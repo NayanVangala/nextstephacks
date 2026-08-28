@@ -7,6 +7,7 @@ import { IndexView } from "./views/IndexView";
 import { Landing } from "./landing/Landing";
 import { CITIES, 預設之城 } from "./data/cities";
 import { 解址 } from "./data/路之址";
+import { SignIn } from "./auth/SignIn";
 import { useEnter } from "./motion/useEnter";
 
 type 之view = "route" | "reach" | "report" | "index";
@@ -111,6 +112,7 @@ export default function App() {
               </option>
             ))}
           </select>
+          <SignIn />
           <button
             type="button"
             onClick={() => {

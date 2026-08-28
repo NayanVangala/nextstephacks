@@ -3,8 +3,16 @@ import { 正一报, type 庫, type 报 } from "./本地庫";
 
 const 表 = "报事";
 
-/** 送於 remote 者。status 不與焉 —— 其值由 RLS 定為 unverified。 */
-function 可送之形(r: 报) {
+/**
+ * 送於 remote 者。status 不與焉 —— 其值由 RLS 定為 unverified。
+ *
+ * reporter_id 為 null 者匿名之报,非缺漏。RLS 之 with check 拒他人之 uuid,
+ * 故此值雖出於 client,不可以之冒他人之名。
+ * A null reporter_id means anonymous, not missing. The RLS WITH CHECK rejects
+ * any uuid that is not the caller's own, so this client-supplied value cannot
+ * be used to attribute a report to someone else.
+ */
+function 可送之形(r: 报, reporterId?: string | null) {
   return {
     id: r.id,
     city_id: r.city_id,
@@ -12,6 +20,7 @@ function 可送之形(r: 报) {
     kind: r.kind,
     note: r.note,
     created_at: r.created_at,
+    reporter_id: reporterId ?? null,
   };
 }
 
@@ -26,11 +35,12 @@ export async function 寫报(
   db: 庫,
   r: 报,
   供: SupabaseClient | null,
+  reporterId?: string | null,
 ): Promise<void> {
   await db.增报(r);
   if (!供) return;
   try {
-    const { error } = await 供.from(表).insert(可送之形(r));
+    const { error } = await 供.from(表).insert(可送之形(r, reporterId));
     if (!error) await db.標已同步([r.id]);
   } catch {
     // 網斷、CORS、任何之敗 —— 报犹在 local 而待同步

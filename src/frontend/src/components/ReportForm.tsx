@@ -109,9 +109,12 @@ export function ReportForm({
       )}
 
       <p className="mt-2 text-xs text-muted-foreground">
-        Reports are anonymous — no account, no location history, no device
-        identifier. A report attaches to a sidewalk segment, never to you. Submitted
-        reports show as unverified until someone confirms them.
+        Reporting is anonymous by default and always will be — no account
+        required, no location history, no device identifier, and a report attaches
+        to a sidewalk segment rather than to you. Signing in is optional: it
+        attributes your reports so someone else can confirm them, which is the
+        only way an unverified report ever becomes a verified one. Submitted
+        reports show as unverified until that happens.
       </p>
     </form>
   );

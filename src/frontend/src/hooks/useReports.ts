@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { 開庫, type 庫, type 报 } from "../data/本地庫";
 import { 得供給 } from "../data/供給";
 import { 寫报, 讀报, 同步 } from "../data/报事";
+import { useAuth } from "../auth/useAuth";
 
 const 供 = 得供給();
 
@@ -17,6 +18,8 @@ export function useReports(city_id: string) {
   const [报列, set报列] = useState<报[]>([]);
   const [同步中, set同步中] = useState(false);
   const [庫之誤, set庫之誤] = useState<string | null>(null);
+  const { 狀: 登入之狀 } = useAuth();
+  const 己身 = 登入之狀.態 === "已登入" ? 登入之狀.session.user.id : null;
 
   useEffect(() => {
     let 已棄 = false;
@@ -41,7 +44,7 @@ export function useReports(city_id: string) {
     async (r: 报): Promise<boolean> => {
       if (!db) return false;
       try {
-        await 寫报(db, r, 供);
+        await 寫报(db, r, 供, 己身);
         set报列(await 讀报(db, city_id));
         return true;
       } catch (e) {
@@ -49,7 +52,7 @@ export function useReports(city_id: string) {
         return false;
       }
     },
-    [db, city_id],
+    [db, city_id, 己身],
   );
 
   // 段之罚。同段数报则累之 —— 报愈多,愈当避之。
