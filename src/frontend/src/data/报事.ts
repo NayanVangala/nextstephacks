@@ -4,7 +4,7 @@ import { 正一报, type 庫, type 报 } from "./本地庫";
 const 表 = "报事";
 
 /**
- * 送於 remote 者。status 不與焉 —— 其值由 RLS 定為 unverified。
+ * 送於 remote 者。status 亦送之 —— 表態賴之。
  *
  * reporter_id 為 null 者匿名之报,非缺漏。RLS 之 with check 拒他人之 uuid,
  * 故此值雖出於 client,不可以之冒他人之名。
@@ -21,6 +21,11 @@ function 可送之形(r: 报, reporterId?: string | null) {
     note: r.note,
     created_at: r.created_at,
     reporter_id: reporterId ?? null,
+    // 表態之状必送之,否则 confirmed/disputed 皆落回 unverified,
+    // 而其报永不能出未验之境 —— 众人之知遂无从相印。
+    // Without this every confirmation silently degrades to 'unverified' on
+    // sync, and no report can ever leave the unverified state.
+    status: r.status,
   };
 }
 

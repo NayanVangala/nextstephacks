@@ -19,6 +19,7 @@ import { 算遲行之利 } from "../routing/cost";
 import { 阻之故, 阻之文, type 阻之報 } from "../routing/阻";
 import { 解址, 成址, 驗其節 } from "../data/路之址";
 import { 曝之色, 曝之文 } from "../routing/曝之色";
+import { 幾時之前 } from "../data/报之重";
 import { effectiveExposure } from "../routing/cost";
 
 const 午後 = 4; // hour_buckets[4] === 14:00, 暑之極
@@ -42,7 +43,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   const [阻, set阻] = useState<阻之報 | null>(null);
   const [result, setResult] = useState<RouteResult | null>(null);
   const [status, setStatus] = useState("Select a start point on the map.");
-  const { 报列, 罰, 寫: 寫报事, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
+  const { 报列, 罰, 段狀, 寫: 寫报事, 表態, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
   // 左列諸器依序而起,一入而已。易城則重動之。
   const 器 = useEnter<HTMLDivElement>({ 選: ":scope > *", 位移: 12, 間: 0.06, 憑: cityId });
   // 所報之段,必由人自擇 —— 前此取路之中者,則报落於無干之段,其罚亦然。
@@ -380,19 +381,63 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                     {报之段 === step.edge.id ? "Selected" : "Report this"}
                   </button>
                 </div>
-                {(段之报.get(step.edge.id) ?? []).length > 0 && (
-                  <p className="mt-1 text-xs text-midsun">
-                    <span className="数 font-semibold">
-                      {段之报.get(step.edge.id)!.length}
-                    </span>{" "}
-                    {段之报.get(step.edge.id)!.length === 1 ? "report" : "reports"} on
-                    this segment —{" "}
-                    {[...new Set(段之报.get(step.edge.id)!.map((r) => r.kind))]
-                      .map((k) => k.replace(/_/g, " "))
-                      .join(", ")}
-                    . Unverified.
-                  </p>
-                )}
+                {(() => {
+                  const st = 段狀.get(step.edge.id);
+                  if (!st || st.總數 === 0) return null;
+                  const 类 = [...new Set(
+                    (段之报.get(step.edge.id) ?? []).map((r) => r.kind),
+                  )].map((k) => k.replace(/_/g, " "));
+                  return (
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                      <span className={st.罰 > 0 ? "text-midsun" : "text-muted-foreground"}>
+                        <span className="数 font-semibold">{st.總數}</span>{" "}
+                        {st.總數 === 1 ? "report" : "reports"}
+                        {st.確認 > 0 && (
+                          <>
+                            {" ("}
+                            <span className="数">{st.確認}</span> confirmed
+                            {st.存疑 > 0 && (
+                              <>
+                                {", "}
+                                <span className="数">{st.存疑}</span> disputed
+                              </>
+                            )}
+                            {")"}
+                          </>
+                        )}
+                        {st.確認 === 0 && st.存疑 > 0 && (
+                          <>
+                            {" ("}
+                            <span className="数">{st.存疑}</span> disputed{")"}
+                          </>
+                        )}
+                        {" — "}
+                        {类.join(", ")}
+                        {st.最新 != null && `, latest ${幾時之前(st.最新)}`}
+                        {/* 罰既歸零,則不當使人以為此段猶避之。 */}
+                        {st.罰 === 0 && " — no longer affecting routing"}
+                      </span>
+                      <span className="flex gap-1.5">
+                        <button
+                          type="button"
+                          disabled={!就緒}
+                          onClick={() => 表態(step.edge.id, "confirmed", step.edge.is_steps ? "other" : "sidewalk_blocked")}
+                          className="min-h-9 rounded-full border border-line px-2.5 text-xs transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-accent-ink hover:text-accent-ink disabled:opacity-50"
+                        >
+                          Still there
+                        </button>
+                        <button
+                          type="button"
+                          disabled={!就緒}
+                          onClick={() => 表態(step.edge.id, "disputed", step.edge.is_steps ? "other" : "sidewalk_blocked")}
+                          className="min-h-9 rounded-full border border-line px-2.5 text-xs transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-accent-ink hover:text-accent-ink disabled:opacity-50"
+                        >
+                          Fixed now
+                        </button>
+                      </span>
+                    </div>
+                  );
+                })()}
               </li>
             ))}
           </ol>

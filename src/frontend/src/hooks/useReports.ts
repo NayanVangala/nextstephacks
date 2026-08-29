@@ -3,15 +3,9 @@ import { 開庫, type 庫, type 报 } from "../data/本地庫";
 import { 得供給 } from "../data/供給";
 import { 寫报, 讀报, 同步 } from "../data/报事";
 import { useAuth } from "../auth/useAuth";
+import { 罰之表, 段之狀 as 算段之狀 } from "../data/报之重";
 
 const 供 = 得供給();
-
-// 未验之报,增之以罚;已验者罚倍之。增而不减,故不变式不破。
-const 罰之值: Record<报["status"], number> = {
-  unverified: 150,
-  confirmed: 400,
-  disputed: 0,
-};
 
 export function useReports(city_id: string) {
   const [db, setDb] = useState<庫 | null>(null);
@@ -55,21 +49,54 @@ export function useReports(city_id: string) {
     [db, city_id, 己身],
   );
 
-  // 段之罚。同段数报则累之 —— 报愈多,愈当避之。
-  const 罰 = useMemo(() => {
-    const m = new Map<number, number>();
+  // 段之罚。眾則益之,久則衰之,爭則損之 —— 其法在 报之重.ts。
+  // 前此但累其数而不问其时其争,故去岁之报与今日者同重。
+  const 罰 = useMemo(() => 罰之表(报列), [报列]);
+
+  /** 一段之狀。示於行程之每步,俾人自斷其可信。 */
+  const 段狀 = useMemo(() => {
+    const 聚 = new Map<number, typeof 报列>();
     for (const r of 报列) {
-      // 末守。正一报 已濾其状於庫之口,然此值直入 cost —— NaN 一入,
-      // 其段默然去於圖中。故此處不恃上游而自驗之。
-      // Last line: 正一报 filters at the DB boundary, but this value feeds
-      // edgeCost directly, and one NaN silently removes an edge from the graph.
-      // Do not trust upstream for a value with that blast radius.
-      const v = 罰之值[r.status];
-      if (!Number.isFinite(v) || v < 0) continue;
-      m.set(r.edge_id, (m.get(r.edge_id) ?? 0) + v);
+      const 有 = 聚.get(r.edge_id);
+      if (有) 有.push(r);
+      else 聚.set(r.edge_id, [r]);
     }
+    const m = new Map<number, ReturnType<typeof 算段之狀>>();
+    for (const [id, 列] of 聚) m.set(id, 算段之狀(列));
     return m;
   }, [报列]);
 
-  return { 报列, 罰, 寫, 同步中, 庫之誤, 就緒: db !== null, 供給有無: 供 !== null };
+  /**
+   * 確認或存疑一段之报。
+   *
+   * A confirmation is a NEW row, never an edit of the existing one. The reports
+   * table has no UPDATE policy on purpose: if a confirmed report could have its
+   * text changed afterwards, the confirmation would vouch for something nobody
+   * read. Filing a fresh row keeps every judgement attributable to whoever made
+   * it and to when.
+   */
+  const 表態 = useCallback(
+    async (edge_id: number, 態: "confirmed" | "disputed", kind: 报["kind"]): Promise<boolean> => {
+      if (!db) return false;
+      try {
+        await 寫报(db, {
+          id: crypto.randomUUID(),
+          city_id, edge_id, kind, note: null,
+          status: 態,
+          created_at: new Date().toISOString(),
+        }, 供, 己身);
+        set报列(await 讀报(db, city_id));
+        return true;
+      } catch (e) {
+        set庫之誤((e as Error).message);
+        return false;
+      }
+    },
+    [db, city_id, 己身],
+  );
+
+  return {
+    报列, 罰, 段狀, 寫, 表態, 同步中, 庫之誤,
+    就緒: db !== null, 供給有無: 供 !== null,
+  };
 }
