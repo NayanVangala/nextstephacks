@@ -368,12 +368,34 @@ html:has(.landing) body {
   border-width: 0;
 }
 
-/* 節之題,前置一豎。色止於此 —— 微而可辨,不奪其文。 */
+/*
+  節之題,前置一豎。色止於此 —— 微而可辨,不奪其文。
+
+  impeccable 之 side-tab 屢指此處。其規所禁者,卡之一側加粗色之邊 ——
+  生成之界面最易辨之跡也。而此非卡,乃題前之一豎,施於十一 h2,為標點之屬。
+  其真犯此規者本在 tsx(RouteView 與 ReachView 之狀報,四邊有框而左加三像素之藍),
+  已去之,不抑之。
+
+  前此以 config 抑之,而其 files 之路相對於庫根,其 config 乃在 src/frontend/src,
+  故終不合(detector 以 process.cwd() 讀之)。今以行內之註抑之:
+  其註隨其檔而行,不繫於 cwd,亦不繫於 config 之所在,且其由即在其側。
+
+  Flagged repeatedly by impeccable's side-tab rule, which targets a thick
+  coloured border on one side of a CARD. This is not a card — it is a 3px mark
+  before eleven section headings, closer to punctuation. The genuine card
+  instance was in TSX and was removed rather than suppressed.
+
+  Suppressed inline rather than via config: the earlier config entry stored a
+  repo-root-relative path in a config living at src/frontend/src, and the
+  detector resolves against process.cwd(), so it never matched. An inline
+  comment travels with the file and states its reason where the code is.
+*/
 .题-accent {
   position: relative;
   padding-left: 0.7rem;
 }
 
+/* impeccable-disable-next-line side-tab -- heading rule mark, not a card edge */
 .题-accent::before {
   content: "";
   position: absolute;
