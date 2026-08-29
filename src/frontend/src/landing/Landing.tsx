@@ -127,8 +127,15 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
   // 捲即時 —— 全頁之界與記,隨其所至而行於曝之階。
   const 頁 = useRef<HTMLDivElement>(null);
   useSunScroll(頁);
+  /*
+    其地由 index.css 之 .landing 主之,此不復書 bg-black —— 前此並書之,
+    雖為其 CSS 所勝(彼不在 layer 中),而讀者見之必以為黑。一物一處書之。
+    The ground lives in index.css's .landing rule. The className also said
+    bg-black, which lost to that unlayered rule but would mislead anyone reading
+    the component — and would silently win back if the CSS ever moved into a layer.
+  */
   return (
-    <div ref={頁} className="landing bg-black text-white">
+    <div ref={頁} className="landing text-white">
       <DifferenceCursor />
       <Nav onEnter={onEnter} />
       <ScrollThread 節數={4} />
@@ -178,16 +185,16 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               <button
                 type="button"
                 onClick={onEnter}
-                className="rounded-full bg-white px-8 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.03] hover:opacity-90"
+                className="rounded-full bg-white px-8 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
               >
                 Open the tool
               </button>
               <a
                 href="#what"
-                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-white"
+                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-quint hover:border-white"
               >
                 How it works
-                <span aria-hidden className="transition-transform duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-y-1">↓</span>
+                <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-y-1">↓</span>
               </a>
             </div>
           </Reveal>
@@ -296,7 +303,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <ReachField />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.55)_42%,rgba(0,0,0,0.15)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(6,8,12,0.88)_0%,rgba(6,8,12,0.55)_42%,rgba(6,8,12,0.15)_100%)]"
         />
         <div className="relative">
           <SplitText as="h2" text="NOW WALK IT."
@@ -306,16 +313,16 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               <button
                 type="button"
                 onClick={onEnter}
-                className="rounded-full bg-white px-10 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.03] hover:opacity-90"
+                className="rounded-full bg-white px-10 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
               >
                 Open the tool
               </button>
               <a
                 href="https://github.com/NayanVangala/nextstephacks"
-                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-white"
+                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-quint hover:border-white"
               >
                 Read the source
-                <span aria-hidden className="transition-transform duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1">→</span>
+                <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-x-1">→</span>
               </a>
             </div>
           </Reveal>

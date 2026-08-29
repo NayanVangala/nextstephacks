@@ -31,8 +31,8 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-        實 ? "bg-black/85 backdrop-blur-sm" : "bg-transparent"
+      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ease-quint ${
+        實 ? "bg-[#0e1116]/85 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
       <nav
@@ -41,7 +41,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
       >
         <a
           href="#top"
-          className="text-sm font-semibold uppercase transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:opacity-60"
+          className="text-sm font-semibold uppercase transition-opacity duration-150 ease-quint hover:opacity-60"
         >
           Passable
         </a>
@@ -53,7 +53,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="text-xs uppercase text-white/70 transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:text-white hover:opacity-100"
+                className="text-xs uppercase text-white/70 transition-opacity duration-150 ease-quint hover:text-white hover:opacity-100"
               >
                 {s.label}
               </a>
@@ -69,7 +69,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
           <button
             type="button"
             onClick={onEnter}
-            className="rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase text-black transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105 hover:opacity-90"
+            className="rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-105 hover:opacity-90"
           >
             Open the tool
           </button>

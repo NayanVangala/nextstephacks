@@ -55,7 +55,7 @@ export function SignIn({ 暗 = false }: { 暗?: boolean }) {
         <button
           type="button"
           onClick={登出}
-          className={`min-h-11 rounded-full border px-4 text-xs font-semibold uppercase transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] ${邊}`}
+          className={`min-h-11 rounded-full border px-4 text-xs font-semibold uppercase transition-colors duration-150 ease-quint ${邊}`}
         >
           Sign out
         </button>
@@ -69,7 +69,7 @@ export function SignIn({ 暗 = false }: { 暗?: boolean }) {
         <button
           type="button"
           onClick={() => 登入("google")}
-          className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-semibold transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.03] ${邊}`}
+          className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-semibold transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] ${邊}`}
         >
           <GoogleMark />
           Continue with Google
@@ -77,7 +77,7 @@ export function SignIn({ 暗 = false }: { 暗?: boolean }) {
         <button
           type="button"
           onClick={() => 登入("github")}
-          className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-semibold transition-[opacity,scale] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.03] ${邊}`}
+          className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-semibold transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] ${邊}`}
         >
           <GitHubMark />
           Continue with GitHub

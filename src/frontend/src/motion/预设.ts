@@ -1,11 +1,32 @@
 /**
- * 動之常數。二曲三時,取於 Palomino:微動用「曲微」,大動用「曲巨」。
+ * 動之常數。二曲三時。
  *
  * 所動者惟 transform 與 opacity。二者行於 compositor,不觸 layout,
  * 故羸弱之機但失幀,不致全頁之滯。
+ *
+ * ── 曲何以改 ────────────────────────────────────────────────────────
+ * 曲微本 [0.4,0,0.2,1],即 Material 之常曲,亦天下最泛之曲。其為 ease-IN-out:
+ * 起而遲。凡懸、按之應,遲於其始者,人覺其鈍 —— 手已動而物未應。
+ * 應者當即起而徐止,故取 ease-out 之屬。
+ *
+ * 二證相合:量 incredibles.dev,其三十一處皆用 cubic-bezier(0.23,1,0.32,1);
+ * 而 ui-ux-pro-max 所薦者 Expo.out (0.16,1,0.3,1) —— 同族也。
+ *
+ * The old 曲微 was Material's standard curve, which is ease-IN-out: it starts
+ * slow. For hover and press feedback that reads as lag — the hand has moved and
+ * the thing has not answered yet. Feedback should leave immediately and settle
+ * slowly, which is ease-out. Two independent sources agree: incredibles.dev uses
+ * cubic-bezier(0.23,1,0.32,1) on 31 elements, and ui-ux-pro-max recommends
+ * Expo.out (0.16,1,0.3,1) — the same family.
+ *
+ * 此為全app曲之所出,CSS 之 --ease-quint 亦同其值。前此二處各書其曲
+ * (预设.ts 與 landing/motion.tsx),名互倒而值同,是二本也 —— 今歸於一。
+ * SINGLE SOURCE. These were previously duplicated in landing/motion.tsx under
+ * transposed names with identical values, which is exactly how two curves drift
+ * apart. The CSS token --ease-quint carries the same value for Tailwind classes.
  */
-export const 曲微 = [0.4, 0, 0.2, 1] as const;
-export const 曲巨 = [0.3, 1, 0.7, 1] as const;
+export const 曲微 = [0.23, 1, 0.32, 1] as const;
+export const 曲巨 = [0.19, 1, 0.22, 1] as const;
 
 export const 時微 = 0.22;
 export const 時中 = 0.42;

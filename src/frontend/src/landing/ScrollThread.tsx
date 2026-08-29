@@ -86,7 +86,7 @@ export function ScrollThread({ 節數 = 4 }: { 節數?: number }) {
               cy={y}
               r={過 ? 3 : 2}
               fill={過 ? "#fff" : "rgba(255,255,255,0.28)"}
-              className="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+              className="transition-all duration-300 ease-quint"
             />
           );
         })}

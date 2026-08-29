@@ -672,3 +672,22 @@ label[for],
 summary {
   cursor: pointer;
 }
+
+/*
+  ── 曲之籤 ──────────────────────────────────────────────────────────
+  前此二十處各書 ease-quint 於其 className,
+  散於六檔 —— 一曲而二十本,改其一則餘十九不從。今立一籤而盡之。
+
+  其值與 motion/预设.ts 之曲微同。JS 之動與 CSS 之動,不可異其律。
+
+  Twenty hand-written copies of the same magic bezier across six files: change
+  one and nineteen stay behind. This token replaces all of them and carries the
+  same value as 曲微 in motion/预设.ts, so JS-driven and CSS-driven motion on the
+  same page share one rhythm.
+
+  ease-out,非 ease-in-out —— 應者當即起而徐止。見 预设.ts 之註。
+*/
+@theme {
+  --ease-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}

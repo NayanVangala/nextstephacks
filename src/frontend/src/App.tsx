@@ -91,7 +91,7 @@ export default function App() {
               type="button"
               onClick={退}
               aria-label="Passable — back to the overview"
-              className="text-sm font-semibold uppercase tracking-wide transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:opacity-60"
+              className="text-sm font-semibold uppercase tracking-wide transition-opacity duration-150 ease-quint hover:opacity-60"
             >
               Passable
             </button>
@@ -107,7 +107,7 @@ export default function App() {
               onChange={(ev) => setCity(ev.target.value)}
               // 其單亦須從其色,不然則白底黑字之單躍於黑帶之上。
               style={{ colorScheme: "dark" }}
-              className="-ml-1 min-h-9 rounded-md border border-transparent bg-transparent px-1.5 py-1 text-sm font-medium transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-white/25 hover:bg-white/10"
+              className="-ml-1 min-h-9 rounded-md border border-transparent bg-transparent px-1.5 py-1 text-sm font-medium transition-colors duration-150 ease-quint hover:border-white/25 hover:bg-white/10"
             >
               {CITIES.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -132,7 +132,7 @@ export default function App() {
                     onClick={() => setView(t.id)}
                     aria-current={當 ? "page" : undefined}
                     title={t.blurb}
-                    className={`relative min-h-11 rounded-t-md px-3 py-2 text-sm transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] sm:px-4 ${
+                    className={`relative min-h-11 rounded-t-md px-3 py-2 text-sm transition-colors duration-200 ease-quint sm:px-4 ${
                       當
                         ? "font-semibold text-white"
                         : "text-white/55 hover:bg-white/10 hover:text-white"

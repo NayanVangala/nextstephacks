@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion, type Variants } from "motion/react";
+import { 曲巨 as 巨曲 } from "../motion/预设";
 import type { ReactNode } from "react";
 
 /**
@@ -25,8 +26,14 @@ import type { ReactNode } from "react";
  * text cannot be read.
  */
 
-export const 微曲 = [0.4, 0, 0.2, 1] as const;
-export const 巨曲 = [0.3, 1, 0.7, 1] as const;
+/*
+  曲不自立,取於 motion/预设(見上之 import)—— 前此此處與彼處各書其曲,
+  值同而名互倒,是一物而二本。二本者必離,離則同一頁之動不復同其律。
+  微曲本亦在此,而無一處用之,故並去之。
+  Previously duplicated in motion/预设.ts under transposed names with identical
+  values — which is how two curves silently drift apart and one page ends up
+  animating to two rhythms. The 微曲 export had no consumers and is gone.
+*/
 
 const 保底之時 = 1800;
 
