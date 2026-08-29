@@ -119,11 +119,11 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   return (
     <main className="py-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Reach — {pack.manifest.name}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Reach</h1>
+        {/* 其問已在頂帶,此不復問,但言其法與其度。 */}
         <p className="mt-0.5 text-sm text-muted-foreground">
-          What can you actually get to, and can you get out?
+          Everywhere within a distance or sun-exposure budget from one point —
+          and what a heat emergency or transit outage takes out of it.
         </p>
       </header>
 
@@ -138,7 +138,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       <HeatAlert 狀={警狀} />
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(280px,1fr)_2fr]">
-        <div ref={器}>
+        <div ref={器} className="rounded-xl border border-line bg-paper p-4">
           <PlacePicker
             pack={pack}
             label="Starting point"

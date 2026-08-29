@@ -61,9 +61,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
   return (
     <main className="py-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Report — {pack.manifest.name}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Report</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Where this city fails its disabled residents, measured on{" "}
           {pack.edges.length.toLocaleString()} sidewalk segments.

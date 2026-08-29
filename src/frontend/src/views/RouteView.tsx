@@ -12,6 +12,7 @@ import { ExposureStrip } from "../components/ExposureStrip";
 import { PlacePicker } from "../components/PlacePicker";
 import { ReportForm } from "../components/ReportForm";
 import { ReportList } from "../components/ReportList";
+import { MetricCard } from "../components/MetricCard";
 import { useReports } from "../hooks/useReports";
 import { Button } from "@/components/ui/button";
 import { useEnter } from "../motion/useEnter";
@@ -157,6 +158,32 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     [result, hourIdx, pack],
   );
 
+  /*
+    路之四數。其長與其曝,文中已載,然埋於句中 —— 數之大者當先見,而後其文釋之。
+    The route's numbers already existed in prose ("Route found: 1,240 m, peak sun
+    exposure 62%") where they read as sentence, not as measurement. Every value
+    here is one the reader is deciding on.
+
+    蔭之界取零點三四,與曝之色同 —— 帶與數不可異其語,不然則所畫與所數相違。
+    The 0.34 threshold is 曝之色's, deliberately: the strip below this row is
+    painted with the same cut, so a different one here would make the picture and
+    the number disagree on screen.
+  */
+  const 路之數 = useMemo(() => {
+    if (!result) return null;
+    const 總 = result.totalLength_m;
+    const 蔭米 = result.edges.reduce(
+      (s, e) => s + (effectiveExposure(e, hourIdx) < 0.34 ? e.length_m : 0),
+      0,
+    );
+    return {
+      長: 總 >= 1000 ? `${(總 / 1000).toFixed(1)} km` : `${Math.round(總)} m`,
+      峰: `${Math.round(result.maxExposure * 100)}%`,
+      蔭: 總 > 0 ? `${Math.round((蔭米 / 總) * 100)}%` : "—",
+      未驗: result.edges.filter((e) => e.confidence !== "high").length,
+    };
+  }, [result, hourIdx]);
+
   // 报事以段之號為鑰,俾行程之每步得問其有报否。
   const 段之报 = useMemo(() => {
     const m = new Map<number, typeof 报列>();
@@ -187,10 +214,9 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
   return (
     <main className="py-6">
+      {/* 城之名已在頂帶,不復言之。 */}
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Passable — {pack.manifest.name}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Route</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Heat-safe, step-free walking routes over{" "}
           <span className="数">{pack.edges.length.toLocaleString()}</span> sidewalk segments.
@@ -265,7 +291,13 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       )}
 
       <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(260px,1fr)_2fr]">
-        <div ref={器}>
+        {/*
+          諸器共一地。前此各浮於頁,而其中獨 profile 有框,故如散置而非一列。
+          The controls previously floated loose on the page background with only
+          the profile fieldset bordered, which read as accidental rather than as
+          one panel of inputs.
+        */}
+        <div ref={器} className="rounded-xl border border-line bg-paper p-4">
           <PlacePicker
             pack={pack}
             label="Start"
@@ -313,6 +345,22 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           onPick={onPick}
         />
       </div>
+
+      {路之數 && result && (
+        <section
+          aria-label="Route summary"
+          className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          <MetricCard 題="Distance" 數={路之數.長} 註={`${result.edges.length} segments`} />
+          <MetricCard 題="Peak sun exposure" 數={路之數.峰} 註={`at ${hourLabel}`} />
+          <MetricCard 題="Shaded" 數={路之數.蔭} 註="of route length" />
+          <MetricCard
+            題="Unverified segments"
+            數={String(路之數.未驗)}
+            註="accessibility not tagged in OpenStreetMap"
+          />
+        </section>
+      )}
 
       {result && (
         <section aria-label="Route detail" className="mt-6">

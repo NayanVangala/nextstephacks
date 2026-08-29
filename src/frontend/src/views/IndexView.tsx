@@ -86,9 +86,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
   if (!pack.index) {
     return (
       <main className="py-6" ref={面}>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Index — {pack.manifest.name}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Index</h1>
         <p role="note" className="mt-4 rounded-lg border border-line bg-panel p-4 text-sm">
           <span className="font-semibold">Not computed for this city.</span>{" "}
           The block-group index needs Census boundary and income data, and that
@@ -112,9 +110,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
 
   return (
     <main className="py-6" ref={面}>
-      <h1 className="text-2xl font-semibold tracking-tight">
-        Index — {pack.manifest.name}
-      </h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Index</h1>
       <p className="mt-0.5 text-sm text-muted-foreground">
         Every census block group in the study area, ranked by how much of its
         step-free sidewalk actually connects to the rest of the city.

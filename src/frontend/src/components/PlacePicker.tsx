@@ -57,7 +57,7 @@ export function PlacePicker({
   };
 
   return (
-    <div className="my-3">
+    <div className="mb-4">
       <label htmlFor={id} className="mb-1 block text-sm font-semibold">
         {label}
       </label>
