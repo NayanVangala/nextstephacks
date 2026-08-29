@@ -47,6 +47,18 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   const { 报列, 罰, 段狀, 寫: 寫报事, 表態, 同步中, 庫之誤, 就緒, 供給有無 } = useReports(cityId);
   // 左列諸器依序而起,一入而已。易城則重動之。
   const 器 = useEnter<HTMLDivElement>({ 選: ":scope > *", 位移: 12, 間: 0.06, 憑: cityId });
+  /*
+    四數依序而起,以識其為新得之答。
+    其憑但取起訖,不取時序 —— 曳其桿則時序逐格而變,若并憑之,
+    則每格一動,是以動擾其用,非以動助其讀。新路乃為新答,易時非也。
+    Keyed on origin/destination only, NOT the hour. The hour changes on every
+    step of a slider drag, and re-running a stagger on each step would animate
+    over someone mid-interaction. A new route is a new answer; a new hour is the
+    same answer re-read.
+  */
+  const 數列 = useEnter<HTMLDivElement>({
+    選: ":scope > *", 位移: 8, 間: 0.05, 憑: `${origin}|${dest}`,
+  });
   // 所報之段,必由人自擇 —— 前此取路之中者,則报落於無干之段,其罚亦然。
   const [报之段, set报之段] = useState<number | null>(null);
 
@@ -348,6 +360,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       {路之數 && result && (
         <section
+          ref={數列}
           aria-label="Route summary"
           className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
         >

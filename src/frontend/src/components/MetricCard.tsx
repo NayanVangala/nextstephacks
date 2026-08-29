@@ -10,7 +10,13 @@ export function MetricCard({
   註?: string;
 }) {
   return (
-    <Card className="gap-0 px-4 py-3.5">
+    /*
+      懸則其界稍明。無影 —— 所法者舉site無一 box-shadow,而此樹亦然。
+      所易者惟其色,故不移其位,亦不使其鄰重排。
+      A border lift on hover, not a shadow: the reference uses none anywhere and
+      neither does this app. Colour-only, so nothing shifts or reflows.
+    */
+    <Card className="gap-0 border-line px-4 py-3.5 transition-colors duration-200 ease-quint hover:border-muted-foreground/40">
       {/* 籤為刻,故等寬;而其註為語,故仍其常 —— 註者句也,非刻也。 */}
       <div className="籤 text-muted-foreground">{題}</div>
       {/*
