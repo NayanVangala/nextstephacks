@@ -128,3 +128,70 @@ export function RevealItem({
     </motion.div>
   );
 }
+
+/**
+ * 一橫界,隨其入而自左至右畫之。
+ *
+ * 諸節皆升入(縱),故其節奏一律。此界橫行,故其節自別於其餘 ——
+ * 所變者軸,非所加者效。四節各施一效,則此頁為效之集;
+ * 一節易其軸,則其節可辨而頁猶為一物。
+ *
+ * Every other reveal on this page moves vertically, which is why four sections
+ * read as one. This one draws horizontally: the section changes axis rather than
+ * acquiring a different effect. Four sections with four effects would be a
+ * collection of effects; one section on a different axis is still one page.
+ *
+ * 用 useRevealState,故其保底之時同 —— 觀察者不報,亦必現。
+ * Shares useRevealState, so it inherits the 1800ms timeout: if
+ * IntersectionObserver never fires (hidden document, background tab, full-page
+ * screenshot) the rule still appears rather than staying at scaleX(0) forever.
+ */
+export function RevealRule({ className = "" }: { className?: string }) {
+  const 減 = useReducedMotion();
+  const { ref, 現 } = useRevealState<HTMLDivElement>();
+  /*
+    ── 何以不用 framer ────────────────────────────────────────────────
+    framer 之動,亦賴 requestAnimationFrame。頁隱、tab 在背、全頁截圖之際,
+    rAF 不行,則其物永停於 initial —— 即 scaleX(0),界遂全不見。
+    量之於真 browser:八界之中,五者停於 matrix(0,0,0,1,0,0)。
+    此正此頁已犯再三之疾,不可以一界之飾復蹈之。
+
+    CSS 之 transform 則不然:狀既定,其終值即刻著於其樣,
+    動之行與不行,不改其所終。動可失,而其物不可失。
+
+    NOT framer-motion: its animation loop is rAF-driven, so in a hidden document,
+    a background tab, or a full-page screenshot the element stays at its initial
+    scaleX(0) and the rules simply never appear. Measured in a real browser, five
+    of eight were stuck collapsed. This page has shipped that exact bug twice
+    already and a decorative hairline is not worth a third.
+
+    A CSS transform commits its end value to computed style the moment the state
+    flips, whether or not the transition ever gets a frame to run in. The
+    animation is allowed to be lost; the rule is not.
+  */
+  /*
+    頁隱則即現,不待其觀察者,亦不待其計時。
+    量之於真 browser:document.hidden 之時,此頁二十三物停於 opacity 0,
+    而上文所稱之「保底之時」實不能救之 —— 其狀雖易,而 framer 賴 rAF 以著其樣,
+    rAF 於隱頁不行,故其樣終不著。此界既以 CSS 為之,不賴 rAF,
+    然其狀猶賴其計時,故此更加一途:頁隱者,徑現之。
+    Measured: with document.hidden, 23 elements on this page sit at opacity 0 and
+    the 1800ms fallback does NOT rescue them. This rule uses CSS rather than
+    framer so its committed style does not need a frame, but its STATE still
+    comes from that same timer — so a hidden document reveals it outright.
+    A divider must never be missing because an animation could not run.
+  */
+  const 隱 = typeof document !== "undefined" && document.hidden;
+  return (
+    <div
+      ref={ref}
+      aria-hidden
+      className={className}
+      style={{
+        transformOrigin: "left",
+        transform: 減 || 現 || 隱 ? "scaleX(1)" : "scaleX(0)",
+        transition: 減 ? undefined : "transform 700ms cubic-bezier(0.3, 1, 0.7, 1)",
+      }}
+    />
+  );
+}

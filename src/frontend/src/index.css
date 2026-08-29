@@ -536,3 +536,51 @@ h1, h2, h3 {
     border-bottom: 1px solid #222835;
   }
 }
+
+/*
+  ── 日隨捲而行 ──────────────────────────────────────────────────────
+  --sun 者,曝之階之當前色也,useSunScroll 隨捲而書之。
+  其常為白 —— JS 不行則頁如其舊。飾不可以其敗累其文。
+  Set by useSunScroll as the reader descends. The default is the plain white the
+  page used before, so if the script never runs nothing looks broken.
+
+  凡用之者,皆界與記而已,無一及其文之色 —— 故其對比不隨捲而動。
+  Only rules and marks consume it, never text colour, so scrolling cannot move a
+  contrast ratio anywhere on the page.
+*/
+.landing {
+  --sun: 230 234 240;
+  /* landing 恆黑,不隨其人之題 —— 故其紋自有其色,不用上之 --hatch。 */
+  --hatch: rgb(230 234 240 / 0.35);
+}
+
+.sun-rule {
+  border-color: rgb(var(--sun) / 0.34);
+}
+
+.sun-rule-soft {
+  border-color: rgb(var(--sun) / 0.18);
+}
+
+.sun-bar {
+  background: rgb(var(--sun) / 0.34);
+}
+
+.sun-mark {
+  background: rgb(var(--sun) / 0.7);
+}
+
+/*
+  紋於曝之階。此為 app 之signature —— 紋者,所推而未知也。
+  landing 前此但以文言其所不知,而 app 則畫之;今二者同語。
+  The uncertainty hatch, tinted to the ramp. The app draws this texture wherever
+  its data is inferred; the landing had only ever described that in prose. Using
+  the same mark in both places makes it a vocabulary rather than an ornament.
+*/
+.纹-sun {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 3px,
+    rgb(var(--sun) / 0.55) 3px 6px
+  );
+}

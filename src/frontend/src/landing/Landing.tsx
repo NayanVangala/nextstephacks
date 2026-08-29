@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { SplitText } from "./SplitText";
 import { DifferenceCursor } from "./DifferenceCursor";
 import { Marquee } from "./Marquee";
@@ -6,7 +7,8 @@ import { HeatField } from "./HeatField";
 import { ReachField } from "./ReachField";
 import { ScrollThread } from "./ScrollThread";
 import { useCountUp, 解數 } from "./useCountUp";
-import { Reveal, RevealGroup, RevealItem } from "./motion";
+import { Reveal, RevealGroup, RevealItem, RevealRule } from "./motion";
+import { useSunScroll } from "./useSunScroll";
 
 /**
  * 其度皆量於所法者,非所擬者。see index.css 之「landing 之度」。
@@ -28,7 +30,7 @@ function Section({
     <section
       id={id}
       aria-label={label}
-      className={`landing-sec scroll-mt-16 border-t border-white/10 px-5 ${className}`}
+      className={`landing-sec sun-rule-soft scroll-mt-16 border-t px-5 ${className}`}
     >
       <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
@@ -40,7 +42,7 @@ function SectionLabel({ children }: { children: string }) {
   return (
     <Reveal>
       <p className="landing-label mb-10 flex items-center gap-[20px] text-white/50">
-        <span aria-hidden className="inline-block h-px w-10 bg-white/30" />
+        <span aria-hidden className="sun-mark inline-block h-px w-10" />
         {children}
       </p>
     </Reveal>
@@ -60,10 +62,20 @@ function CountUpFigure({ n, 延 }: { n: string; 延: number }) {
  * No card border and no 14px radius: the reference uses full pills or nothing
  * in between. A hairline rule and space do the separating.
  */
-function Figure({ n, t, s: sub, i }: { n: string; t: string; s: string; i: number }) {
+function Figure({
+  n, t, s: sub, i, 缺 = false,
+}: { n: string; t: string; s: string; i: number; 缺?: boolean }) {
   return (
-    <RevealItem className="border-t border-white/20 pt-5">
-      <div className="数 landing-display text-[clamp(3rem,7vw,5.5rem)]">
+    <RevealItem>
+      {/*
+        其上之緣。所量者一髮,所缺者紋之 —— 讀者不待其文而已知此數異乎其餘。
+        A hairline for a measured figure, the hatch for a missing one, so the
+        reader can see which of these numbers is a gap before reading a word of
+        it. Same mark the app uses on inferred segments.
+      */}
+      <div aria-hidden className={缺 ? "纹-sun h-2" : "sun-bar h-px"} />
+      {/* 其階本二極 —— 五點五為其「中」,正 index.css 所自戒者。 */}
+      <div className="数 landing-display mt-5 text-[clamp(3.25rem,8.5vw,6.75rem)]">
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
       <div className="mt-4 text-base">{t}</div>
@@ -72,10 +84,10 @@ function Figure({ n, t, s: sub, i }: { n: string; t: string; s: string; i: numbe
   );
 }
 
-const 數 = [
+const 數: { n: string; t: string; s: string; 缺?: boolean }[] = [
   { n: "136k", t: "sidewalk segments", s: "modelled across seven US downtowns" },
   { n: "484", t: "census block groups", s: "scored for step-free connectivity" },
-  { n: "91%", t: "of Phoenix buildings", s: "have no published height at all" },
+  { n: "91%", t: "of Phoenix buildings", s: "have no published height at all", 缺: true },
   { n: "0", t: "accounts required", s: "everything runs in your browser" },
 ];
 
@@ -112,8 +124,11 @@ const 所發現 = [
 ];
 
 export function Landing({ onEnter }: { onEnter: () => void }) {
+  // 捲即時 —— 全頁之界與記,隨其所至而行於曝之階。
+  const 頁 = useRef<HTMLDivElement>(null);
+  useSunScroll(頁);
   return (
-    <div className="landing bg-black text-white">
+    <div ref={頁} className="landing bg-black text-white">
       <DifferenceCursor />
       <Nav onEnter={onEnter} />
       <ScrollThread 節數={4} />
@@ -196,7 +211,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         </Reveal>
         <RevealGroup className="mt-[72px] grid gap-[36px] md:grid-cols-3">
           {何以為之.map((s) => (
-            <RevealItem key={s.n} className="border-t border-white/20 pt-5">
+            <RevealItem key={s.n} className="sun-rule border-t pt-5">
               <span className="数 text-base text-white/40">{s.n}</span>
               <h3 className="mt-4 text-base">{s.h}</h3>
               <p className="mt-2 text-base text-white/55">{s.p}</p>
@@ -209,17 +224,29 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <SectionLabel>Key figures</SectionLabel>
         <RevealGroup className="grid gap-x-[36px] gap-y-[72px] sm:grid-cols-2 lg:grid-cols-4">
           {數.map((d, i) => (
-            <Figure key={d.n} n={d.n} t={d.t} s={d.s} i={i} />
+            <Figure key={d.n} n={d.n} t={d.t} s={d.s} i={i} 缺={d.缺} />
           ))}
         </RevealGroup>
+        {/*
+          紋既施,必釋之 —— 未釋之記,於讀者為無義。app 於其帶下亦有此語。
+          An unexplained mark means nothing to a first-time reader. The app
+          carries the same sentence under its exposure strip.
+        */}
+        <Reveal>
+          <p className="mt-[36px] flex items-center gap-[20px] text-base text-white/45">
+            <span aria-hidden className="纹-sun inline-block h-2 w-10 shrink-0" />
+            Hatched means the data does not exist. It is the one thing this tool
+            will not quietly smooth over.
+          </p>
+        </Reveal>
       </Section>
 
       <Section id="does" label="What it does">
         <SectionLabel>What it does</SectionLabel>
-        <div className="border-t border-white/20">
+        <div className="sun-rule border-t">
           {事.map((s) => (
             <Reveal key={s.h}>
-              <div className="grid gap-[20px] border-b border-white/20 py-[36px] md:grid-cols-[1fr_1.3fr]">
+              <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display text-[clamp(1.6rem,3.4vw,2.6rem)]">{s.h}</h3>
                 <p className="text-base text-white/55">{s.p}</p>
               </div>
@@ -230,13 +257,25 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
 
       <Section id="found" label="Findings">
         <SectionLabel>What we found</SectionLabel>
-        <div className="max-w-4xl border-t border-white/20">
+        {/*
+          此四者為全頁最實之語 —— 皆所自量,非所引。而前此其形最泛:
+          一段文而已。今各以一界橫畫其下,隨其入而行,如畫線於其所讀之句。
+          其軸既橫,則此節自別於上之三節,而不必別施一效。
+          These four are the page's actual research findings, and they had the
+          most generic treatment on the page. Each now draws its own rule as you
+          reach it — the gesture of underlining a sentence.
+        */}
+        <div className="max-w-4xl">
+          <RevealRule className="sun-bar h-px" />
           {所發現.map((t, i) => (
-            <Reveal key={i}>
-              <p className="border-b border-white/20 py-[36px] text-[clamp(1.05rem,1.9vw,1.5rem)] font-light leading-[1.2]">
-                {t}
-              </p>
-            </Reveal>
+            <div key={i}>
+              <Reveal>
+                <p className="py-[36px] text-[clamp(1.15rem,2.1vw,1.7rem)] font-light leading-[1.2]">
+                  {t}
+                </p>
+              </Reveal>
+              <RevealRule className="sun-bar h-px" />
+            </div>
           ))}
         </div>
       </Section>
