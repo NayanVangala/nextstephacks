@@ -3,6 +3,10 @@ import { useReveal } from "./useReveal";
 import { DifferenceCursor } from "./DifferenceCursor";
 import { Marquee } from "./Marquee";
 import { Nav } from "./Nav";
+import { HeatField } from "./HeatField";
+import { ReachField } from "./ReachField";
+import { ScrollThread } from "./ScrollThread";
+import { useCountUp, 解數 } from "./useCountUp";
 
 /**
  * 一Section。
@@ -47,17 +51,39 @@ function 節標({ children }: { children: string }) {
 }
 
 /** 一數之卡。有框有號 —— 前但一橫線,故其列如表而不如卡。 */
+function 升數({ n, 延 }: { n: string; 延: number }) {
+  const 解 = 解數(n);
+  const { ref, 值 } = useCountUp(解?.數 ?? 0, { 延 });
+  if (!解) return <>{n}</>;
+  // 小數者存其一位(58%),大數者取其整而分之(40,165)。
+  const 文 = 解.數 < 100
+    ? 值.toFixed(0)
+    : Math.round(值).toLocaleString();
+  return (
+    <span ref={ref}>
+      {解.前}{文}{解.後}
+    </span>
+  );
+}
+
 function FigureCard({ n, t, s: sub, i }: { n: string; t: string; s: string; i: number }) {
   const r = useReveal<HTMLDivElement>({ 位移: 60, 延: i * 80 });
   return (
     <div
       ref={r}
-      className="relative rounded-xl border border-white/15 p-6 transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-white/35"
+      className="group relative overflow-hidden rounded-xl border border-white/15 p-6 transition-colors duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:border-white/35"
     >
+      {/* 懸則一暈自其角而起。transform 與 opacity 而已,不觸 layout。 */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 size-32 rounded-full bg-white/5 opacity-0 transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100"
+      />
       <span className="数 absolute right-5 top-5 text-xs text-white/35">
         {String(i + 1).padStart(2, "0")}
       </span>
-      <div className="数 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-[1]">{n}</div>
+      <div className="数 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-[1]">
+        <升數 n={n} 延={i * 80 + 120} />
+      </div>
       <div className="mt-2 text-base font-medium">{t}</div>
       <div className="mt-1 text-sm leading-[1.4] text-white/55">{sub}</div>
     </div>
@@ -140,14 +166,22 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
     <div className="landing bg-black text-white">
       <DifferenceCursor />
       <Nav onEnter={onEnter} />
+      <ScrollThread 節數={4} />
 
       {/* 一、hero。次行縮入,則其題斜行而下 —— 二行齊左則平。 */}
       <section
         id="top"
         aria-label="Introduction"
-        className="flex min-h-svh flex-col justify-center px-5 pt-24"
+        className="relative flex min-h-svh flex-col justify-center overflow-hidden px-5 pt-24"
       >
-        <div className="mx-auto w-full max-w-6xl">
+        {/* 真實之洛城人行道。鼠橫移則時辰隨之,其網自蔭而赤。 */}
+        <HeatField />
+        {/* 網之上覆一暈,俾其字可讀 —— 圖為底,非為主。 */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.86)_32%,rgba(0,0,0,0.45)_62%,rgba(0,0,0,0.12)_100%)]"
+        />
+        <div className="relative mx-auto w-full max-w-6xl">
           <SplitText
             as="h1"
             text="HEAT HAS"
@@ -191,6 +225,10 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               Los Angeles · Seattle · Phoenix
             </span>
           </div>
+          {/* 動之提示。無此則其效多不為人所見 —— 掃之而後知。 */}
+          <p className="mt-8 hidden text-xs uppercase tracking-wide text-white/45 lg:block">
+            Sweep across to move the sun — real Los Angeles sidewalk, 6am to 8pm
+          </p>
         </div>
       </section>
 
@@ -269,9 +307,15 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       {/* 七、末 */}
       <section
         aria-label="Enter"
-        className="flex flex-col items-center justify-center border-t border-white/10 px-5 py-[clamp(72px,14svh,160px)] text-center"
+        className="relative flex flex-col items-center justify-center overflow-hidden border-t border-white/10 px-5 py-[clamp(96px,18svh,200px)] text-center"
       >
-        <div ref={末}>
+        {/* Reach 之算,可玩者。鼠所在,則所及者明。 */}
+        <ReachField />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.55)_42%,rgba(0,0,0,0.15)_100%)]"
+        />
+        <div className="relative" ref={末}>
           <SplitText
             as="h2"
             text="NOW WALK IT."
@@ -298,6 +342,10 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               </span>
             </a>
           </div>
+          <p className="mt-8 hidden text-xs uppercase tracking-wide text-white/45 lg:block">
+            Move your cursor over the network — everything that lights up is what
+            you could still reach under a heat budget
+          </p>
         </div>
       </section>
 
