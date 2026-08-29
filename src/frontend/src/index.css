@@ -584,3 +584,91 @@ h1, h2, h3 {
     rgb(var(--sun) / 0.55) 3px 6px
   );
 }
+
+/*
+  ══ 其三,量於 incredibles.dev,並 ui-ux-pro-max 之所勸 ═══════════════
+
+  ── 一、地不用純黑 ──────────────────────────────────────────────────
+  landing 本 #000。二證皆言其非:
+    ui-ux-pro-max 之 Modern Dark 明曰「avoid pure #000000 (OLED smear)」;
+    incredibles.dev 量之,其墨 rgb(43,43,43),其地 rgb(241,241,241),
+    無一處用純黑純白。
+  今從 app 之地 #0e1116 —— 瀝青之色。二者既同,則 landing 與器為一物,
+  而 OLED 之屏不復拖影。
+  Pure black is avoided on both counts: OLED smear, and neither reference site
+  uses it. Adopting the app's asphalt ground also makes the two halves of the
+  product one colour instead of two.
+*/
+html:has(.landing),
+html:has(.landing) body,
+.landing {
+  background: #0e1116;
+}
+
+/*
+  ── 二、字距之二律 ──────────────────────────────────────────────────
+  量 incredibles.dev:其字距非一,乃二律。
+    顯之字(四四至五二像素)  -0.05em
+    中題(三二像素)          -0.02em
+    小籤(一三至一四像素)    +0.025 至 +0.03em
+  即:大者收之,小者放之。
+
+  ── 此與前之所量相違,故記其擇 ──────────────────────────────────
+  上文「landing 之度」載 palominoprod 之量曰「tracking none」,而今反之。
+  二所法者相違,不可兩從。所以從此者,非以其後量,乃以其字之大:
+  此頁之題百五十三像素,為其文之十倍。凡字至此,其默認之距必鬆 ——
+  此為字之理,不繫乎所法者為誰。故顯之字收之,而其文仍存其常。
+  TWO REFERENCES DISAGREE and this reverses the earlier note. The reason for
+  choosing this one is not that it was measured later: this page's display type
+  runs to 153.6px, ten times its body size, and default tracking at that scale
+  is loose as a matter of typographic fact rather than taste. Display tightens;
+  body text is untouched and stays at normal.
+*/
+.landing-display {
+  letter-spacing: -0.045em;
+}
+
+/* 中題不當收如其大者 —— 收之過,則其字相犯。 */
+.landing h2.landing-display,
+.landing h3.landing-display {
+  letter-spacing: -0.02em;
+}
+
+/*
+  ── 三、小籤用等寬 ──────────────────────────────────────────────────
+  incredibles 以 Supply Mono 書其籤與其走馬(十二至十四像素,大寫)。
+  此物本為量器,其籤用等寬則如儀表之刻,不如告白之語 —— 稱其實。
+
+  等寬取系統之族,不取 CDN —— 離網可用,此頁之戒也。
+  ui-ux-pro-max 所薦者 JetBrains Mono / Orbitron,皆須 Google Fonts,
+  故取其意而不取其字。
+  Mono for small utility labels, the way the reference uses Supply Mono for its
+  eyebrows and ticker. This is a measuring instrument, so instrument labels suit
+  it better than marketing type. The face is the SYSTEM mono stack, not the
+  CDN font the database recommends — this app must work with no network, so the
+  idea is adopted and the webfont is not.
+
+  前此十二而重,故其標如註;今十四而輕,又大寫而放其距,則為標而非註。
+*/
+.landing-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/*
+  ── 四、凡可點者,其指必變 ──────────────────────────────────────────
+  tailwind v4 去 button 之默認 cursor,故未自書者三皆無之。
+  一則盡之,且後來者不必復記。
+  Tailwind v4 dropped the default cursor on buttons; three here had lost it.
+  One rule covers every button, now and later, instead of a class per site.
+*/
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+label[for],
+summary {
+  cursor: pointer;
+}

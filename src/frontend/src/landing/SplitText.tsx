@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 
 /**
  * SplitText為格,以為錯落之顯。
@@ -69,25 +69,56 @@ export function SplitText({
   return (
     <As ref={ref as never} className={className}>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true" className="inline-flex flex-wrap">
-        {[...text].map((ch, i) => (
-          <span
-            key={i}
-            data-ch
-            className="inline-block"
-            style={{
-              // 初態必以 inline 為之:Tailwind v4 之 opacity-0 於 layer 中勝出,
-              // 而其 translate-y 用 translate 之屬,transform 覆之不得。
-              transform: "translateY(0.9em)",
-              opacity: 0,
-              willChange: "transform, opacity",
-              transition:
-                "transform 600ms cubic-bezier(0.3,1,0.7,1), opacity 600ms cubic-bezier(0.3,1,0.7,1)",
-            }}
-          >
-            {ch === " " ? " " : ch}
-          </span>
-        ))}
+      {/*
+        字各為一格,而必先聚為詞 —— 前此諸格直置於 flex-wrap 之中,
+        則其行可斷於任二字之間。量之於一四四〇:「A GEOMETRY.」斷為
+        「A GEOMETR」與「Y.」,一字孤懸於次行。
+        此疾本潛,隨其寬而發;今字距既緊,其度稍移,遂見於常用之寬。
+
+        MUST group by word. Every character was its own flex item, so a line
+        could break between any two letters — at 1440px "A GEOMETRY." wrapped as
+        "A GEOMETR" / "Y." with a single letter orphaned. The bug was latent and
+        width-dependent; tightening the tracking shifted the metrics enough to
+        surface it at a common viewport.
+
+        詞內 nowrap,詞間留其真空 —— 故其斷必在詞際,如常文然。
+        錯落之序貫乎全句,不隨詞而復始。
+        Words are nowrap and separated by real space text nodes, so breaks land
+        where they would in ordinary text. The stagger index runs across the
+        whole line rather than restarting at each word.
+      */}
+      <span aria-hidden="true">
+        {(() => {
+          let 序 = 0;
+          return text.split(/(\s+)/).filter(Boolean).map((詞, wi) => {
+            if (/^\s+$/.test(詞)) return <Fragment key={`sp${wi}`}> </Fragment>;
+            return (
+              <span key={wi} className="inline-block whitespace-nowrap">
+                {[...詞].map((ch) => {
+                  const k = 序++;
+                  return (
+                    <span
+                      key={k}
+                      data-ch
+                      className="inline-block"
+                      style={{
+                        // 初態必以 inline 為之:Tailwind v4 之 opacity-0 於 layer 中勝出,
+                        // 而其 translate-y 用 translate 之屬,transform 覆之不得。
+                        transform: "translateY(0.9em)",
+                        opacity: 0,
+                        willChange: "transform, opacity",
+                        transition:
+                          "transform 600ms cubic-bezier(0.3,1,0.7,1), opacity 600ms cubic-bezier(0.3,1,0.7,1)",
+                      }}
+                    >
+                      {ch}
+                    </span>
+                  );
+                })}
+              </span>
+            );
+          });
+        })()}
       </span>
     </As>
   );

@@ -151,10 +151,19 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(6,8,12,0.92)_0%,rgba(6,8,12,0.88)_30%,rgba(6,8,12,0.55)_52%,rgba(6,8,12,0.10)_78%,rgba(6,8,12,0)_100%)]"
         />
         <div className="relative mx-auto w-full max-w-6xl">
+          {/*
+            量之於一四二五:次行需一〇八〇,而其地一〇三七,短四三 ——
+            故「A GEOMETRY.」不能一行。前此斷於字中而不覺,今詞不可斷,乃見之。
+            減其頂(十點八至十 rem)與其縮(八至六 vw),則餘六十五,可容。
+            Measured at 1425px: line two needs 1080px and has 1037px — 43px
+            short, which is why it could never fit on one line. The old
+            mid-word break hid that. Capping the size and easing the indent
+            leaves ~65px of slack.
+          */}
           <SplitText as="h1" text="HEAT HAS"
-            className="landing-display block text-[clamp(3rem,12vw,10.8rem)]" />
+            className="landing-display block text-[clamp(3rem,12vw,10rem)]" />
           <SplitText as="div" text="A GEOMETRY." 延={240}
-            className="landing-display block pl-[8vw] text-[clamp(3rem,12vw,10.8rem)]" />
+            className="landing-display block pl-[6vw] text-[clamp(3rem,12vw,10rem)]" />
 
           <Reveal 延={0.5}>
             <p className="mt-[36px] max-w-2xl text-base text-white/70">
