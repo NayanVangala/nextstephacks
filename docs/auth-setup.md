@@ -38,14 +38,25 @@ npx supabase link --project-ref YOUR_PROJECT_REF
 npx supabase db push
 ```
 
-That applies two migrations:
+That applies four migrations:
 
 - `20260826000000_报事.sql` — the reports table, RLS on, anon can read and insert
-- `20260827000000_报事之属人.sql` — adds `reporter_id`, and the policies that
-  make attribution safe
+- `20260827000000_报事之属人.sql` — adds `reporter_id` and the strict insert policies
+- `20260828000000_报之表態.sql` — allows confirm/dispute, one stance per person per segment
+- `20260829000000_正插之政.sql` — **removes a permissive policy that defeated the
+  strict ones**
 
-The load-bearing line is the insert policy's `WITH CHECK`: without it a signed-in
-user could file a report attributed to somebody else's account.
+That last one matters. The 20260827 migration dropped a policy named
+`报事_众可插` while the original had created `报事_众可增` — one character apart, so
+the permissive policy survived. **Postgres OR-combines RLS policies for the same
+command**, so the permissive one won and a signed-in user could file reports
+attributed to any other account. Verified by executing the SQL against real
+Postgres, then fixed and re-verified.
+
+`src/frontend/tests/migrations.test.ts` runs all four migrations against an
+in-process Postgres (PGlite) on every `npm test` and asserts the policy
+behaviour, including that every INSERT policy constrains `reporter_id`. Reading
+the SQL cannot catch a policy-name typo; running it can.
 
 ## 3. Create the OAuth apps
 
