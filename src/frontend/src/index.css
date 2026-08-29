@@ -260,9 +260,74 @@ body {
   animation: marquee-scroll linear infinite;
 }
 
-/* landing 為黑地白字,自成一域,不干於 app 之明色。 */
+/*
+  ── landing 之度,量於所法者 ──────────────────────────────────
+  Measured off palominoprod.com with Playwright, not guessed. Every value here
+  has a frequency count behind it:
+
+    body        16px  (483 of its text nodes; ours was 14 and read small)
+    leading     1.20  (612 nodes; ours ran 1.33-1.50 and read loose)
+    tracking    none  (zero letter-spacing anywhere on their site)
+    spacing     20 / 72px  (138 and 28 uses; ours was 16/20/24/28/81, no system)
+    gap         20 / 36px
+    radius      pill or square, never in between (ours had a stray 14px)
+    shadow      none
+
+  其字之階為二極:十六而已,而題則百四十以上 —— 中無所有。
+  Their type scale is deliberately bimodal: 16px utility text, then a violent
+  jump to 140-284px display, with almost nothing between. Ours interpolated
+  smoothly with clamp() at every size, which is what made it read as mush.
+*/
+@theme {
+  --spacing-gut: 20px;
+  --spacing-sec: 72px;
+}
+
 .landing {
   color-scheme: dark;
+  /* 十六為其常。前此十四,故其文皆小一號。 */
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: normal;
+}
+
+/* 其節之律:上七十二,下零。量之,二十八處皆然。 */
+.landing-sec {
+  padding-top: var(--spacing-sec);
+  padding-bottom: var(--spacing-sec);
+}
+
+/* 題之行高恰為其字之大 —— 比為一,不多不少。 */
+.landing-display {
+  line-height: 1;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+
+/*
+  tailwind 之 text-base 自帶 line-height: 1.5rem —— 故雖 .landing 設一點二,
+  凡用 text-base 者皆復為一點五。量之,一點五者最眾,而所法者一點二。
+  此規在 layer 之外,故勝 tailwind 之 utility。(前此 .sr-only 之事同理。)
+
+  Tailwind's text-base ships its own line-height of 1.5rem, which overrode the
+  1.2 set on .landing. This rule is unlayered, so it wins — the same mechanism
+  that made focus:not-sr-only lose earlier in this project.
+*/
+.landing p,
+.landing span,
+.landing li,
+.landing h3,
+.landing a,
+.landing button {
+  line-height: 1.2;
+}
+
+/* 節之標:十六而輕。前此十二而重,故其標如註,不如標。 */
+.landing-label {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: normal;
 }
 
 /*

@@ -41,7 +41,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
       >
         <a
           href="#top"
-          className="text-sm font-semibold uppercase tracking-wide transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:opacity-60"
+          className="text-sm font-semibold uppercase transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:opacity-60"
         >
           Passable
         </a>
@@ -53,7 +53,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="text-xs uppercase tracking-wide text-white/70 transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:text-white hover:opacity-100"
+                className="text-xs uppercase text-white/70 transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:text-white hover:opacity-100"
               >
                 {s.label}
               </a>

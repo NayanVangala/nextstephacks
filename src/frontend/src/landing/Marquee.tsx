@@ -27,7 +27,7 @@ export function Marquee({
         {兩份.map((t, i) => (
           <span
             key={i}
-            className="whitespace-nowrap text-sm font-medium uppercase tracking-wide text-white/70"
+            className="whitespace-nowrap text-sm font-medium uppercase text-white/70"
           >
             {t}
           </span>

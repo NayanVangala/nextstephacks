@@ -42,3 +42,27 @@ Clarity beats compression when the cost of a misread is high.
 This policy applies going forward. Existing English identifiers, strings, and
 commit messages are not retrofitted unless asked — a mass rename would churn
 the whole tree for no functional gain.
+
+## React component and hook names are ASCII
+
+This is a mechanical exception to the Chinese-identifier rule, not a style
+preference. React identifies components by a leading capital letter and hooks by
+`/^use[A-Z]/`. A Chinese name satisfies neither, so:
+
+- `react-hooks/rules-of-hooks` cannot verify the file and reports errors
+- Fast Refresh does not recognise the component
+- React's own dev-mode warnings misattribute
+
+Everything else in a component file — variables, state, comments, handlers —
+stays Chinese. Only the component and hook *names* are ASCII.
+
+```tsx
+// wrong: lint errors, no Fast Refresh
+function 升數() { const { ref } = use必現(); }
+
+// right
+function CountUpFigure() { const { ref } = useRevealState(); }
+```
+
+This has now been hit twice in one session. It is not discoverable from the
+language policy alone, which is why it is written here.
