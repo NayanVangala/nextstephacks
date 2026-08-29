@@ -88,12 +88,19 @@ const 何以為之 = [
     p: "You get a route and a written itinerary. When no route exists it names the barrier — three flights of steps, 60 m of them." },
 ];
 
+/*
+  三者並列,非有先後 —— 故無其序。前此編之為 01/02/03,而人讀之若步驟,
+  以為必先 ROUTE 而後 REACH。其上之「何以為之」則真有其序,故其序存。
+  These three are parallel views, not steps, so they carry no numbers. They were
+  numbered 01/02/03, which reads as a sequence you must follow in order. The
+  section above it genuinely IS a sequence and keeps its numbering.
+*/
 const 事 = [
-  { i: "01", h: "ROUTE",
+  { h: "ROUTE",
     p: "Every routing app optimises for shortest. A handful optimise for shade. None optimise for both at once, and the step-free path is usually the longer, more exposed one." },
-  { i: "02", h: "REACH",
+  { h: "REACH",
     p: "Not where you want to go, but where you can actually get. Run the graph to exhaustion under a heat budget and ask whether any cooling centre falls inside it." },
-  { i: "03", h: "REPORT",
+  { h: "REPORT",
     p: "98.9% of the network is traversable, which sounds close to solved. It is the wrong number. 488 points of usable sidewalk cannot be reached at all." },
 ];
 
@@ -117,9 +124,16 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         className="relative flex min-h-svh flex-col justify-center overflow-hidden px-5 pt-24"
       >
         <HeatField />
+        {/*
+          幕止於其文之後。前此右亦覆一二之黑,而其網為此頁之所以立 ——
+          幕之厚薄,當隨其文之所在,不當均覆其面。
+          The scrim now clears completely on the right instead of holding 12%
+          black across the whole hero. It exists to keep the headline legible,
+          not to dim the thing the headline is about.
+        */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(0,0,0,0.94)_0%,rgba(0,0,0,0.86)_32%,rgba(0,0,0,0.45)_62%,rgba(0,0,0,0.12)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(6,8,12,0.92)_0%,rgba(6,8,12,0.88)_30%,rgba(6,8,12,0.55)_52%,rgba(6,8,12,0.10)_78%,rgba(6,8,12,0)_100%)]"
         />
         <div className="relative mx-auto w-full max-w-6xl">
           <SplitText as="h1" text="HEAT HAS"
@@ -152,12 +166,6 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
                 <span aria-hidden className="transition-transform duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-y-1">↓</span>
               </a>
             </div>
-          </Reveal>
-
-          <Reveal 延={0.8}>
-            <p className="mt-[36px] hidden text-base text-white/40 lg:block">
-              Sweep across to move the sun — real Los Angeles sidewalk, 6am to 8pm
-            </p>
           </Reveal>
         </div>
       </section>
@@ -211,8 +219,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <div className="border-t border-white/20">
           {事.map((s) => (
             <Reveal key={s.h}>
-              <div className="grid gap-[20px] border-b border-white/20 py-[36px] md:grid-cols-[5rem_1fr_1.3fr]">
-                <span className="数 text-base text-white/40">{s.i}</span>
+              <div className="grid gap-[20px] border-b border-white/20 py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display text-[clamp(1.6rem,3.4vw,2.6rem)]">{s.h}</h3>
                 <p className="text-base text-white/55">{s.p}</p>
               </div>

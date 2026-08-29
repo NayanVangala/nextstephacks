@@ -84,7 +84,7 @@ export default function App() {
         MUST outrank Leaflet: its controls sit at z-index 1000, so anything less
         here lets the zoom buttons render on top of the sticky header.
       */}
-      <header className="sticky top-0 z-[1200] bg-ink text-white">
+      <header className="chrome sticky top-0 z-[1200] text-white">
         <div className="mx-auto max-w-5xl px-4">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-3">
             <button

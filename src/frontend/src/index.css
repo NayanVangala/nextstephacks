@@ -398,3 +398,141 @@ h1, h2, h3 {
 .越:focus {
   top: 1rem;
 }
+
+/*
+  ══ 暗 ═══════════════════════════════════════════════════════════════════
+  其常為暗。landing 本黑,而器前此淡 —— 入之如易其站。今二者同色。
+  淡者不去:好淡者自有其疾(散光、閱讀之障),奪之則此物自違其旨。
+  故從其人之所欲:願淡者得淡,餘皆暗。
+
+  Dark is the default; light is kept for anyone whose OS asks for it. Forcing
+  dark on a light-preferring reader is a real accessibility cost in a tool whose
+  whole purpose is access, and honouring the preference costs one media query
+  because the light palette already exists above.
+
+  ── 其地非黑,乃瀝青之色 ────────────────────────────────────────────
+  #0a0a0a 者,凡暗題之所同也。此地帶藍,以其所寫者即路面 ——
+  一物之色當出於其物。
+  The ground is asphalt, not black: a blue-cast charcoal rather than the neutral
+  near-black every dark theme defaults to. The subject of this product is
+  pavement, so its ground colour comes from pavement.
+
+  ── 曝之階必提 ──────────────────────────────────────────────────────
+  #1d4ed8 之藍,於此地幾不可見(對比一點六)。故三色皆提,而其義不改:
+  青為蔭,黃為午,赤為曝。此非一色之飾,乃三階之量,每階各有其實。
+  The ramp MUST be lifted: #1d4ed8 on #0E1116 is 1.6:1 and effectively
+  invisible. Lifted values are 6.8:1 or better. The hues do not change, because
+  they are not decoration — each one names a measured condition.
+*/
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    /* 曝之階,提之以就暗地。 */
+    --color-shade: #5b9bff;
+    --color-shade-soft: #12233f;
+    --color-midsun: #e2a63c;
+    --color-midsun-soft: #2a2210;
+    --color-fullsun: #ff6b5b;
+    --color-fullsun-soft: #2e1614;
+
+    --color-route: #34d399;
+    --color-reach: #a78bfa;
+    --color-blocked: #8b93a1;
+
+    /* 地與紙。皆帶藍 —— 中性之灰置於此則如塵。 */
+    --color-canvas: #0e1116;
+    --color-paper: #161a21;
+    --color-panel: #1a1f28;
+    --color-line: #262c36;
+    --color-ink: #e6eaf0;
+
+    --color-accent-ink: #5b9bff;
+    --color-accent-wash: #14203a;
+
+    /* shadcn 之籤亦須從之,不然則中性之卡浮於帶藍之地,其灰可見。 */
+    --background: #0e1116;
+    --foreground: #e6eaf0;
+    --card: #161a21;
+    --card-foreground: #e6eaf0;
+    --popover: #161a21;
+    --popover-foreground: #e6eaf0;
+    --primary: #e6eaf0;
+    --primary-foreground: #0e1116;
+    --secondary: #1e242d;
+    --secondary-foreground: #e6eaf0;
+    --muted: #1e242d;
+    --muted-foreground: #98a2b3;
+    --accent: #1e242d;
+    --accent-foreground: #e6eaf0;
+    --destructive: #ff6b5b;
+    --border: #262c36;
+    --input: #2a313c;
+    --ring: #5b9bff;
+  }
+}
+
+/*
+  信之紋,其色自為一籤。前此賴 --color-muted —— 而暗中 muted 為暗灰,
+  紋遂沒於其板,而「所推者」與「所知者」不可辨。此紋為此設計之signature,
+  不可因易色而失。
+  The uncertainty hatch had been keyed to --color-muted, which inverts to a dark
+  grey in dark mode — making the hatch vanish into the panel it is drawn on.
+  That texture is the one thing distinguishing inferred data from verified data,
+  so it gets its own token that stays visible against either ground.
+*/
+:root {
+  --hatch: rgba(24, 24, 27, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hatch: rgba(230, 234, 240, 0.30);
+  }
+}
+
+.纹-medium {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 5px,
+    color-mix(in oklab, var(--hatch) 45%, transparent) 5px 7px
+  );
+}
+
+.纹-low {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 3px,
+    color-mix(in oklab, var(--hatch) 80%, transparent) 3px 6px
+  );
+}
+
+/*
+  頂帶之地。不用 --color-ink —— 暗中 ink 為白,則帶白而其字亦白,遂不可讀。
+  故自為一色,而其常與其暗各書之。
+  NOT --color-ink: that token inverts to near-white in dark mode, which would
+  paint the bar white and leave white text on it. The chrome's ground is its own
+  value in each theme.
+
+  其暗者必在其常之後 —— 同其specificity,則後者勝。media query 不增其重。
+  ORDER MATTERS: the dark rule must come after the base rule. A media query adds
+  no specificity, so source order alone decides, and putting the override first
+  silently disables it.
+*/
+.chrome {
+  background: #18181b;
+}
+
+@media (prefers-color-scheme: dark) {
+  /*
+    暗中,帶與地相去無幾(#080a0e 與 #0e1116),故其界不可見,而帶失其為帶。
+    淡中則不須此 —— 黑帶自別於淡地。
+    In dark mode the bar and the page ground are within a few points of each
+    other, so the chrome stops reading as chrome. A hairline restores the edge;
+    in light mode the near-black bar separates on its own and needs none.
+  */
+  .chrome {
+    background: #080a0e;
+    border-bottom: 1px solid #222835;
+  }
+}

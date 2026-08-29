@@ -51,11 +51,19 @@ export function 可動(): boolean {
 
 /** 曝之色,與 app 同階。此處用 rgb 之值 —— canvas 不解 CSS 之變數。 */
 export function 曝之rgb(曝: number): [number, number, number] {
-  // 蔭 #1d4ed8 -> 午 #a16207 -> 曝 #dc2626
+  /*
+    蔭 #5b9bff -> 午 #e2a63c -> 曝 #ff6b5b。此暗地之階,非淡地之階。
+    前此取淡地之值(#1d4ed8 等),而 landing 恆黑 —— 其藍於黑地對比一點六,
+    故晨時之網幾不可見,而人但見其午與其暮。所失者正其半日。
+    These are the DARK-ground ramp values. The light-theme ones were used here,
+    but this canvas only ever draws on black: #1d4ed8 on #000 is 1.6:1, so the
+    morning half of the sweep was very nearly invisible — losing exactly the
+    contrast the animation exists to show.
+  */
   const 階: [number, [number, number, number]][] = [
-    [0, [29, 78, 216]],
-    [0.5, [161, 98, 7]],
-    [1, [220, 38, 38]],
+    [0, [91, 155, 255]],
+    [0.5, [226, 166, 60]],
+    [1, [255, 107, 91]],
   ];
   const t = Math.max(0, Math.min(1, 曝));
   for (let i = 1; i < 階.length; i++) {
