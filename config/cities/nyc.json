@@ -1,0 +1,26 @@
+{
+  "id": "nyc",
+  "name": "New York",
+  "bbox": [
+    -74.013,
+    40.701,
+    -73.983,
+    40.724
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "MTA Access-A-Ride",
+    "advance_booking_hours": 24
+  }
+}

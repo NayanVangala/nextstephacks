@@ -1,0 +1,26 @@
+{
+  "id": "sfo",
+  "name": "San Francisco",
+  "bbox": [
+    -122.415,
+    37.775,
+    -122.385,
+    37.798
+  ],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "SF Paratransit",
+    "advance_booking_hours": 24
+  }
+}

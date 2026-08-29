@@ -118,7 +118,7 @@ const 數 = [
   { n: "58%", t: "less sun exposure", s: "for a 149 m detour at 2pm in extreme heat" },
   { n: "488", t: "points cut off", s: "sidewalk that exists but a wheelchair cannot reach" },
   { n: "299", t: "transit stops", s: "with no accessibility field published at all" },
-  { n: "54k", t: "sidewalk segments", s: "modelled across Los Angeles, Seattle and Phoenix" },
+  { n: "136k", t: "sidewalk segments", s: "modelled across seven US downtowns" },
 ];
 
 const 何以為之 = [
@@ -222,7 +222,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               </span>
             </a>
             <span className="text-xs uppercase text-white/55">
-              Los Angeles · Seattle · Phoenix
+              Seven US cities
             </span>
           </div>
           {/* 動之提示。無此則其效多不為人所見 —— 掃之而後知。 */}
@@ -251,7 +251,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           because for a lot of people they are.
         </h2>
         <p className="mt-5 max-w-2xl text-base leading-[1.6] text-white/65">
-          Passable models every sidewalk segment in three downtowns for whether you
+          Passable models every sidewalk segment in seven downtowns for whether you
           can physically use it and how much sun falls on it, hour by hour. It runs
           entirely in your browser — no account, no server, no tracking — and it
           says plainly when the underlying data does not know something.
@@ -297,7 +297,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             "LA Metro's public feeds omit the GTFS wheelchair_boarding field entirely — not blank, absent — across all 299 stops in the study area.",
             "Its canceled-service endpoint answers 200, with open CORS and well-formed JSON. The data is from October 2022.",
             "Phoenix publishes building heights for 9% of downtown. We shipped it anyway, with the uncertainty on the surface.",
-            "We looked for a link between shade and household income. Across 145 block groups we could not find one that survives the margins of error, and the tool says so.",
+            "We looked for a link between shade and household income. Across 484 block groups we could not find one that survives the margins of error, and the tool says so.",
           ].map((t, i) => (
             <FindingLine key={i} text={t} i={i} />
           ))}
@@ -352,7 +352,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       <footer className="border-t border-white/10 px-5 py-10">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-wide text-white/55">
           <span>NextStep Hacks 2026 · Earth Forward</span>
-          <span>Los Angeles · Seattle · Phoenix</span>
+          <span>Seven US cities</span>
           <span>Not medical guidance</span>
         </div>
       </footer>

@@ -1,0 +1,26 @@
+{
+  "id": "chi",
+  "name": "Chicago",
+  "bbox": [
+    -87.64,
+    41.874,
+    -87.61,
+    41.897
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "CTA Pace ADA Paratransit",
+    "advance_booking_hours": 24
+  }
+}

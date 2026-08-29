@@ -13,6 +13,11 @@ export const CITIES: 城[] = [
   // visible, and a city that needs shade modelling this badly while publishing
   // this little data is the finding, not a defect to be smoothed over.
   { id: "phx", label: "Phoenix" },
+  // 四大城。其資之厚薄不一 —— 界面自著其所推之比,不必於此預言之。
+  { id: "nyc", label: "New York" },
+  { id: "chi", label: "Chicago" },
+  { id: "sfo", label: "San Francisco" },
+  { id: "mia", label: "Miami" },
 ];
 
 export const 預設之城 = "la";
