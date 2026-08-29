@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/frontend/src/index.css"
+        ],
+        "createdAt": "2026-08-29T17:43:00.922Z",
+        "reason": "Claude: .题-accent is a 3px rule before 11 section <h2>s, not a card edge — the rule targets cards. The real card instance the hook missed (status banner in RouteView/ReachView) was removed instead, not suppressed."
+      }
+    ]
+  }
+}

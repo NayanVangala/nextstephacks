@@ -226,7 +226,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       <p
         role="status"
         aria-live="polite"
-        className="mt-4 rounded-lg border border-line border-l-[3px] border-l-accent-ink bg-panel px-4 py-3 text-sm"
+        className="mt-4 rounded-lg border border-line bg-panel px-4 py-3 text-sm"
       >
         {status}
       </p>
