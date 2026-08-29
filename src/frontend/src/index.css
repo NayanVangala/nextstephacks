@@ -297,9 +297,25 @@ body {
   padding-bottom: var(--spacing-sec);
 }
 
-/* 題之行高恰為其字之大 —— 比為一,不多不少。 */
+/*
+  題之行高。前此為一,今零點八八。
+  讀 incredibles.dev 之籤,其 --font-height-h-* 皆零點八六,而其文一點三 ——
+  題與文非但異其大,亦異其律:題為一塊,故其行相銜;文為一列,故其行相讓。
+  行高為一者,是以文之律書其題,故其題散而不成塊。
+
+  Read from the reference's own tokens: every heading step carries
+  line-height 0.86 while body text carries 1.3. Headings and body do not merely
+  differ in size — a heading is a block whose lines lock together, body text is
+  a column whose lines breathe. Leading of 1.0 applied body rhythm to display
+  type, which is why it read as loose.
+
+  取零點八八而非零點八六 —— 其題皆短語,而此頁之 h2 有長至三行者,
+  中有 g、p、y 之垂,零點八六則垂者犯其下行之升。量之而後定。
+  0.88 rather than their 0.86: their headings are short phrases, while this page
+  has h2s running to three lines with descenders that collide at 0.86.
+*/
 .landing-display {
-  line-height: 1;
+  line-height: 0.88;
   letter-spacing: normal;
   font-weight: 600;
 }

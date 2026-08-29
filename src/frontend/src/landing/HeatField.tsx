@@ -154,8 +154,22 @@ export function HeatField() {
       return () => ro.disconnect();
     }
 
+    /*
+      視差。網隨捲而行,而其行遲於其頁 —— 故其城若在其文之後,非與之同面。
+      不別立捲之聽者:此幀本已逐幀而行,取 scrollY 於此,無所增費。
+      Parallax: the network drifts slower than the page, so the city reads as
+      sitting behind the text rather than pasted onto it. No scroll listener is
+      added — this loop already runs every frame, so reading scrollY here is free.
+    */
+    const 視差 = () => {
+      const y = scrollY * 0.18;
+      // 出其屏則止,不復算 —— 其下之節不見此網。
+      c.style.transform = y < innerHeight ? `translate3d(0, ${y.toFixed(1)}px, 0)` : "";
+    };
+
     const 幀 = (now: number) => {
       if (!始) 始 = now;
+      視差();
       if (自行) {
         // 三角之波:晨而暮而復晨。日之行,往而必返。
         const p = ((now - 始) / (周之秒 * 1000)) % 1;

@@ -9,6 +9,8 @@ import { ScrollThread } from "./ScrollThread";
 import { useCountUp, 解數 } from "./useCountUp";
 import { Reveal, RevealGroup, RevealItem, RevealRule } from "./motion";
 import { useSunScroll } from "./useSunScroll";
+import { useSmoothScroll } from "./useSmoothScroll";
+import { Magnetic } from "./Magnetic";
 
 /**
  * 其度皆量於所法者,非所擬者。see index.css 之「landing 之度」。
@@ -127,6 +129,8 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
   // 捲即時 —— 全頁之界與記,隨其所至而行於曝之階。
   const 頁 = useRef<HTMLDivElement>(null);
   useSunScroll(頁);
+  // 平捲。止於此頁 —— 器之中有圖有桿,不可奪其輪。見 useSmoothScroll 之註。
+  useSmoothScroll();
   /*
     其地由 index.css 之 .landing 主之,此不復書 bg-black —— 前此並書之,
     雖為其 CSS 所勝(彼不在 layer 中),而讀者見之必以為黑。一物一處書之。
@@ -182,13 +186,15 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
 
           <Reveal 延={0.65}>
             <div className="mt-[36px] flex flex-wrap items-center gap-[20px]">
-              <button
-                type="button"
-                onClick={onEnter}
-                className="rounded-full bg-white px-8 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
-              >
-                Open the tool
-              </button>
+              <Magnetic>
+                <button
+                  type="button"
+                  onClick={onEnter}
+                  className="rounded-full bg-white px-8 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                >
+                  Open the tool
+                </button>
+              </Magnetic>
               <a
                 href="#what"
                 className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-quint hover:border-white"
@@ -310,13 +316,15 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             className="landing-display block text-[clamp(2.75rem,11vw,9rem)]" />
           <Reveal 延={0.2}>
             <div className="mt-[36px] flex flex-wrap items-center justify-center gap-[20px]">
-              <button
-                type="button"
-                onClick={onEnter}
-                className="rounded-full bg-white px-10 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
-              >
-                Open the tool
-              </button>
+              <Magnetic 力={0.4}>
+                <button
+                  type="button"
+                  onClick={onEnter}
+                  className="rounded-full bg-white px-10 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                >
+                  Open the tool
+                </button>
+              </Magnetic>
               <a
                 href="https://github.com/NayanVangala/nextstephacks"
                 className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-quint hover:border-white"
