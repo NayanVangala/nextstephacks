@@ -81,7 +81,7 @@ export function ExposureStrip({
           );
         })}
       </div>
-      <div className="mt-1 flex justify-between text-[0.7rem] text-muted-foreground">
+      <div className="mt-1 flex justify-between text-xs text-muted-foreground">
         <span className="flex items-center gap-1">
           <span className="inline-block h-2 w-2 rounded-sm bg-shade" aria-hidden />
           shade

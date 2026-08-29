@@ -29,7 +29,7 @@ export function TimeSlider({
         thumbAriaLabelledBy="time-label"
         thumbAriaValueText={label}
       />
-      <div aria-hidden className="数 mt-1 flex justify-between text-[0.7rem] text-muted-foreground">
+      <div aria-hidden className="数 mt-1 flex justify-between text-xs text-muted-foreground">
         {buckets.map((h) => (
           <span key={h}>{h}</span>
         ))}

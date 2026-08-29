@@ -691,3 +691,79 @@ summary {
   --ease-quint: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
 }
+
+/*
+  ══ 器之面 ═══════════════════════════════════════════════════════════
+  量其面(#主 之內,五百八十七物):
+    其字之階   十二、十四、十八、二十四、三十 —— 最大者不過其文之二倍有半。
+    其距       皆 normal,惟 h1 有之。
+    其族       Geist 而已,無一等寬。
+
+  landing 之階十倍其文(十六至一百六十),而器之階二倍有半。
+  景之數大而器之數小 —— 而人所決者在器,不在景。
+
+  Measured across 587 elements in the app: the type scale tops out at 30px,
+  only 2.1x body, while the landing runs 16px to 160px. The numbers a person
+  actually decides on live in the app, not the landing, and they were the
+  smaller of the two.
+*/
+
+/*
+  ── 籤:器之刻 ──────────────────────────────────────────────────────
+  等寬、大寫、放其距。此與 landing 之 .landing-label 同族 ——
+  二面本一物,其籤不當異其形。
+
+  ── 但施於所讀之籤,不施於所操之籤 ────────────────────────────────
+  凡 form 之 label(「Start」「Destination」「Accessibility profile」)皆不與焉。
+  此物為身不便者而設,其控之名以易讀為第一,不可以形奪之。
+  大寫者,讀屏或逐字母而讀,又失其詞形,故於必讀之處不用。
+  ONLY for read-only instrument labels, never for form control labels. This is a
+  tool for disabled users: the names of the controls they operate are on the
+  critical path and legibility outranks styling there. Uppercase also costs word
+  shape and can be read letter-by-letter by some screen readers, so it stays off
+  anything someone must read to operate the app.
+*/
+.籤 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/*
+  ── 節之題,其距亦收 ────────────────────────────────────────────────
+  h1 有 tracking-tight 而 h2 無之,故同頁二律。此類十有一處,故收於此一規,
+  不逐處書之。
+  The h1 carried tracking-tight and the eleven section h2s did not — two rules on
+  one page. Fixed once here rather than in eleven className strings.
+*/
+.题-accent {
+  letter-spacing: -0.015em;
+}
+
+/*
+  ── 淡題之次文,其色須再深 ──────────────────────────────────────────
+  量之於淡題:shadcn 之 --muted-foreground(oklch 0.556,即 #737373)
+  於暑警之琥珀地(#fef3c7)上,其比四點二六 —— 不及四點五。三處犯之,
+  其一為「This is a routing heuristic, not medical guidance」。
+
+  於白地其比四點八三,故其常不覺;而此樹之告皆有其色之地(琥珀、赤、青),
+  地既淺,則其比隨之而降。故不可但驗其於白地者。
+
+  Measured in light mode: shadcn's stock --muted-foreground (#737373) hits only
+  4.26:1 on the amber heat-alert panel, below the 4.5 required at 12px. It
+  passes on plain white, which is why it goes unnoticed — but every advisory in
+  this app sits on a tinted ground (amber, red, blue), and a lighter ground
+  lowers the ratio. One of the three failures was the "not medical guidance"
+  line, which is the last text that should be hard to read.
+
+  今深之至 oklch(0.52),於琥珀地得四點七五,於白地得五點四三。
+  暗題不與焉 —— 其 #98a2b3 於暗地已六點六二。
+*/
+@media not all and (prefers-color-scheme: dark) {
+  :root {
+    --muted-foreground: oklch(0.52 0 0);
+  }
+}
