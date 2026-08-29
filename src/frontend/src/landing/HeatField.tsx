@@ -97,33 +97,53 @@ export function HeatField() {
       ctx.lineCap = "round";
       let 通數 = 0;
       let 蔭數 = 0;
-      for (const [x1, y1, x2, y2, su, 通] of 網.edges) {
-        const 曝 = (su[i0] ?? 1) * (1 - k) + (su[i1] ?? 1) * k;
-        if (通 === 0) {
-          // 不可通者灰,且細 —— 於 app 中亦然。
-          ctx.strokeStyle = "rgba(139,147,161,0.30)";
-          ctx.lineWidth = 0.7;
-        } else {
-          通數++;
-          if (曝 < 蔭之界) 蔭數++;
-          const [r, g, b] = 曝之rgb(曝);
-          /*
-            曝愈甚則愈明而愈粗,故午時其網如燒。
-            然其底必厚 —— 前此蔭者透二八而細七分,故晨昏之網幾若無物,
-            而晨昏正其最可行之時。是所畫者與所言者相反:蔭多之時反如空城。
-            The floor MUST stay high: shaded segments were drawn at 0.28 alpha
-            and 0.7px, so 6am — when 83% of the city is walkable shade — rendered
-            as a nearly empty frame. That inverts the message, making the best
-            hour look like the emptiest one. Sun still burns brighter and
-            heavier; shade is simply no longer invisible.
-          */
-          ctx.strokeStyle = `rgba(${r},${g},${b},${0.48 + 曝 * 0.42})`;
-          ctx.lineWidth = 0.95 + 曝 * 1.25;
+
+      /*
+        二巡而成:一巡為暈(寬而淡),一巡為芯(窄而明)。
+        曝甚者其暈厚,故午之網如燒,而晨之網但為線。
+
+        不用 shadowBlur —— 千四百筆各為其blur,每幀之費不可任。
+        二巡者二千八百筆而已,皆無 blur,遠廉於是。
+        Two passes — a wide dim halo, then a narrow bright core — instead of
+        canvas shadowBlur, which would be computed per stroke and cannot be
+        afforded 1,400 times a frame. Two plain passes are far cheaper and give
+        the same bloom, so midday reads as heat rather than as more lines.
+
+        其墨前此覆其面之百分之三有三 —— 是九成六為空。網為此頁之所以立,
+        而其在屏上幾不可見。今加其寬,故其城可辨。
+        Ink covered 3.3% of the canvas: 96.7% empty. The network is the reason
+        this page exists and it was barely on screen.
+      */
+      for (const 巡 of [0, 1] as const) {
+        for (const [x1, y1, x2, y2, su, 通] of 網.edges) {
+          const 曝 = (su[i0] ?? 1) * (1 - k) + (su[i1] ?? 1) * k;
+          if (通 === 0) {
+            // 不可通者灰而細,且無暈 —— 其不可行,不當奪目。
+            if (巡 === 0) continue;
+            ctx.strokeStyle = "rgba(139,147,161,0.34)";
+            ctx.lineWidth = 0.9;
+          } else {
+            if (巡 === 1) {
+              通數++;
+              if (曝 < 蔭之界) 蔭數++;
+            }
+            const [r, g, b] = 曝之rgb(曝);
+            if (巡 === 0) {
+              // 暈。曝愈甚愈厚;蔭者幾無暈。
+              const 暈 = Math.max(0, 曝 - 0.25);
+              if (暈 <= 0.02) continue;
+              ctx.strokeStyle = `rgba(${r},${g},${b},${0.10 + 暈 * 0.16})`;
+              ctx.lineWidth = 3 + 暈 * 9;
+            } else {
+              ctx.strokeStyle = `rgba(${r},${g},${b},${0.62 + 曝 * 0.38})`;
+              ctx.lineWidth = 1.5 + 曝 * 1.9;
+            }
+          }
+          ctx.beginPath();
+          ctx.moveTo(ox + x1 * s, oy + y1 * s);
+          ctx.lineTo(ox + x2 * s, oy + y2 * s);
+          ctx.stroke();
         }
-        ctx.beginPath();
-        ctx.moveTo(ox + x1 * s, oy + y1 * s);
-        ctx.lineTo(ox + x2 * s, oy + y2 * s);
-        ctx.stroke();
       }
 
       /*

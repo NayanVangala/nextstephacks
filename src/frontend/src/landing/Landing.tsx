@@ -159,7 +159,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(6,8,12,0.92)_0%,rgba(6,8,12,0.88)_30%,rgba(6,8,12,0.55)_52%,rgba(6,8,12,0.10)_78%,rgba(6,8,12,0)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(6,8,12,0.88)_0%,rgba(6,8,12,0.72)_28%,rgba(6,8,12,0.34)_50%,rgba(6,8,12,0.04)_76%,rgba(6,8,12,0)_100%)]"
         />
         <div className="relative mx-auto w-full max-w-6xl">
           {/*
@@ -177,7 +177,16 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             className="landing-display block pl-[6vw] text-[clamp(3rem,12vw,10rem)]" />
 
           <Reveal 延={0.5}>
-            <p className="mt-[36px] max-w-2xl text-base text-white/70">
+            {/*
+              網既明而幕既薄,則此文之下不復為純色,乃有網行其後。
+              故提其色至八五,並加一影 —— 文在圖上者,其比不可以一數定之,
+              當以其最劣處為度。影者,所以固其最劣處也。
+              With the network brighter and the scrim thinner, this paragraph no
+              longer sits on flat colour — lines pass behind it. Text over
+              imagery cannot be judged by a single contrast number; it has to
+              survive its worst pixel, which is what the shadow guarantees.
+            */}
+            <p className="mt-[36px] max-w-2xl text-base text-white/85 [text-shadow:0_1px_12px_rgba(6,8,12,0.95)]">
               Heat-safe, step-free walking routes for disabled pedestrians. Built
               on real sidewalk data, projected building shadows, and an explicit
               account of what the data does not know.

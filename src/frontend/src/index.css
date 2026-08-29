@@ -3,6 +3,24 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 /*
+  題之族。Archivo Variable —— 其軸有寬(六二至一二五)有重(百至九百),
+  故可為窄而重之體,即路牌之體。此物所寫者即路,其題用路牌之字,稱其實。
+
+  ── 何以增一族 ──────────────────────────────────────────────────────
+  前此一族(Geist)兼題與文之二職,故其題但為大之文,無其自性。
+  讀 incredibles.dev 之籤,其題自有其族(Frama),其文自有其族(Neue Montreal)
+  —— 題與文異其職,亦當異其形。
+
+  ── 仍不違離網之戒 ──────────────────────────────────────────────────
+  此為 @fontsource,其字隨其 build 而入,非取於 CDN。戒者在 CDN,不在其字。
+  latin 之檔九十千字節,且以 unicode-range 分之,他文之檔不為所取。
+  This is @fontsource — the font files are bundled into the build, not fetched
+  from a CDN. The rule this project set is against CDN dependency, not against
+  having a second typeface. 90KB for latin, and unicode-range keeps the other
+  subsets from ever being downloaded.
+*/
+@import "@fontsource-variable/archivo/wdth.css";
+/*
   ---break---
 */
 @custom-variant dark (&:is(.dark *));
@@ -47,6 +65,9 @@
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  /* 題之族。其後備為系統之窄體,不得則從其常 —— 字未至而版不崩。 */
+  --font-display: "Archivo Variable", "Archivo", "Helvetica Neue Condensed",
+    "Arial Narrow", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
 
@@ -314,10 +335,34 @@ body {
   0.88 rather than their 0.86: their headings are short phrases, while this page
   has h2s running to three lines with descenders that collide at 0.86.
 */
+/*
+  題:窄而重,如路牌。
+  其寬七二 —— 同其地而字可大,故其題成塊而不成行。
+  重八百 —— 其筆實,故於網之上不為所奪。
+  距 -0.02em —— 窄體之字本已相親,收之過則其字相犯。Frama 之 -0.05em 為寬體之數。
+  行高零點八六 —— 既為窄體,其行可更相銜,與所法者同。
+
+  Condensed and heavy, in the register of street signage — which is literally
+  this product's subject. The width axis at 72% buys physical size in the same
+  column, so the headline reads as a block rather than a line. Tracking is only
+  -0.02em because a condensed face is already tight; the reference's -0.05em is
+  a number for a wide face.
+*/
 .landing-display {
-  line-height: 0.88;
-  letter-spacing: normal;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  /*
+    詞間必補。窄體之空本狹,而字距又收之,故「HEAT HAS」讀如「HEATHAS」。
+    字距收其字與字,而詞與詞之別賴其空 —— 收其一則必補其一,不然則詞界失。
+    A condensed face has a narrow word space to begin with, and negative
+    tracking shrinks it further, so "HEAT HAS" read as one word. Tightening
+    letter-spacing must be paid back in word-spacing or the word boundary is
+    lost — which costs legibility, not just looks.
+  */
+  word-spacing: 0.14em;
 }
 
 /*
