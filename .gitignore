@@ -16,3 +16,11 @@ src/frontend/.env.local
 # chroma 之索,可再建,不入库
 src/backend/.chroma/
 .gstack/
+
+# playwright MCP 之遺:每run所存之 snapshot 與 console,非source
+.playwright-mcp/
+
+# 前後之圖,九兆有餘 —— 入之則永在其史,而其所載者已在其 README。
+# 圖存於其地,不入其庫。
+docs/design/**/before/
+docs/design/**/after/

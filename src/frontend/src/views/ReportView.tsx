@@ -61,7 +61,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
   return (
     <main className="py-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Report</h1>
+        <h1 className="h-sm">Report</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Where this city fails its disabled residents, measured on{" "}
           {pack.edges.length.toLocaleString()} sidewalk segments.
@@ -104,7 +104,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       {站總 > 0 && 有輪椅之欄 === false && (
         <section aria-label="Transit accessibility data gap" className="mt-8">
-          <h2 className="题-accent text-lg font-semibold">Transit accessibility data is not published</h2>
+          <h2 className="题-accent h-xs">Transit accessibility data is not published</h2>
           <p className="mt-1 text-sm">
             The GTFS specification has carried a <code>wheelchair_boarding</code> field
             since 2011. {pack.manifest.name}'s published feeds omit that column
@@ -122,7 +122,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       )}
 
       <section aria-label="Severance" className="mt-8">
-        <h2 className="题-accent text-lg font-semibold">What the traversable figure hides</h2>
+        <h2 className="题-accent h-xs">What the traversable figure hides</h2>
         <p className="mt-1 text-sm">
           <strong className="数">{百分(報.通.率)}</strong> of the sidewalk network is
           traversable for this profile, which sounds close to solved. It is not the
@@ -144,7 +144,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </section>
 
       <section aria-label="Building height coverage" className="mt-8">
-        <h2 className="题-accent text-lg font-semibold">Building height coverage</h2>
+        <h2 className="题-accent h-xs">Building height coverage</h2>
         <p className="mt-1 text-sm">
           Shade is computed by projecting building shadows, so it is only as good as
           OpenStreetMap's height data — and that varies enormously by city.{" "}
@@ -169,7 +169,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </section>
 
       <section aria-label="Data confidence" className="mt-8">
-        <h2 className="题-accent text-lg font-semibold">Data confidence</h2>
+        <h2 className="题-accent h-xs">Data confidence</h2>
         <p className="mt-1 text-sm">
           Accessibility attributes come from OpenStreetMap. A segment is only{" "}
           <strong>high</strong> confidence when a wheelchair, kerb, or steps tag was
@@ -187,7 +187,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </section>
 
       <section aria-label="Heat traps" className="mt-8">
-        <h2 className="题-accent text-lg font-semibold">Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
+        <h2 className="题-accent h-xs">Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Segments carrying the most foot traffic <em>and</em> the most sun. Traffic is
           estimated by sampling shortest paths, so these are approximate rankings, not
@@ -205,7 +205,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       {停.有源 && (
         <section aria-label="Service disruption feed" className="mt-8">
-          <h2 className="题-accent text-lg font-semibold">Service disruption data</h2>
+          <h2 className="题-accent h-xs">Service disruption data</h2>
           <p className="mt-1 text-sm">
             {pack.manifest.name} publishes no service-alerts endpoint. The nearest
             public equivalent is canceled trips, which currently reports{" "}
@@ -241,7 +241,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       )}
 
       <section aria-label="Paratransit" className="mt-8">
-        <h2 className="题-accent text-lg font-semibold">Paratransit</h2>
+        <h2 className="题-accent h-xs">Paratransit</h2>
         <p className="mt-1 text-sm">
           {pack.manifest.name}'s ADA paratransit operator requires advance booking. A
           wildfire or a heat emergency does not give that much notice, so the transit

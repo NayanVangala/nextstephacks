@@ -350,19 +350,30 @@ body {
 */
 .landing-display {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-stretch: 72%;
-  line-height: 0.86;
-  letter-spacing: -0.02em;
   /*
-    詞間必補。窄體之空本狹,而字距又收之,故「HEAT HAS」讀如「HEATHAS」。
-    字距收其字與字,而詞與詞之別賴其空 —— 收其一則必補其一,不然則詞界失。
-    A condensed face has a narrow word space to begin with, and negative
-    tracking shrinks it further, so "HEAT HAS" read as one word. Tightening
-    letter-spacing must be paid back in word-spacing or the word boundary is
-    lost — which costs legibility, not just looks.
+    ── 重四百而寬其常,反前此之八百七二 ────────────────────────────
+    前此取窄而重(八百、寬七二),以路牌之體書之,取其為此物之所寫者。
+    再量所法者:其顯之字皆四百,其寬為其常,其距 -.05em —— 輕而寬而收。
+    二者之別在其所為:窄而重者,告白之體,其力在奪目;
+    輕而寬者,刊物之體,其力在其字之形。所法者為後者,今從之。
+
+    ── 詞距之補既可去 ────────────────────────────────────────────
+    補詞距者,為窄體而設 —— 窄體之空本狹,又收其距,故詞界失。
+    寬其常則其空自足,補之反使詞相離。故隨其寬而去之。
+
+    Reversed from 800 weight / 72% width. That was a signage register chosen
+    because signage is this product's subject; the reference's display type is
+    editorial — 400 weight at normal width with -.05em. The word-spacing
+    compensation existed only to protect word boundaries in a condensed face and
+    is removed with it, since a normal-width face has a sufficient word space.
+
+    此二值為其所繫 —— 欲復其舊者,改此二行而已(800 / 72%)。
+    To restore the signage register, these two lines are the only knobs.
   */
-  word-spacing: 0.14em;
+  font-weight: 400;
+  font-stretch: 100%;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
 }
 
 /*
@@ -507,53 +518,7 @@ h1, h2, h3 {
   invisible. Lifted values are 6.8:1 or better. The hues do not change, because
   they are not decoration — each one names a measured condition.
 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-
-    /* 曝之階,提之以就暗地。 */
-    --color-shade: #5b9bff;
-    --color-shade-soft: #12233f;
-    --color-midsun: #e2a63c;
-    --color-midsun-soft: #2a2210;
-    --color-fullsun: #ff6b5b;
-    --color-fullsun-soft: #2e1614;
-
-    --color-route: #34d399;
-    --color-reach: #a78bfa;
-    --color-blocked: #8b93a1;
-
-    /* 地與紙。皆帶藍 —— 中性之灰置於此則如塵。 */
-    --color-canvas: #0e1116;
-    --color-paper: #161a21;
-    --color-panel: #1a1f28;
-    --color-line: #262c36;
-    --color-ink: #e6eaf0;
-
-    --color-accent-ink: #5b9bff;
-    --color-accent-wash: #14203a;
-
-    /* shadcn 之籤亦須從之,不然則中性之卡浮於帶藍之地,其灰可見。 */
-    --background: #0e1116;
-    --foreground: #e6eaf0;
-    --card: #161a21;
-    --card-foreground: #e6eaf0;
-    --popover: #161a21;
-    --popover-foreground: #e6eaf0;
-    --primary: #e6eaf0;
-    --primary-foreground: #0e1116;
-    --secondary: #1e242d;
-    --secondary-foreground: #e6eaf0;
-    --muted: #1e242d;
-    --muted-foreground: #98a2b3;
-    --accent: #1e242d;
-    --accent-foreground: #e6eaf0;
-    --destructive: #ff6b5b;
-    --border: #262c36;
-    --input: #2a313c;
-    --ring: #5b9bff;
-  }
-}
+/* 其暗與其淡之籤,今合於下之「其常為暗」一處 —— 見卷末。 */
 
 /*
   信之紋,其色自為一籤。前此賴 --color-muted —— 而暗中 muted 為暗灰,
@@ -564,15 +529,9 @@ h1, h2, h3 {
   That texture is the one thing distinguishing inferred data from verified data,
   so it gets its own token that stays visible against either ground.
 */
-:root {
-  --hatch: rgba(24, 24, 27, 0.55);
-}
+/* 其暗與其淡之籤,今合於下之「其常為暗」一處 —— 見卷末。 */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --hatch: rgba(230, 234, 240, 0.30);
-  }
-}
+/* 其暗與其淡之籤,今合於下之「其常為暗」一處 —— 見卷末。 */
 
 .纹-medium {
   background-image: repeating-linear-gradient(
@@ -602,23 +561,9 @@ h1, h2, h3 {
   no specificity, so source order alone decides, and putting the override first
   silently disables it.
 */
-.chrome {
-  background: #18181b;
-}
+/* 其暗與其淡之籤,今合於下之「其常為暗」一處 —— 見卷末。 */
 
-@media (prefers-color-scheme: dark) {
-  /*
-    暗中,帶與地相去無幾(#080a0e 與 #0e1116),故其界不可見,而帶失其為帶。
-    淡中則不須此 —— 黑帶自別於淡地。
-    In dark mode the bar and the page ground are within a few points of each
-    other, so the chrome stops reading as chrome. A hairline restores the edge;
-    in light mode the near-black bar separates on its own and needs none.
-  */
-  .chrome {
-    background: #080a0e;
-    border-bottom: 1px solid #222835;
-  }
-}
+/* 其暗與其淡之籤,今合於下之「其常為暗」一處 —— 見卷末。 */
 
 /*
   ── 日隨捲而行 ──────────────────────────────────────────────────────
@@ -707,11 +652,12 @@ html:has(.landing) body,
   is loose as a matter of typographic fact rather than taste. Display tightens;
   body text is untouched and stays at normal.
 */
-.landing-display {
-  letter-spacing: -0.045em;
-}
-
-/* 中題不當收如其大者 —— 收之過,則其字相犯。 */
+/*
+  距既定於上(-.05em,即所法者之數),此不復書之。
+  中題仍收其半 —— 所法者之 h-md 以下皆 -.02em,不與其顯之字同。
+  The display tracking is now set once above at the reference's own -.05em.
+  Mid-level headings keep -.02em, matching the reference's h-md and below.
+*/
 .landing h2.landing-display,
 .landing h3.landing-display {
   letter-spacing: -0.02em;
@@ -845,8 +791,385 @@ summary {
   今深之至 oklch(0.52),於琥珀地得四點七五,於白地得五點四三。
   暗題不與焉 —— 其 #98a2b3 於暗地已六點六二。
 */
-@media not all and (prefers-color-scheme: dark) {
-  :root {
-    --muted-foreground: oklch(0.52 0 0);
-  }
+/* 其暗與其淡之籤,今合於下之「其常為暗」一處 —— 見卷末。 */
+
+/*
+  ══ 其四,盡法 incredibles.dev 之制 ═══════════════════════════════════
+  再量其站(Playwright,一二四籤皆讀其 :root,非目測)。前三次所改者,
+  曲、色、籤而已 —— 其骨未動。此番動其骨:字之階、地之格、角之等、動之時。
+
+  Re-measured from the reference's own :root rather than by eye. The previous
+  passes changed curves, colour and labels; this one changes the skeleton —
+  the type scale, the layout grid, the radius set, and transition timing.
+*/
+
+/*
+  ── 一、字之階:一階五屬,不可拆 ────────────────────────────────────
+  所法者之階,每一階自帶其大、其重、其行高、其族、其距 —— 五者同綁。
+  故其 h-lg 與 h-md 同為 2.5rem 而不相亂:一為 Frama 四百,距 -.05em;
+  一為 Neue Montreal 五百,距 -.02em。大小非其所以別,五屬合而別之。
+
+  前此此樹但取其「大」,而重與距逐處手書,故同大者未必同族,同族者未必同距。
+  今立其階,凡用之者五屬俱得。
+
+  Each step on the reference bundles FIVE properties — size, weight,
+  line-height, family, tracking — which is why its h-lg and h-md share 2.5rem
+  without colliding: one is the display face at 400/-.05em, the other the text
+  face at 500/-.02em. Size alone does not identify a step.
+
+  ── 其族之代 ────────────────────────────────────────────────────────
+  Frama → Archivo Variable、Neue Montreal → Geist Variable、
+  Supply Mono → 系統之等寬。三者皆隨其 build 而入,無一取於 CDN。
+  Frama / Neue Montreal / Supply Mono are not licensable here; the substitutes
+  are the two @fontsource faces already bundled plus the system mono stack.
+
+  ── 其大之縮 ────────────────────────────────────────────────────────
+  所法者之 8.5rem 為定值,於三七五之屏必溢。故以 clamp 縛之,而其上限即其值 ——
+  寬屏所見者即其數,窄屏乃縮之。
+  The reference's fixed 8.5rem overflows a 375px viewport. clamp() caps at the
+  reference value so wide screens match it exactly and narrow ones scale down.
+*/
+@theme {
+  --font-size-h-3xl: clamp(3rem, 13vw, 8.5rem);
+  --font-size-h-2xl: clamp(2.5rem, 7.5vw, 5.5rem);
+  --font-size-h-xl: clamp(2.25rem, 6.5vw, 5rem);
+  --font-size-h-lg: clamp(1.75rem, 3.6vw, 2.5rem);
+  --font-size-h-md: clamp(1.75rem, 3.2vw, 2.5rem);
+  --font-size-h-sm: clamp(1.5rem, 2.6vw, 2rem);
+  --font-size-h-xs: 1.5rem;
+  --font-size-t-lg: 1.25rem;
+  --font-size-t-md: 1.125rem;
+  --font-size-t-sm: 1.0625rem;
+  --font-size-t-xs: 1rem;
+  --font-size-t-2xs: 0.875rem;
+  --font-size-t-3xs: 0.8125rem;
+  --font-size-t-4xs: 0.75rem;
 }
+
+/* 題之四階,皆用顯之族。行高零點八六,距負零點零五 —— 皆其所量。 */
+.h-3xl, .h-2xl, .h-xl, .h-lg {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+}
+.h-3xl { font-size: var(--font-size-h-3xl); }
+.h-2xl { font-size: var(--font-size-h-2xl); }
+.h-xl  { font-size: var(--font-size-h-xl); }
+.h-lg  { font-size: var(--font-size-h-lg); }
+
+/* 中題三階,用文之族而重五百。距負零點零二 —— 收之不如其大者。 */
+.h-md, .h-sm, .h-xs {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+}
+.h-md { font-size: var(--font-size-h-md); }
+.h-sm { font-size: var(--font-size-h-sm); }
+.h-xs { font-size: var(--font-size-h-xs); }
+
+/*
+  文之七階。行高一點三,距零 —— 與題正相反:題為塊而文為列。
+
+  ── 其重四百,不四三百 ──────────────────────────────────────────────
+  所法者之文皆三百(--font-weight-base: 300),而此樹不從,故記其由:
+  所法者為淡地黑字,細筆於淡地愈顯其形;此樹之常為暗地淡字,細筆於暗地則
+  其邊暈開(halation),筆愈細則所失愈多。其比雖不隨其重而改,而其可讀者改。
+  故大者(t-lg、t-md)從其三百,小者(t-sm 以下)仍四百。
+
+  THE REFERENCE USES 300 EVERYWHERE AND THIS DOES NOT. The reference is dark
+  text on a light ground, where a thin stroke stays crisp. This app's default is
+  light text on a dark ground, where thin strokes bloom at small sizes. Contrast
+  ratio does not change with weight but legibility does, so 300 is kept for the
+  large steps and 400 held at t-sm and below.
+*/
+.t-lg, .t-md, .t-sm, .t-xs, .t-2xs, .t-3xs, .t-4xs {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.t-lg { font-size: var(--font-size-t-lg); font-weight: 300; }
+.t-md { font-size: var(--font-size-t-md); font-weight: 300; }
+.t-sm { font-size: var(--font-size-t-sm); }
+.t-xs { font-size: var(--font-size-t-xs); }
+.t-2xs { font-size: var(--font-size-t-2xs); }
+.t-3xs { font-size: var(--font-size-t-3xs); }
+.t-4xs { font-size: var(--font-size-t-4xs); }
+
+/*
+  ── 二、籤之距,量之乃知其太鬆 ──────────────────────────────────────
+  前此書零點零八 em,以為大寫之籤當放其距。量所法者:其 l-sm 之距
+  .0225rem 施於 .75rem 之字,即零點零三 em —— 三分之一而已。
+  Measured: the reference tracks its uppercase mono labels at .0225rem on a
+  .75rem face — 0.03em. This project had 0.08em, nearly three times as loose,
+  which is why the labels read as spaced-out rather than as instrument type.
+*/
+.landing-label { letter-spacing: 0.03em; }
+.籤 { letter-spacing: 0.03em; }
+
+/*
+  ── 三、地之格 ──────────────────────────────────────────────────────
+  所法者之格:十二列,其外四十八,其器至一九二〇而止。
+  此樹前此 max-w-6xl(一一五二),於一四四〇之屏兩側各餘一四四之空 ——
+  其面遂窄於所法者近二百。今從其制。
+
+  窄屏則其外二十四 —— 四十八於三七五之屏為八分之一,文不能立。
+  The 48px offset is a desktop number; on a 375px viewport it would eat an
+  eighth of the width, so it steps down below 768px.
+*/
+@theme {
+  --grid-container-max-width: 120rem;
+  --grid-offset: 48px;
+  --grid-columns-count: 12;
+  --layout-padding-top: 8rem;
+}
+
+.grid-container {
+  width: 100%;
+  max-width: var(--grid-container-max-width);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (min-width: 768px) {
+  .grid-container { padding-inline: var(--grid-offset); }
+}
+
+/* 節之距,四點六八七五 rem(七十五) —— 前此七十二,近而非是。 */
+@theme {
+  --spacing-sec: 4.6875rem;
+}
+
+/*
+  ── 四、角之等 ──────────────────────────────────────────────────────
+  所法者之角:六(二十五處)、八(十三)、十二(十二)、十六(十)、
+  二十四(十一)、丸(七)。無一在十以上而不在此列者。
+  此樹本以 --radius 十像素派生,故其階為六點四、八、十、十四 —— 無一合。
+  今直書其值。
+  The reference's radii are a fixed set, not a derived ramp. This project
+  derived everything from a 10px base and matched none of them.
+*/
+@theme {
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-4xl: 24px;
+}
+
+/*
+  ── 五、色之易,無所行,故不當有律 ────────────────────────────────
+  量所法者:凡 transition 之屬 color 與 border-color 者,皆零點零七秒而 linear
+  (十一處)。而形之動(transform、opacity、clip-path)則零點八、零點六,
+  皆用其曲。
+
+  其理在:色無所行。形自甲至乙,其間之路可疾可徐,故有曲;而色之「中間」
+  非其所歷之地,乃算之所生。故色但當即易,不當作勢。
+
+  此規在 layer 之外,故勝 tailwind 之 duration-* 與 ease-* ——
+  全樹凡 transition-colors 者一舉而正,不必逐處改其 className。
+  Colour has no spatial trajectory: the intermediate values of a colour fade are
+  computed, not traversed, so an easing curve on them is meaningless. Measured
+  at 0.07s linear on all 11 colour transitions on the reference. This rule is
+  unlayered so it beats Tailwind's duration/ease utilities everywhere at once.
+*/
+.transition-colors {
+  transition-duration: 0.07s;
+  transition-timing-function: linear;
+}
+
+/*
+  ── 六、其常為暗 ────────────────────────────────────────────────────
+  IMPORTANT: this block must stay AFTER the light values above and BEFORE the
+  light media query below. Dark is now the base :root, not a media override, so
+  a client with no colour-scheme preference gets dark. Light is opt-in.
+
+  前此暗在 @media (prefers-color-scheme: dark) 之中 —— 故無所欲者得淡。
+  量之於 Playwright(其常無所欲),landing 黑而器白,二者判然 ——
+  「其常為暗」之令實未行。今暗為其本,而淡者退為所欲乃得。
+  Verified in Playwright, which reports no colour-scheme preference: the landing
+  rendered dark and the tool rendered white. "Dark by default" was not actually
+  in effect. The dark values now live on :root itself.
+*/
+:root {
+  color-scheme: dark;
+
+  --color-shade: #5b9bff;
+  --color-shade-soft: #12233f;
+  --color-midsun: #e2a63c;
+  --color-midsun-soft: #2a2210;
+  --color-fullsun: #ff6b5b;
+  --color-fullsun-soft: #2e1614;
+
+  --color-route: #34d399;
+  --color-reach: #a78bfa;
+  --color-blocked: #8b93a1;
+
+  --color-canvas: #0e1116;
+  --color-paper: #161a21;
+  --color-panel: #1a1f28;
+  --color-line: #262c36;
+  --color-ink: #e6eaf0;
+
+  --color-accent-ink: #5b9bff;
+  --color-accent-wash: #14203a;
+
+  --background: #0e1116;
+  --foreground: #e6eaf0;
+  --card: #161a21;
+  --card-foreground: #e6eaf0;
+  --popover: #161a21;
+  --popover-foreground: #e6eaf0;
+  --primary: #e6eaf0;
+  --primary-foreground: #0e1116;
+  --secondary: #1e242d;
+  --secondary-foreground: #e6eaf0;
+  --muted: #1e242d;
+  --muted-foreground: #98a2b3;
+  --accent: #1e242d;
+  --accent-foreground: #e6eaf0;
+  --destructive: #ff6b5b;
+  --border: #262c36;
+  --input: #2a313c;
+  --ring: #5b9bff;
+
+  --hatch: rgba(230, 234, 240, 0.30);
+}
+
+.chrome {
+  background: #080a0e;
+  border-bottom: 1px solid #222835;
+}
+
+/*
+  淡者不去 —— 好淡者自有其疾(散光、閱讀之障),而此物為便不能者而設,
+  奪其所欲則自違其旨。故淡退為所欲乃得,非去之。
+  Light is retained rather than dropped: readers with astigmatism or certain
+  reading disabilities need it, and an accessibility tool that overrides a
+  stated OS preference contradicts itself.
+*/
+/*
+  ── 淡者以其所擇得之,不以其所欲 ──────────────────────────────────
+  CSS 之 prefers-color-scheme 無「無所欲」之值 —— 凡不欲暗者皆報淡。
+  故「其常為暗,而欲淡者得淡」不可以 media query 書之:二者不可辨。
+  量之於 Playwright(其機無所設),其報為 light,故淡勝而暗之令不行。
+
+  今以 data-theme 主之:其常為暗,加此屬乃淡。其擇存於 localStorage,
+  而 index.html 於畫前施之,故無閃。
+
+  CSS has no "no preference" value for prefers-color-scheme: any client not set
+  to dark reports light, so "dark by default, light for those who ask" cannot be
+  written as a media query — the two states are indistinguishable. Theme is
+  therefore an explicit choice: dark is the base for everyone, and this
+  attribute is set by the header toggle and restored before first paint.
+*/
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --color-shade: #1d4ed8;
+    --color-shade-soft: #dbeafe;
+    --color-midsun: #a16207;
+    --color-midsun-soft: #fef3c7;
+    --color-fullsun: #dc2626;
+    --color-fullsun-soft: #fee2e2;
+
+    --color-route: #16a34a;
+    --color-reach: #7c3aed;
+    --color-blocked: #a1a1aa;
+
+    --color-canvas: #fbfaf9;
+    --color-paper: #ffffff;
+    --color-panel: #f4f4f5;
+    --color-line: #d4d4d8;
+    --color-ink: #18181b;
+
+    --color-accent-ink: #1d4ed8;
+    --color-accent-wash: #eef4ff;
+
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    /* 淡題之次文須再深 —— 見上「淡題之次文」之註,其比於琥珀地者。 */
+    --muted-foreground: oklch(0.52 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+
+    --hatch: rgba(24, 24, 27, 0.55);
+}
+
+:root[data-theme="light"] .chrome {
+  background: #18181b;
+  border-bottom: 0;
+}
+
+/*
+  ── 七、地有其紋 ────────────────────────────────────────────────────
+  所法者之地帶半調之點。量其 CSS 則無 background-image —— 其紋畫於 canvas。
+  此樹之 landing 已有其網(亦 canvas),故不復加;所加者在器之地。
+
+  其點一像素,其距二十四(即其間距之主數),其色三十五分之一 ——
+  近乎不可見,而地不復為一片平色。此為觸感,非圖案:若可數其點,則太過。
+  The reference's ground carries a halftone the CSS does not describe — it is
+  canvas-drawn. The landing already has its own canvas field, so the texture is
+  added only to the tool's ground: 1px dots on the 24px spacing rhythm at 3.5%
+  opacity. If the dots are countable it is too strong; this is meant to register
+  as surface rather than as pattern.
+
+  無 fixed —— 其地隨捲而行,不然則點浮於其上,如玻璃之塵。
+*/
+body {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklab, var(--color-ink) 3.5%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}
+
+/* landing 自有其網,其地不當復有點 —— 二紋相犯則皆亂。 */
+body:has(.landing) {
+  background-image: none;
+}
+
+/*
+  ── leaflet 之署,其比不及 ──────────────────────────────────────────
+  量之:其鏈 rgb(0,120,168) 於其地 #ddd,得三點六四 —— 十二像素之文須四點五。
+  此為 leaflet 自帶之色,非此樹所書,然其在此頁之上,則其責在此頁。
+  Measured at 3.64:1 — Leaflet's own link colour on its own attribution strip,
+  below the 4.5 required at 12px. It ships from the library, but it renders on
+  this page, so it is this page's problem.
+*/
+.leaflet-control-attribution a {
+  color: #00506f;
+}
+
+/*
+  ── 顯之階,施於短語,不施於長句 ────────────────────────────────────
+  所法者之大題皆三五字之語(「See for yourself」「Incredible devs you can
+  count on.」),故八十八像素而不為過。此頁之節題二十字,同施之則五行,
+  一節之地盡為其所據,而其下之文反不可見。
+
+  故其分不以其位(h1、h2),而以其長:短語者得其顯之階,長句者得其中階。
+  此為所法者之實,非其籤所能載 —— 其籤但言其大,而其所以施者在其文。
+  The reference's display steps are applied to three-to-six word phrases. The
+  same step on this page's twenty-word section heading produced five lines that
+  consumed the whole section. The rule that actually governs the reference is
+  not "h2 gets 5.5rem" but "short phrases get the display steps"; length, not
+  tag, decides. Long headings take the 2.5rem step instead.
+*/

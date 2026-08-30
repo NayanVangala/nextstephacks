@@ -13,7 +13,7 @@ export function BudgetSlider({
         <span id="budget-label" className="text-sm font-semibold">
           Sun-exposure budget
         </span>
-        <span className="数 text-lg font-semibold text-accent-ink">{value}</span>
+        <span className="数 h-xs text-accent-ink">{value}</span>
       </div>
       <Slider
         className="[&_[data-slot=slider-range]]:bg-accent-ink"

@@ -215,7 +215,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   if (loadError) {
     return (
       <main className="py-8">
-        <h1 className="text-2xl font-semibold">Passable</h1>
+        <h1 className="h-sm">Passable</h1>
         <p role="alert" className="mt-2 text-fullsun">
           Could not load city data: {loadError}
         </p>
@@ -228,7 +228,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     <main className="py-6">
       {/* 城之名已在頂帶,不復言之。 */}
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Route</h1>
+        <h1 className="h-sm">Route</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Heat-safe, step-free walking routes over{" "}
           <span className="数">{pack.edges.length.toLocaleString()}</span> sidewalk segments.
@@ -377,7 +377,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       {result && (
         <section aria-label="Route detail" className="mt-6">
-          <h2 className="题-accent text-lg font-semibold">Sun along this route</h2>
+          <h2 className="题-accent h-xs">Sun along this route</h2>
           <ExposureStrip edges={result.edges} hourIdx={hourIdx} className="mt-2" />
 
           {遲之利 && 遲之利.省之比 >= 0.1 && pack && (
@@ -394,7 +394,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             </p>
           )}
 
-          <h2 className="题-accent mt-6 text-lg font-semibold">Directions</h2>
+          <h2 className="题-accent mt-6 h-xs">Directions</h2>
           <p className="text-sm text-muted-foreground">
             <span className="数">{Math.round(result.totalLength_m)}</span> m over{" "}
             <span className="数">{result.edges.length}</span> segments.

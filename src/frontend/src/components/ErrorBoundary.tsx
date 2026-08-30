@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, 之狀> {
     if (!this.state.誤) return this.props.children;
     return (
       <main className="mx-auto max-w-2xl px-4 py-16">
-        <h1 className="text-2xl font-semibold">Something in this page broke.</h1>
+        <h1 className="h-sm">Something in this page broke.</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           This is a bug on our side, not something you did. Reloading usually
           clears it. Routing runs entirely on your device, so nothing you entered

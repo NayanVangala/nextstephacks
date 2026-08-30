@@ -20,7 +20,7 @@ export function ReportList({
 }) {
   return (
     <section aria-label="Reported problems" className="mt-6">
-      <h2 className="text-lg font-semibold">
+      <h2 className="h-xs">
         Reported problems <span className="数 text-muted-foreground">({报列.length})</span>
         {同步中 && <span className="ml-2 text-sm font-normal text-muted-foreground">syncing…</span>}
       </h2>

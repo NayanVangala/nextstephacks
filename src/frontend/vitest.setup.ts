@@ -22,6 +22,32 @@ if (typeof document !== "undefined") {
       disconnect() {}
     } as never;
   }
+  /*
+    jsdom 於此設無可用之 localStorage —— 其物存而其法不備
+    (`localStorage.clear is not a function`)。凡驗所存之擇者皆賴之,
+    故補一以 Map 為體者。其為真物之替,非其偽:存、取、去、清皆如其約。
+    jsdom here exposes a localStorage that lacks its methods, so anything
+    testing a persisted preference fails on the setup line rather than on the
+    behaviour under test. This is a real Map-backed implementation of the
+    Storage contract, not a spy.
+  */
+  if (typeof localStorage === "undefined" || typeof localStorage.clear !== "function") {
+    const 存 = new Map<string, string>();
+    Object.defineProperty(globalThis, "localStorage", {
+      configurable: true,
+      value: {
+        getItem: (k: string) => (存.has(k) ? 存.get(k)! : null),
+        setItem: (k: string, v: string) => void 存.set(k, String(v)),
+        removeItem: (k: string) => void 存.delete(k),
+        clear: () => 存.clear(),
+        key: (i: number) => [...存.keys()][i] ?? null,
+        get length() {
+          return 存.size;
+        },
+      },
+    });
+  }
+
   if (!globalThis.matchMedia) {
     globalThis.matchMedia = ((q: string) => ({
       matches: false,

@@ -8,6 +8,7 @@ import { Landing } from "./landing/Landing";
 import { CITIES, 預設之城 } from "./data/cities";
 import { 解址 } from "./data/路之址";
 import { SignIn } from "./auth/SignIn";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { useEnter } from "./motion/useEnter";
 
 type 之view = "route" | "reach" | "report" | "index";
@@ -73,19 +74,19 @@ export default function App() {
       </a>
 
       {/*
-        頂之chrome。黑者,承 landing 之色也 —— 二者本一物,而前此一黑一淡,
-        入之如易其站。今存一黑帶於上,則其一貫可見,而其下猶淡:圖與數賴之。
-        A dark chrome bar over a light workspace. The landing is black and the
-        tool was flat white, so entering it read as arriving at a different
-        product. The bar carries the identity across; the working surface stays
-        light because map tiles and dense figures need it.
+        頂之chrome。其色深於其地,故為帶而非地之一段。
+        其常既為暗,則此帶不復為「黑帶於淡地」,乃暗中之更暗者 ——
+        其別在一髮之界,見 index.css 之 .chrome。
+        The chrome sits a step darker than the workspace. Now that dark is the
+        base theme this is no longer a black bar over white; the separation is a
+        hairline, which is why .chrome carries a border in the dark palette.
 
         z 必逾千 —— leaflet 之控在千,不然則其鈕浮於此帶之上。
         MUST outrank Leaflet: its controls sit at z-index 1000, so anything less
         here lets the zoom buttons render on top of the sticky header.
       */}
       <header className="chrome sticky top-0 z-[1200] text-white">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-5xl px-6">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-3">
             <button
               type="button"
@@ -116,7 +117,9 @@ export default function App() {
               ))}
             </select>
 
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-2">
+              {/* 題之擇。暗為其本,故此鈕為所以出之,非所以入之。 */}
+              <ThemeToggle />
               <SignIn 暗 />
             </div>
           </div>
@@ -168,7 +171,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-5xl px-4">
+      <div className="mx-auto max-w-5xl px-6">
         {/* 帶既黏於上,則跳之的須讓其高,不然其題隱於帶下。 */}
         <div id="主" ref={面} tabIndex={-1} className="scroll-mt-28">
           {view === "route" && <RouteView key={city} cityId={city} />}

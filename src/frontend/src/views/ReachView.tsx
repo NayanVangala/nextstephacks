@@ -107,7 +107,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   if (loadError) {
     return (
       <main className="py-8">
-        <h1 className="text-2xl font-semibold">Reach</h1>
+        <h1 className="h-sm">Reach</h1>
         <p role="alert" className="mt-2 text-fullsun">
           Could not load city data: {loadError}
         </p>
@@ -119,7 +119,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   return (
     <main className="py-6">
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Reach</h1>
+        <h1 className="h-sm">Reach</h1>
         {/* 其問已在頂帶,此不復問,但言其法與其度。 */}
         <p className="mt-0.5 text-sm text-muted-foreground">
           Everywhere within a distance or sun-exposure budget from one point —
@@ -204,7 +204,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
       {result && (
         <section aria-label="Destinations" className="mt-6">
-          <h2 className="题-accent mb-2 text-lg font-semibold">Destinations</h2>
+          <h2 className="题-accent mb-2 h-xs">Destinations</h2>
           <DestinationList
             reachable={split.reachable}
             unreachable={split.unreachable}

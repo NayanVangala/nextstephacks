@@ -37,11 +37,11 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
     >
       <nav
         aria-label="Sections"
-        className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4"
+        className="grid-container flex items-center justify-between py-4"
       >
         <a
           href="#top"
-          className="text-sm font-semibold uppercase transition-opacity duration-150 ease-quint hover:opacity-60"
+          className="landing-label font-medium transition-opacity duration-150 ease-quint hover:opacity-60"
         >
           Passable
         </a>
@@ -53,7 +53,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className="text-xs uppercase text-white/70 transition-opacity duration-150 ease-quint hover:text-white hover:opacity-100"
+                className="landing-label text-white/70 transition-colors hover:text-white"
               >
                 {s.label}
               </a>
@@ -69,7 +69,7 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
           <button
             type="button"
             onClick={onEnter}
-            className="rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-105 hover:opacity-90"
+            className="landing-label rounded-full bg-white px-5 py-2.5 font-medium text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-105 hover:opacity-90"
           >
             Open the tool
           </button>

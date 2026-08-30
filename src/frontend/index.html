@@ -5,6 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
+    <!--
+      題之擇,必施於畫前 —— 不然則暗題之人先見一白之閃。
+      Applied before first paint: doing this in React would flash the dark base
+      at anyone who has chosen light. The key must match 題之鑰 in ThemeToggle.tsx.
+    -->
+    <script>
+      try {
+        if (localStorage.getItem("passable:theme") === "light")
+          document.documentElement.dataset.theme = "light";
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

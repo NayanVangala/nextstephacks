@@ -32,9 +32,9 @@ function Section({
     <section
       id={id}
       aria-label={label}
-      className={`landing-sec sun-rule-soft scroll-mt-16 border-t px-5 ${className}`}
+      className={`landing-sec sun-rule-soft scroll-mt-16 border-t ${className}`}
     >
-      <div className="mx-auto w-full max-w-6xl">{children}</div>
+      <div className="grid-container">{children}</div>
     </section>
   );
 }
@@ -77,11 +77,11 @@ function Figure({
       */}
       <div aria-hidden className={缺 ? "纹-sun h-2" : "sun-bar h-px"} />
       {/* 其階本二極 —— 五點五為其「中」,正 index.css 所自戒者。 */}
-      <div className="数 landing-display mt-5 text-[clamp(3.25rem,8.5vw,6.75rem)]">
+      <div className="数 landing-display h-2xl mt-5">
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
-      <div className="mt-4 text-base">{t}</div>
-      <div className="mt-1 text-base text-white/50">{sub}</div>
+      <div className="t-xs mt-4">{t}</div>
+      <div className="t-xs mt-1 text-white/50">{sub}</div>
     </RevealItem>
   );
 }
@@ -147,7 +147,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       <section
         id="top"
         aria-label="Introduction"
-        className="relative flex min-h-svh flex-col justify-center overflow-hidden px-5 pt-24"
+        className="relative flex min-h-svh flex-col justify-center overflow-hidden pt-[var(--layout-padding-top)]"
       >
         <HeatField />
         {/*
@@ -161,7 +161,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(6,8,12,0.88)_0%,rgba(6,8,12,0.72)_28%,rgba(6,8,12,0.34)_50%,rgba(6,8,12,0.04)_76%,rgba(6,8,12,0)_100%)]"
         />
-        <div className="relative mx-auto w-full max-w-6xl">
+        <div className="grid-container relative">
           {/*
             量之於一四二五:次行需一〇八〇,而其地一〇三七,短四三 ——
             故「A GEOMETRY.」不能一行。前此斷於字中而不覺,今詞不可斷,乃見之。
@@ -172,9 +172,9 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             leaves ~65px of slack.
           */}
           <SplitText as="h1" text="HEAT HAS"
-            className="landing-display block text-[clamp(3rem,12vw,10rem)]" />
+            className="landing-display h-3xl block" />
           <SplitText as="div" text="A GEOMETRY." 延={240}
-            className="landing-display block pl-[6vw] text-[clamp(3rem,12vw,10rem)]" />
+            className="landing-display h-3xl block sm:pl-[6vw]" />
 
           <Reveal 延={0.5}>
             {/*
@@ -186,7 +186,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               imagery cannot be judged by a single contrast number; it has to
               survive its worst pixel, which is what the shadow guarantees.
             */}
-            <p className="mt-[36px] max-w-2xl text-base text-white/85 [text-shadow:0_1px_12px_rgba(6,8,12,0.95)]">
+            <p className="t-xs mt-[36px] max-w-2xl text-white/85 [text-shadow:0_1px_12px_rgba(6,8,12,0.95)]">
               Heat-safe, step-free walking routes for disabled pedestrians. Built
               on real sidewalk data, projected building shadows, and an explicit
               account of what the data does not know.
@@ -199,14 +199,14 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
                 <button
                   type="button"
                   onClick={onEnter}
-                  className="rounded-full bg-white px-8 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                  className="t-xs rounded-full bg-white px-8 py-4 text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
                 >
                   Open the tool
                 </button>
               </Magnetic>
               <a
                 href="#what"
-                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-quint hover:border-white"
+                className="t-xs group inline-flex items-center gap-2 border-b border-white/30 pb-1 transition-colors duration-150 ease-quint hover:border-white"
               >
                 How it works
                 <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-y-1">↓</span>
@@ -227,13 +227,13 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       <Section id="what" label="What it is">
         <SectionLabel>What it is</SectionLabel>
         <Reveal>
-          <h2 className="landing-display max-w-4xl text-[clamp(1.75rem,4.2vw,3.4rem)]">
+          <h2 className="landing-display h-lg max-w-4xl">
             A routing tool that treats heat and step-free access as the same
             problem, because for a lot of people they are.
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <p className="mt-[36px] max-w-2xl text-base text-white/60">
+          <p className="t-xs mt-[36px] max-w-2xl text-white/60">
             Passable models every sidewalk segment in seven downtowns for whether
             you can physically use it and how much sun falls on it, hour by hour.
             It runs entirely in your browser — no account, no server, no tracking —
@@ -243,9 +243,9 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <RevealGroup className="mt-[72px] grid gap-[36px] md:grid-cols-3">
           {何以為之.map((s) => (
             <RevealItem key={s.n} className="sun-rule border-t pt-5">
-              <span className="数 text-base text-white/40">{s.n}</span>
-              <h3 className="mt-4 text-base">{s.h}</h3>
-              <p className="mt-2 text-base text-white/55">{s.p}</p>
+              <span className="landing-label text-white/55">{s.n}</span>
+              <h3 className="t-xs mt-4">{s.h}</h3>
+              <p className="t-xs mt-2 text-white/55">{s.p}</p>
             </RevealItem>
           ))}
         </RevealGroup>
@@ -264,7 +264,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           carries the same sentence under its exposure strip.
         */}
         <Reveal>
-          <p className="mt-[36px] flex items-center gap-[20px] text-base text-white/45">
+          <p className="t-xs mt-[36px] flex items-center gap-[20px] text-white/45">
             <span aria-hidden className="纹-sun inline-block h-2 w-10 shrink-0" />
             Hatched means the data does not exist. It is the one thing this tool
             will not quietly smooth over.
@@ -278,8 +278,8 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           {事.map((s) => (
             <Reveal key={s.h}>
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
-                <h3 className="landing-display text-[clamp(1.6rem,3.4vw,2.6rem)]">{s.h}</h3>
-                <p className="text-base text-white/55">{s.p}</p>
+                <h3 className="landing-display h-lg">{s.h}</h3>
+                <p className="t-xs text-white/55">{s.p}</p>
               </div>
             </Reveal>
           ))}
@@ -301,7 +301,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           {所發現.map((t, i) => (
             <div key={i}>
               <Reveal>
-                <p className="py-[36px] text-[clamp(1.15rem,2.1vw,1.7rem)] font-light leading-[1.2]">
+                <p className="h-xs py-[36px]">
                   {t}
                 </p>
               </Reveal>
@@ -313,7 +313,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
 
       <section
         aria-label="Enter"
-        className="relative flex flex-col items-center justify-center overflow-hidden border-t border-white/10 px-5 py-[144px] text-center"
+        className="relative flex flex-col items-center justify-center overflow-hidden border-t border-white/10 px-6 py-[144px] text-center"
       >
         <ReachField />
         <div
@@ -322,36 +322,36 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         />
         <div className="relative">
           <SplitText as="h2" text="NOW WALK IT."
-            className="landing-display block text-[clamp(2.75rem,11vw,9rem)]" />
+            className="landing-display h-3xl block" />
           <Reveal 延={0.2}>
             <div className="mt-[36px] flex flex-wrap items-center justify-center gap-[20px]">
               <Magnetic 力={0.4}>
                 <button
                   type="button"
                   onClick={onEnter}
-                  className="rounded-full bg-white px-10 py-4 text-base text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                  className="t-xs rounded-full bg-white px-10 py-4 text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
                 >
                   Open the tool
                 </button>
               </Magnetic>
               <a
                 href="https://github.com/NayanVangala/nextstephacks"
-                className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 text-base transition-colors duration-150 ease-quint hover:border-white"
+                className="t-xs group inline-flex items-center gap-2 border-b border-white/30 pb-1 transition-colors duration-150 ease-quint hover:border-white"
               >
                 Read the source
                 <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-x-1">→</span>
               </a>
             </div>
           </Reveal>
-          <p className="mt-[36px] hidden text-base text-white/40 lg:block">
+          <p className="t-xs mt-[36px] hidden text-white/55 lg:block">
             Move your cursor over the network — everything that lights up is what
             you could still reach under a heat budget
           </p>
         </div>
       </section>
 
-      <footer className="border-t border-white/10 px-5 py-[36px]">
-        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-[20px] text-base text-white/45">
+      <footer className="border-t border-white/10 py-[36px]">
+        <div className="grid-container t-xs flex flex-wrap items-center justify-between gap-[20px] text-white/45">
           <span>NextStep Hacks 2026 · Earth Forward</span>
           <span>Seven US cities</span>
           <span>Not medical guidance</span>
