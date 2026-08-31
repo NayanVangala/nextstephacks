@@ -1,0 +1,26 @@
+{
+  "id": "bos",
+  "name": "Boston",
+  "bbox": [
+    -71.072,
+    42.347,
+    -71.046,
+    42.366
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "MBTA The RIDE",
+    "advance_booking_hours": 24
+  }
+}

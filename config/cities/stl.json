@@ -1,0 +1,26 @@
+{
+  "id": "stl",
+  "name": "St. Louis",
+  "bbox": [
+    -90.212,
+    38.618,
+    -90.186,
+    38.637
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "Metro Call-A-Ride",
+    "advance_booking_hours": 24
+  }
+}

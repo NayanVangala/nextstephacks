@@ -1,0 +1,26 @@
+{
+  "id": "dal",
+  "name": "Dallas",
+  "bbox": [
+    -96.81,
+    32.771,
+    -96.784,
+    32.79
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "DART Paratransit Services",
+    "advance_booking_hours": 24
+  }
+}

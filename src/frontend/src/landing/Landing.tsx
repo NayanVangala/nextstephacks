@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import { SplitText } from "./SplitText";
+import { ReachProbe } from "./ReachProbe";
 import { DifferenceCursor } from "./DifferenceCursor";
 import { Marquee } from "./Marquee";
 import { Nav } from "./Nav";
 import { HeatField } from "./HeatField";
-import { ReachField } from "./ReachField";
 import { ScrollThread } from "./ScrollThread";
 import { useCountUp, 解數 } from "./useCountUp";
 import { Reveal, RevealGroup, RevealItem, RevealRule } from "./motion";
@@ -89,8 +89,8 @@ function Figure({
 }
 
 const 數: { n: string; t: string; s: string; 缺?: boolean }[] = [
-  { n: "136k", t: "sidewalk segments", s: "modelled across seven US downtowns" },
-  { n: "484", t: "census block groups", s: "scored for step-free connectivity" },
+  { n: "227k", t: "sidewalk segments", s: "modelled across sixteen US downtowns" },
+  { n: "667", t: "census block groups", s: "scored for step-free connectivity" },
   { n: "91%", t: "of Phoenix buildings", s: "have no published height at all", 缺: true },
   { n: "0", t: "accounts required", s: "everything runs in your browser" },
 ];
@@ -123,8 +123,8 @@ const 事: { h: string; p: string; 式: 式 }[] = [
 const 所發現 = [
   "LA Metro's public feeds omit the GTFS wheelchair_boarding field entirely — not blank, absent — across all 299 stops in the study area.",
   "Its canceled-service endpoint answers 200, with open CORS and well-formed JSON. The data is from October 2022.",
-  "Phoenix publishes building heights for 9% of downtown. It is the hottest city here and has the worst shade data by a wide margin.",
-  "We looked for a link between shade and household income. Across 484 block groups we could not find one that survives the margins of error, and the tool says so.",
+  "Phoenix publishes building heights for 9% of its downtown. Green Bay publishes them for 2%. The two cities have almost nothing else in common, and neither has anything to do with how much either one needs the shade.",
+  "We looked for a link between shade and household income. Across 667 block groups we could not find one that survives the margins of error, and the tool says so.",
 ];
 
 export function Landing({ onEnter }: { onEnter: () => void }) {
@@ -236,7 +236,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         </Reveal>
         <Reveal 延={0.1}>
           <p className="t-xs mt-[36px] max-w-2xl text-white/60">
-            Passable models every sidewalk segment in seven downtowns for whether
+            Passable models every sidewalk segment in sixteen downtowns for whether
             you can physically use it and how much sun falls on it, hour by hour.
             It runs entirely in your browser — no account, no server, no tracking —
             and it says plainly when the underlying data does not know something.
@@ -331,49 +331,12 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         </div>
       </Section>
 
-      <section
-        aria-label="Enter"
-        className="relative flex flex-col items-center justify-center overflow-hidden border-t border-white/10 px-6 py-[144px] text-center"
-      >
-        <ReachField />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(6,8,12,0.88)_0%,rgba(6,8,12,0.55)_42%,rgba(6,8,12,0.15)_100%)]"
-        />
-        <div className="relative">
-          <SplitText as="h2" text="NOW WALK IT."
-            className="landing-display h-3xl block" />
-          <Reveal 延={0.2}>
-            <div className="mt-[36px] flex flex-wrap items-center justify-center gap-[20px]">
-              <Magnetic 力={0.4}>
-                <button
-                  type="button"
-                  onClick={onEnter}
-                  className="t-xs rounded-full bg-white px-10 py-4 text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
-                >
-                  Open the tool
-                </button>
-              </Magnetic>
-              <a
-                href="https://github.com/NayanVangala/nextstephacks"
-                className="t-xs group inline-flex items-center gap-2 border-b border-white/30 pb-1 transition-colors duration-150 ease-quint hover:border-white"
-              >
-                Read the source
-                <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-x-1">→</span>
-              </a>
-            </div>
-          </Reveal>
-          <p className="t-xs mt-[36px] hidden text-white/55 lg:block">
-            Move your cursor over the network — everything that lights up is what
-            you could still reach under a heat budget
-          </p>
-        </div>
-      </section>
+      <ReachProbe onEnter={onEnter} />
 
       <footer className="border-t border-white/10 py-[36px]">
         <div className="grid-container t-xs flex flex-wrap items-center justify-between gap-[20px] text-white/45">
           <span>NextStep Hacks 2026 · Earth Forward</span>
-          <span>Seven US cities</span>
+          <span>Sixteen US cities</span>
           <span>Not medical guidance</span>
         </div>
       </footer>

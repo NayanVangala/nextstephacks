@@ -1,0 +1,26 @@
+{
+  "id": "hou",
+  "name": "Houston",
+  "bbox": [
+    -95.38,
+    29.75,
+    -95.354,
+    29.769
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "METROLift",
+    "advance_booking_hours": 24
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "mem",
+  "name": "Memphis",
+  "bbox": [
+    -90.062,
+    35.135,
+    -90.036,
+    35.154
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "MATAplus",
+    "advance_booking_hours": 24
+  }
+}

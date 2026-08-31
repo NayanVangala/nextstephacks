@@ -1,0 +1,26 @@
+{
+  "id": "bel",
+  "name": "Bellevue",
+  "bbox": [
+    -122.2145,
+    47.6045,
+    -122.1885,
+    47.6235
+  ],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "King County Metro Access",
+    "advance_booking_hours": 24
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "bna",
+  "name": "Nashville",
+  "bbox": [
+    -86.795,
+    36.153,
+    -86.769,
+    36.172
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "WeGo Access Ride",
+    "advance_booking_hours": 24
+  }
+}

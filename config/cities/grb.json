@@ -1,0 +1,26 @@
+{
+  "id": "grb",
+  "name": "Green Bay",
+  "bbox": [
+    -88.029,
+    44.504,
+    -88.003,
+    44.523
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter",
+  "paratransit": {
+    "operator": "Green Bay Metro Paratransit",
+    "advance_booking_hours": 24
+  }
+}
