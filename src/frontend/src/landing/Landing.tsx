@@ -11,6 +11,8 @@ import { Reveal, RevealGroup, RevealItem, RevealRule } from "./motion";
 import { useSunScroll } from "./useSunScroll";
 import { useSmoothScroll } from "./useSmoothScroll";
 import { Magnetic } from "./Magnetic";
+import { SunDial } from "./SunDial";
+import { NetGlyph, type 式 } from "./NetGlyph";
 
 /**
  * 其度皆量於所法者,非所擬者。see index.css 之「landing 之度」。
@@ -109,12 +111,12 @@ const 何以為之 = [
   numbered 01/02/03, which reads as a sequence you must follow in order. The
   section above it genuinely IS a sequence and keeps its numbering.
 */
-const 事 = [
-  { h: "ROUTE",
+const 事: { h: string; p: string; 式: 式 }[] = [
+  { h: "ROUTE", 式: "route",
     p: "Every routing app optimises for shortest. A handful optimise for shade. None optimise for both at once, and the step-free path is usually the longer, more exposed one." },
-  { h: "REACH",
+  { h: "REACH", 式: "reach",
     p: "Not where you want to go, but where you can actually get. Run the graph to exhaustion under a heat budget and ask whether any cooling centre falls inside it." },
-  { h: "REPORT",
+  { h: "REPORT", 式: "report",
     p: "98.9% of the network is traversable, which sounds close to solved. It is the wrong number. 488 points of usable sidewalk cannot be reached at all." },
 ];
 
@@ -240,6 +242,14 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             and it says plainly when the underlying data does not know something.
           </p>
         </Reveal>
+        {/*
+          其文言「影投於日之真位」而不示其影,是以言代示。此圖即其文。
+          The copy claims shadows are projected against the sun's real position;
+          until now the page asserted that and showed nothing.
+        */}
+        <Reveal 延={0.15}>
+          <SunDial />
+        </Reveal>
         <RevealGroup className="mt-[72px] grid gap-[36px] md:grid-cols-3">
           {何以為之.map((s) => (
             <RevealItem key={s.n} className="sun-rule border-t pt-5">
@@ -279,7 +289,17 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             <Reveal key={s.h}>
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
-                <p className="t-xs text-white/55">{s.p}</p>
+                <div>
+                  <p className="t-xs text-white/55">{s.p}</p>
+                  {/*
+                    像在其文之下,不在其題之下 —— 題大而其側本當空,
+                    此頁之疏正在於是。像既釋其文,則當附其文。
+                    The glyph belongs under the paragraph it illustrates, not
+                    under the heading: the air beside the display type is the
+                    layout, not a hole to fill.
+                  */}
+                  <NetGlyph 式={s.式} />
+                </div>
               </div>
             </Reveal>
           ))}

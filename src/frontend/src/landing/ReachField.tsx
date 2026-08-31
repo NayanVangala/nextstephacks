@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useNet, 可動 } from "./useNet";
+import { useNet, 建圖, 大域, 近節, 可動 } from "./useNet";
 
 /**
  * 末節之下:鼠所在,則所及者明。
@@ -16,41 +16,18 @@ import { useNet, 可動 } from "./useNet";
  * mechanism without pretending to be the tool.
  */
 
-const 格 = 0.012; // 端點歸格之度。同格者視為一節。
-
-function 鑰(x: number, y: number): number {
-  return Math.round(x / 格) * 100000 + Math.round(y / 格);
-}
-
 export function ReachField() {
   const cv = useRef<HTMLCanvasElement>(null);
   const 網 = useNet();
   const 鼠 = useRef({ x: 0.5, y: 0.5, 有: false });
-
-  /** 立其鄰接。端點歸格,故斷續之線得以相連。 */
-  const 圖 = useMemo(() => {
-    if (!網) return null;
-    const 鄰 = new Map<number, { 至: number; 曝: number[]; i: number }[]>();
-    const 節座 = new Map<number, [number, number]>();
-    網.edges.forEach(([x1, y1, x2, y2, su], i) => {
-      const a = 鑰(x1, y1);
-      const b = 鑰(x2, y2);
-      if (a === b) return;
-      節座.set(a, [x1, y1]);
-      節座.set(b, [x2, y2]);
-      const 長 = Math.hypot(x2 - x1, y2 - y1);
-      const w = su.map((v) => v * 長);
-      if (!鄰.has(a)) 鄰.set(a, []);
-      if (!鄰.has(b)) 鄰.set(b, []);
-      鄰.get(a)!.push({ 至: b, 曝: w, i });
-      鄰.get(b)!.push({ 至: a, 曝: w, i });
-    });
-    return { 鄰, 節座 };
-  }, [網]);
+  // 端點歸格,故斷續之線得以相連。見 useNet 之 建圖。
+  const 圖 = useMemo(() => (網 ? 建圖(網) : null), [網]);
+  // 鼠所近之節,必取於其大域 —— 落於孤島,則但明數十段而止。
+  const 域 = useMemo(() => (圖 ? 大域(圖) : null), [圖]);
 
   useEffect(() => {
     const c = cv.current;
-    if (!c || !網 || !圖 || !可動()) return;
+    if (!c || !網 || !圖 || !域 || !可動()) return;
     const ctx = c.getContext("2d");
     if (!ctx) return;
 
@@ -90,17 +67,9 @@ export function ReachField() {
     const 洪 = (): Set<number> => {
       const 出集 = new Set<number>();
       if (!鼠.current.有) return 出集;
-      let 始 = -1;
-      let best = Infinity;
-      for (const [k, [x, y]] of 圖.節座) {
-        const d = (x - 鼠.current.x) ** 2 + (y - 鼠.current.y) ** 2;
-        if (d < best) {
-          best = d;
-          始 = k;
-        }
-      }
-      // best 為距之平方。0.06 約當歸一之網四分之一 —— 鼠出其網則不洪。
-      if (始 < 0 || best > 0.06) return 出集;
+      // 0.06 為距之平方之限 —— 鼠出其網則不洪。
+      const 始 = 近節(圖, 鼠.current.x, 鼠.current.y, 0.06, 域);
+      if (始 < 0) return 出集;
 
       // 曝米之限。段長既歸一(約 0.03),故其費約 0.03 至 0.18 之間;
       // 取三,則所洪者數百段,足以見其形而不至於盡染其屏。
@@ -169,7 +138,7 @@ export function ReachField() {
       removeEventListener("pointerleave", 出);
       cancelAnimationFrame(raf);
     };
-  }, [網, 圖]);
+  }, [網, 圖, 域]);
 
   return (
     <canvas
