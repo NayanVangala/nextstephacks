@@ -1173,3 +1173,25 @@ body:has(.landing) {
   not "h2 gets 5.5rem" but "short phrases get the display steps"; length, not
   tag, decides. Long headings take the 2.5rem step instead.
 */
+
+/*
+  ── 街之瓦,暗題則反其色 ────────────────────────────────────────────────
+  器之題既為暗,而 OSM 之瓦為淡 —— 一白之方橫於暗器之中,是全器最刺目者。
+  反其色而旋其相,則其瓦自暗,而其路其水猶各如其類。
+
+  但施於街,不施於星。星者實像也,反之則草木為紫,屋瓦為青,不可讀。
+  故其籤在 tileLayer 之 className(見 MapCanvas 之 街瓦),不在其 pane。
+
+  MUST NOT apply to the satellite layer: inverting aerial imagery turns
+  vegetation purple and roofs cyan, which is worse than useless — it is
+  actively misleading about what is on the ground. The class is set on the
+  street tile layer alone.
+
+  其上之網、之路、之標,皆在他 pane,不受此濾 —— 故其色猶為所量之曝,非其反。
+  Overlays live in separate panes and are NOT filtered, so the exposure ramp
+  still renders as the measured colour rather than its inverse.
+*/
+:root:not([data-theme="light"]) .街瓦 {
+  filter: invert(1) hue-rotate(180deg) brightness(0.88) contrast(0.92)
+    saturate(0.55);
+}

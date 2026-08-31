@@ -3,7 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { CityPack, Edge, ProfileFlags, RouteResult } from "../types";
 import { edgeAllowed } from "../routing/graph";
-import { 曝之色 } from "../routing/曝之色";
+import { 曝之階 } from "../routing/曝之色";
 
 /**
  * 圖。Leaflet 而非 MapLibre。
@@ -58,11 +58,32 @@ const 底圖 = {
  * Blocked segments are drawn, not hidden. A barrier you cannot see is a barrier
  * you cannot report, and hiding it would make the network look complete.
  */
+/**
+ * 曝之實色。canvas 不解 var(),故必先取其實。
+ *
+ * Leaflet runs with preferCanvas here, and a canvas stroke of "var(--color-
+ * shade)" is not an error — it silently paints black. Every segment on this map
+ * was therefore drawn black regardless of its sun exposure, which is the one
+ * thing the map exists to show. Resolved against the live document so the ramp
+ * follows the theme.
+ */
+function 取曝之板(): Record<ReturnType<typeof 曝之階>, string> {
+  const s = getComputedStyle(document.documentElement);
+  const 取 = (名: string, 底: string) =>
+    s.getPropertyValue(`--color-${名}`).trim() || 底;
+  return {
+    shade: 取("shade", "#5b9bff"),
+    midsun: 取("midsun", "#e2a63c"),
+    fullsun: 取("fullsun", "#ff6b5b"),
+  };
+}
+
 function 段之樣(
   e: Edge,
   flags: ProfileFlags,
   hourIdx: number,
   暗底: boolean,
+  板: Record<ReturnType<typeof 曝之階>, string>,
 ): L.PathOptions {
   if (!edgeAllowed(e, flags)) {
     return {
@@ -74,7 +95,7 @@ function 段之樣(
   }
   const 曝 = e.sun_exposure ? e.sun_exposure[hourIdx] ?? 1 : 1;
   return {
-    color: 曝之色(曝),
+    color: 板[曝之階(曝)],
     weight: 暗底 ? 2.4 : 1.8,
     opacity: 暗底 ? 1 : 0.75,
     interactive: false,
@@ -84,6 +105,33 @@ function 段之樣(
 /** leaflet 需 [lat, lon];而囊中所存者 [lon, lat]。此易之。 */
 function 反其座(g: [number, number][]): L.LatLngExpression[] {
   return g.map(([lon, lat]) => [lat, lon] as L.LatLngExpression);
+}
+
+/**
+ * 暗題乎。ThemeToggle 立其 data-theme 於 html,暗則無其屬(暗為其本)。
+ *
+ * 名必為 ASCII。hook 之名,React 辨之以 /^use[A-Z]/ —— "use" 而繼以中文者,
+ * rules-of-hooks 不能驗之而報其誤。見 CLAUDE.md。
+ *
+ * 用 MutationObserver 而不用 context:其屬亦由 index.html 之先畫之script所立,
+ * 早於 React,故必觀其實,不可但聽其變。
+ * Observes the attribute rather than taking it from React state, because the
+ * pre-paint script in index.html sets it before React exists. Dark is the base
+ * theme, so "no attribute" means dark.
+ */
+function useDarkTheme(): boolean {
+  const [暗, set暗] = useState(
+    () => typeof document !== "undefined"
+      && document.documentElement.dataset.theme !== "light",
+  );
+  useEffect(() => {
+    const 讀 = () => set暗(document.documentElement.dataset.theme !== "light");
+    讀();
+    const o = new MutationObserver(讀);
+    o.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => o.disconnect();
+  }, []);
+  return 暗;
 }
 
 export function MapCanvas({
@@ -113,8 +161,17 @@ export function MapCanvas({
   const 路層 = useRef<L.LayerGroup | null>(null);
   const 標層 = useRef<L.LayerGroup | null>(null);
   const [圖之誤, set圖之誤] = useState<string | null>(null);
-  // 底圖暗則線須加明。星之像暗,淡藍之線幾不可見。
-  const [暗底, set暗底] = useState(false);
+  // 星之像自暗。街之瓦本淡,而暗題則反其色,故亦暗 —— 見下之 useDarkTheme。
+  const [星底, set星底] = useState(false);
+  const 暗題 = useDarkTheme();
+  /*
+    底圖暗則線須加明。淡藍之線沒於暗像之中,故加其粗、加其明。
+    A dark ground needs brighter, thicker strokes: the shade end of the exposure
+    ramp is a light blue that all but disappears over dark imagery. This used to
+    track the satellite layer alone, which was correct while the app was light —
+    now the street tiles are inverted under the dark theme, so they need it too.
+  */
+  const 暗底 = 星底 || 暗題;
   const pickRef = useRef(onPick);
   pickRef.current = onPick;
 
@@ -139,10 +196,16 @@ export function MapCanvas({
       // Satellite is genuinely useful here and not decoration: shade is modelled
       // from building footprints, and imagery is how a person checks whether the
       // buildings casting those shadows are actually there.
+      /*
+        街之瓦有其籤,乃可獨反其色 —— 見 index.css 之 .街瓦。
+        The class is what lets the dark theme invert the street tiles WITHOUT
+        touching the satellite layer: inverted aerial imagery is unreadable.
+      */
       const 街層 = L.tileLayer(底圖.街.url, {
         attribution: 底圖.街.屬,
         maxZoom: 底圖.街.最大,
         detectRetina: true,
+        className: "街瓦",
       }).addTo(m);
       const 星層 = L.tileLayer(底圖.星.url, {
         attribution: 底圖.星.屬,
@@ -158,7 +221,7 @@ export function MapCanvas({
 
       // 星之下,網之色須加其明 —— 淡色之線沒於暗像之中。
       m.on("baselayerchange", (ev: L.LayersControlEvent) => {
-        set暗底(ev.name === 底圖.星.名);
+        set星底(ev.name === 底圖.星.名);
       });
     } catch (誤) {
       // Leaflet 不賴 GPU,故此路罕至;然容器之高為零、瓦之網斷,皆可致之。
@@ -190,15 +253,22 @@ export function MapCanvas({
     };
   }, [pack]);
 
-  // 網之色隨時辰、隨身而更。
+  /*
+    網之色隨時辰、隨身而更。題易則其板亦易 —— 暗淡二階不同其值,
+    故 暗題 亦在其 dep 之中(其板讀諸 DOM,非 React 所能見)。
+    暗題 is a real dependency even though nothing in the body names it: 取曝之板
+    reads the computed custom properties off the document, which change when the
+    theme does. Deriving it here rather than in a useMemo keeps that honest.
+  */
   useEffect(() => {
     const g = 網層.current;
     if (!g) return;
+    const 板 = 取曝之板();
     g.clearLayers();
     for (const e of pack.edges) {
-      L.polyline(反其座(e.geometry), 段之樣(e, flags, hourIdx, 暗底)).addTo(g);
+      L.polyline(反其座(e.geometry), 段之樣(e, flags, hourIdx, 暗底, 板)).addTo(g);
     }
-  }, [pack, flags, hourIdx, 暗底]);
+  }, [pack, flags, hourIdx, 暗底, 暗題]);
 
   useEffect(() => {
     const g = 所及層.current;
