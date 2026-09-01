@@ -114,10 +114,20 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
     return () => clearInterval(id);
   }, [圖, 域, 手, 減]);
 
-  /** 座之歸一。與其畫者同一算 —— 二算則其鼠與其線必離。 */
+  /**
+   * 座之歸一。與其畫者同一算 —— 二算則其鼠與其線必離。
+   *
+   * 以其高為度,不以其長。前此取 max(w,h)*1.05:於一四四〇乘五九四之框,
+   * 其度為一五一二,而其城之高遂溢其框幾三倍 —— 所見者其城之一隅耳,
+   * 故不成其形,但為散線。今以其高定之,則全城可見,乃自為一物。
+   * Scaled from the HEIGHT, not the larger side. The old max(w,h) scale made
+   * the city ~2.5x taller than the canvas, so only a sliver of it was ever
+   * visible — which is why it read as scattered lines rather than a place.
+   */
   const 位之算 = (r: DOMRect) => {
-    const s = Math.max(r.width, r.height) * 1.05;
-    return { s, ox: (r.width - s) / 2, oy: (r.height - s) / 2 };
+    // 其城之高,歸一之後為零點八五(見 landing-net.json)。一點一者,略溢其緣。
+    const s = (r.height / 0.85) * 1.1;
+    return { s, ox: (r.width - s) / 2, oy: (r.height - s * 0.85) / 2 - 0.075 * s };
   };
 
   const 移其始 = useCallback(
@@ -162,57 +172,98 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
       const { s, ox, oy } = 位之算(c.getBoundingClientRect());
       ctx.clearRect(0, 0, w, h);
       ctx.lineCap = "round";
+      ctx.lineJoin = "round";
 
-      for (let i = 0; i < 網.edges.length; i++) {
-        const 費 = 及.段.get(i);
-        const 標 = 費 == null ? 0 : 1;
-        明[i] = 即 ? 標 : 明[i] + (標 - 明[i]) * 0.12;
-        const a = 明[i];
-        const [x1, y1, x2, y2, su] = 網.edges[i];
-        /*
-          不及者猶見,但暗 —— 所不能至者亦當使人見之,隱之則其網若無缺。
-          Unreachable segments stay drawn: the shape of what you cannot get to
-          is half of the answer, and erasing it would make the network look
-          whole.
-        */
-        if (a < 0.01) {
-          ctx.strokeStyle = "rgba(255,255,255,0.07)";
-          ctx.lineWidth = 0.7;
-        } else {
-          const [r0, g0, b0] = 曝之rgb(su[午]);
-          /*
-            近其始者明,近其限者淡 —— 其淡處即其界,而界正此節之所問。
-            Fading toward the budget limit is what draws the frontier, and the
-            frontier is the whole question: not how far, but how far before the
-            sun stops you.
-          */
-          const 邊 = 費 == null ? 0 : 1 - Math.min(1, 費 / 限) * 0.72;
-          ctx.strokeStyle = `rgba(${r0},${g0},${b0},${(0.1 + 0.9 * 邊) * a})`;
-          ctx.lineWidth = 0.7 + (0.6 + 1.9 * 邊) * a;
-        }
-        ctx.beginPath();
+      /*
+        ── 一巡:所不及者 ──────────────────────────────────────────────
+        前此其色為白之七釐,故其城如未著墨之稿。今為深藍,而其明加倍 ——
+        所不能至者,亦當自為一物,不當為其背之噪。
+        The unreachable network was 7% white, which made the city look like an
+        unfinished sketch rather than a place. It is now a deep blue at more
+        than double the opacity: what you cannot reach is half the answer and
+        deserves to be drawn as a thing, not as noise.
+      */
+      ctx.globalCompositeOperation = "source-over";
+      ctx.strokeStyle = "rgba(96, 126, 190, 0.34)";
+      ctx.lineWidth = 1.15;
+      ctx.beginPath();
+      for (const [x1, y1, x2, y2] of 網.edges) {
         ctx.moveTo(ox + x1 * s, oy + y1 * s);
         ctx.lineTo(ox + x2 * s, oy + y2 * s);
-        ctx.stroke();
+      }
+      ctx.stroke();
+
+      /*
+        ── 二巡三巡:所及者,以加色為之 ────────────────────────────────
+        lighter 者,色之相加也 —— 二線相交則其處愈明,故其網自有其輝,
+        不待一「glow」之濾。先粗而淡(其暈),後細而明(其心),
+        故每段皆為一束光,非一劃線。
+        Additive compositing: overlapping strokes sum instead of covering, so
+        junctions bloom on their own and the whole flood carries light without
+        a blur filter (which would cost a full-canvas repaint every frame).
+        Two passes — wide and dim for the halo, narrow and bright for the core —
+        make each segment a filament rather than a line.
+      */
+      ctx.globalCompositeOperation = "lighter";
+      for (const 巡 of [0, 1] as const) {
+        for (let i = 0; i < 網.edges.length; i++) {
+          const 費 = 及.段.get(i);
+          const 標 = 費 == null ? 0 : 1;
+          if (巡 === 0) 明[i] = 即 ? 標 : 明[i] + (標 - 明[i]) * 0.12;
+          const a = 明[i];
+          if (a < 0.02) continue;
+          const [x1, y1, x2, y2, su] = 網.edges[i];
+          const [r0, g0, b0] = 曝之rgb(su[午]);
+          /*
+            近其始者明,近其限者淡 —— 其淡處即其界,而界正此節之所問:
+            非「其遠幾何」,乃「日未止我之前,其遠幾何」。
+            Fading toward the budget limit is what draws the frontier, and the
+            frontier is the question: not how far, but how far before the sun
+            stops you.
+          */
+          const 邊 = 費 == null ? 0 : 1 - Math.min(1, 費 / 限) * 0.62;
+          if (巡 === 0) {
+            ctx.strokeStyle = `rgba(${r0},${g0},${b0},${0.30 * 邊 * a})`;
+            ctx.lineWidth = 8 * 邊 * a;
+          } else {
+            ctx.strokeStyle = `rgba(${r0},${g0},${b0},${(0.5 + 0.5 * 邊) * a})`;
+            ctx.lineWidth = 1.1 + 2.1 * 邊 * a;
+          }
+          ctx.beginPath();
+          ctx.moveTo(ox + x1 * s, oy + y1 * s);
+          ctx.lineTo(ox + x2 * s, oy + y2 * s);
+          ctx.stroke();
+        }
       }
 
-      // 始之標。無此則人不知其光自何而發。
+      // 始之標。其暈亦以加色為之,故與其網之光同其理。
       if (圖 && 始 != null) {
         const p = 圖.節座.get(始);
         if (p) {
           const cx = ox + p[0] * s;
           const cy = oy + p[1] * s;
+          const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 96);
+          g.addColorStop(0, "rgba(34, 211, 197, 0.34)");
+          g.addColorStop(0.45, "rgba(34, 211, 197, 0.09)");
+          g.addColorStop(1, "rgba(34, 211, 197, 0)");
+          ctx.fillStyle = g;
           ctx.beginPath();
-          ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-          ctx.fillStyle = "#fff";
+          ctx.arc(cx, cy, 96, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.globalCompositeOperation = "source-over";
+          ctx.beginPath();
+          ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = "#eafffb";
           ctx.fill();
           ctx.beginPath();
-          ctx.arc(cx, cy, 11, 0, Math.PI * 2);
-          ctx.strokeStyle = "rgba(255,255,255,0.5)";
-          ctx.lineWidth = 1;
+          ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+          ctx.strokeStyle = "rgba(34, 211, 197, 0.75)";
+          ctx.lineWidth = 1.2;
           ctx.stroke();
         }
       }
+      ctx.globalCompositeOperation = "source-over";
     };
 
     /*
@@ -246,8 +297,21 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
   return (
     <section
       aria-label="Enter"
-      className="relative flex flex-col items-center justify-center overflow-hidden border-t border-white/10 px-6 py-[144px] text-center"
+      className="relative flex min-h-[86svh] flex-col items-center justify-center overflow-hidden border-t border-white/10 px-6 py-[110px] text-center"
     >
+      {/*
+        地之光。其網為線,線不能滿其面,故其隅恆空 —— 加二暈於其後:
+        左上者赤(暑),右下者青(蔭),正此器所論之二極。
+        非為飾也:此節之問即「暑與蔭之間,汝能至者幾何」,故其地自為其問。
+        The network is linework, and linework cannot fill a frame — the corners
+        stayed empty. Two ambient washes sit behind it: warm where the argument
+        starts (heat) and cool where it lands (shade), which are the two poles
+        this whole section is about.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_46%_at_18%_12%,rgba(255,95,77,0.16)_0%,transparent_70%),radial-gradient(ellipse_62%_52%_at_86%_88%,rgba(34,211,197,0.15)_0%,transparent_72%)]"
+      />
       <canvas
         ref={cv}
         aria-hidden
@@ -264,7 +328,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[420px] -translate-y-1/2 bg-[linear-gradient(180deg,rgba(6,8,12,0)_0%,rgba(6,8,12,0.72)_22%,rgba(6,8,12,0.82)_50%,rgba(6,8,12,0.72)_78%,rgba(6,8,12,0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 top-1/2 h-[380px] -translate-y-1/2 bg-[linear-gradient(180deg,rgba(5,7,12,0)_0%,rgba(5,7,12,0.48)_24%,rgba(5,7,12,0.62)_50%,rgba(5,7,12,0.48)_76%,rgba(5,7,12,0)_100%)]"
       />
       <div className="pointer-events-none relative">
         <SplitText as="h2" text="NOW WALK IT."
@@ -282,7 +346,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
             aria-live="polite"
             className="t-xs mt-[36px] text-white/85 [text-shadow:0_1px_12px_rgba(6,8,12,0.95)]"
           >
-            <span className="landing-display text-[2.5rem] leading-none tabular-nums">
+            <span className="landing-display text-accent-ink text-[2.75rem] leading-none tabular-nums [text-shadow:0_0_28px_rgba(34,211,197,0.45)]">
               {及.數}
             </span>
             <span className="ml-3">

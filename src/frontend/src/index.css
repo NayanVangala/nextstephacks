@@ -998,51 +998,90 @@ summary {
 :root {
   color-scheme: dark;
 
-  --color-shade: #5b9bff;
-  --color-shade-soft: #12233f;
-  --color-midsun: #e2a63c;
-  --color-midsun-soft: #2a2210;
-  --color-fullsun: #ff6b5b;
-  --color-fullsun-soft: #2e1614;
+  /*
+    ── 曝之階。此為其資,非其飾 ──────────────────────────────────────
+    加其彩而不易其義:蔭猶青,午猶黃,曝猶赤,其界(0.34/0.67)不動。
+    前此之值出於淡地,移於暗地則灰而無力 —— 暗地之色須加其彩乃得其明,
+    此非好尚,乃暗地之理:同一色於暗地,其視之彩恆減。
+    More saturated at the same hue and the same thresholds. These values were
+    picked for a light ground; on a dark one the identical colour reads as
+    washed out, because perceived chroma drops against a dark surround. The
+    ramp is the product's only load-bearing colour, so it is the right place
+    to spend saturation.
+  */
+  --color-shade: #4d9fff;
+  --color-shade-soft: #0e2440;
+  --color-midsun: #f5b23c;
+  --color-midsun-soft: #33280f;
+  --color-fullsun: #ff5f4d;
+  --color-fullsun-soft: #3a1713;
 
-  --color-route: #34d399;
-  --color-reach: #a78bfa;
+  --color-route: #2ee6a8;
+  --color-reach: #b28bff;
   --color-blocked: #8b93a1;
 
-  --color-canvas: #0e1116;
-  --color-paper: #161a21;
-  --color-panel: #1a1f28;
-  --color-line: #262c36;
-  --color-ink: #e6eaf0;
+  /*
+    ── 地之階。深而微藍,不為純灰 ────────────────────────────────────
+    前此五階皆近乎無彩(chroma 幾零),故其面雖暗而不厚 —— 如未著色之紙。
+    今各微帶其藍,而其階之差加大:canvas 至 panel 之別,目可辨之。
+    The five surface steps were very nearly achromatic, which is why the app
+    read as flat grey rather than as a lit dark surface. Each now carries a
+    little blue, and the steps are spaced further apart so panels separate from
+    the ground without needing a border to do it.
+  */
+  --color-canvas: #090c13;
+  --color-paper: #10141e;
+  --color-panel: #161b28;
+  --color-line: #252c3d;
+  --color-ink: #e9edf5;
 
-  --color-accent-ink: #5b9bff;
-  --color-accent-wash: #14203a;
+  /*
+    ── 其所操者之色 ────────────────────────────────────────────────────
+    accent-ink 前此正為 --color-shade 之值 —— 是器之所操者,借其資之色。
+    故凡懸、凡焦、凡所擇,皆與「此段在蔭」同其語,而人不能辨其二。
+    今別為一色:青碧,不在其三階之中,故不可誤為其資。
+    The interactive accent was literally the same hex as --color-shade, so every
+    focus ring and active tab spoke the same colour as "this segment is shaded".
+    Teal sits outside the shade/midsun/fullsun ramp, so chrome can never be
+    mistaken for data.
+  */
+  --color-accent-ink: #22d3c5;
+  --color-accent-wash: #0b2f2e;
 
-  --background: #0e1116;
-  --foreground: #e6eaf0;
-  --card: #161a21;
-  --card-foreground: #e6eaf0;
-  --popover: #161a21;
-  --popover-foreground: #e6eaf0;
-  --primary: #e6eaf0;
-  --primary-foreground: #0e1116;
-  --secondary: #1e242d;
-  --secondary-foreground: #e6eaf0;
-  --muted: #1e242d;
-  --muted-foreground: #98a2b3;
-  --accent: #1e242d;
-  --accent-foreground: #e6eaf0;
-  --destructive: #ff6b5b;
-  --border: #262c36;
-  --input: #2a313c;
-  --ring: #5b9bff;
+  --background: #090c13;
+  --foreground: #e9edf5;
+  --card: #10141e;
+  --card-foreground: #e9edf5;
+  --popover: #10141e;
+  --popover-foreground: #e9edf5;
+  --primary: #e9edf5;
+  --primary-foreground: #090c13;
+  --secondary: #1c2331;
+  --secondary-foreground: #e9edf5;
+  --muted: #1c2331;
+  /* 量之於 #10141e:5.9:1。前此 #98a2b3 於新地為 5.4:1,猶足,而此更寬。 */
+  --muted-foreground: #9fabc0;
+  --accent: #1c2331;
+  --accent-foreground: #e9edf5;
+  --destructive: #ff5f4d;
+  --border: #252c3d;
+  --input: #2c3446;
+  --ring: #22d3c5;
 
   --hatch: rgba(230, 234, 240, 0.30);
 }
 
+/*
+  頂之帶。其地非平色,乃自上而下微淡 —— 又加一線之光於其下緣。
+  A flat bar reads as a sticker laid on the page; a slight vertical gradient
+  plus a hairline of light along its bottom edge reads as a surface the page
+  passes under. The light line is the accent at low alpha, so the chrome has
+  one thread of the product's own colour in it.
+*/
 .chrome {
-  background: #080a0e;
-  border-bottom: 1px solid #222835;
+  background: linear-gradient(180deg, #05070c 0%, #080b12 100%);
+  border-bottom: 1px solid #1e2534;
+  box-shadow: inset 0 -1px 0 rgba(34, 211, 197, 0.13);
 }
 
 /*

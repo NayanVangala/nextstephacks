@@ -26,9 +26,16 @@ export function ProfilePicker({
   flags: ProfileFlags;
   onChange: (f: ProfileFlags) => void;
 }) {
+  /*
+    匣中之匣,是為二重之框 —— 其外既有一匣,則此不必更為一匣。
+    今但以一髮橫其上而別之:所別者其群,非其地。
+    A bordered fieldset inside a bordered panel is a box in a box. A hairline
+    rule separates the group just as well and leaves one container instead of
+    two nested ones.
+  */
   return (
-    <fieldset className="rounded-lg border border-line px-4 py-3">
-      <legend className="px-1 text-sm font-semibold">Accessibility profile</legend>
+    <fieldset className="border-t border-line pt-3.5">
+      <legend className="mb-1 text-sm font-semibold">Accessibility profile</legend>
       <div className="flex flex-col gap-3">
         {/* 全行為 label:方寸之匣十六像素,不足以指觸 —— WCAG 2.2 之最小為
             二十四,平臺所勸為四十四。此物本為手不便者而設,尤不可狹。 */}

@@ -311,7 +311,7 @@ export function MapCanvas({
     return (
       <div
         role="note"
-        className="flex h-[42vh] min-h-[300px] w-full flex-col justify-center gap-2 rounded-lg border border-line bg-panel p-6 text-sm md:h-[58vh] md:min-h-[380px]"
+        className="flex h-[42vh] min-h-[300px] w-full flex-col justify-center gap-2 bg-panel p-6 text-sm md:h-full md:min-h-[520px]"
       >
         <p className="font-semibold">The map could not be drawn.</p>
         <p className="text-muted-foreground">
@@ -328,7 +328,7 @@ export function MapCanvas({
       ref={ref}
       role="application"
       aria-label={`Map of ${pack.manifest.name}. The same route is available as a text itinerary below.`}
-      className="h-[42vh] min-h-[300px] w-full overflow-hidden rounded-lg border border-line md:h-[58vh] md:min-h-[380px]"
+      className="h-[42vh] min-h-[300px] w-full overflow-hidden md:h-full md:min-h-[520px]"
     />
   );
 }

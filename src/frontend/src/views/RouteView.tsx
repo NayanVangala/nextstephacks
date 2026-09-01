@@ -302,14 +302,23 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
         </p>
       )}
 
-      <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(260px,1fr)_2fr]">
+      {/*
+        ── 器與圖,一匣而已 ──────────────────────────────────────────────
+        前此左器一匣,右圖一匣,並列而各有其框其角 —— 二物也,而其實一器。
+        今合為一匣,中以一髮分之:所分者其職,非其身。
+        The controls and the map were two separately bordered, separately
+        rounded boxes sitting side by side, which reads as two things that
+        happen to be adjacent. They are one instrument: one container, divided
+        by a hairline rather than by a gap.
+      */}
+      <div className="mt-4 overflow-hidden rounded-xl border border-line bg-paper md:grid md:grid-cols-[minmax(260px,1fr)_2fr] md:divide-x md:divide-line">
         {/*
           諸器共一地。前此各浮於頁,而其中獨 profile 有框,故如散置而非一列。
           The controls previously floated loose on the page background with only
           the profile fieldset bordered, which read as accidental rather than as
           one panel of inputs.
         */}
-        <div ref={器} className="rounded-xl border border-line bg-paper p-4">
+        <div ref={器} className="p-4">
           <PlacePicker
             pack={pack}
             label="Start"

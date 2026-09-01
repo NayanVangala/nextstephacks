@@ -137,8 +137,17 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
       <HeatAlert 狀={警狀} />
 
-      <div className="mt-4 grid items-start gap-4 md:grid-cols-[minmax(280px,1fr)_2fr]">
-        <div ref={器} className="rounded-xl border border-line bg-paper p-4">
+      {/*
+        ── 器與圖,一匣而已 ──────────────────────────────────────────────
+        前此左器一匣,右圖一匣,並列而各有其框其角 —— 二物也,而其實一器。
+        今合為一匣,中以一髮分之:所分者其職,非其身。
+        The controls and the map were two separately bordered, separately
+        rounded boxes sitting side by side, which reads as two things that
+        happen to be adjacent. They are one instrument: one container, divided
+        by a hairline rather than by a gap.
+      */}
+      <div className="mt-4 overflow-hidden rounded-xl border border-line bg-paper md:grid md:grid-cols-[minmax(280px,1fr)_2fr] md:divide-x md:divide-line">
+        <div ref={器} className="p-4">
           <PlacePicker
             pack={pack}
             label="Starting point"
