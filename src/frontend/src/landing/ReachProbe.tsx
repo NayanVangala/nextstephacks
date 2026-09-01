@@ -328,7 +328,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[380px] -translate-y-1/2 bg-[linear-gradient(180deg,rgba(5,7,12,0)_0%,rgba(5,7,12,0.48)_24%,rgba(5,7,12,0.62)_50%,rgba(5,7,12,0.48)_76%,rgba(5,7,12,0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 top-1/2 h-[380px] -translate-y-1/2 bg-[linear-gradient(180deg,rgba(9,12,19,0)_0%,rgba(9,12,19,0.48)_24%,rgba(9,12,19,0.62)_50%,rgba(9,12,19,0.48)_76%,rgba(9,12,19,0)_100%)]"
       />
       <div className="pointer-events-none relative">
         <SplitText as="h2" text="NOW WALK IT."
@@ -344,7 +344,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         <Reveal 延={0.15}>
           <p
             aria-live="polite"
-            className="t-xs mt-[36px] text-white/85 [text-shadow:0_1px_12px_rgba(6,8,12,0.95)]"
+            className="t-xs mt-[36px] text-white/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]"
           >
             <span className="landing-display text-accent-ink text-[2.75rem] leading-none tabular-nums [text-shadow:0_0_28px_rgba(34,211,197,0.45)]">
               {及.數}

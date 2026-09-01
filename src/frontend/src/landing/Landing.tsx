@@ -161,7 +161,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(6,8,12,0.88)_0%,rgba(6,8,12,0.72)_28%,rgba(6,8,12,0.34)_50%,rgba(6,8,12,0.04)_76%,rgba(6,8,12,0)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(9,12,19,0.88)_0%,rgba(9,12,19,0.72)_28%,rgba(9,12,19,0.34)_50%,rgba(9,12,19,0.04)_76%,rgba(9,12,19,0)_100%)]"
         />
         <div className="grid-container relative">
           {/*
@@ -188,7 +188,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               imagery cannot be judged by a single contrast number; it has to
               survive its worst pixel, which is what the shadow guarantees.
             */}
-            <p className="t-xs mt-[36px] max-w-2xl text-white/85 [text-shadow:0_1px_12px_rgba(6,8,12,0.95)]">
+            <p className="t-xs mt-[36px] max-w-2xl text-white/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
               Heat-safe, step-free walking routes for disabled pedestrians. Built
               on real sidewalk data, projected building shadows, and an explicit
               account of what the data does not know.

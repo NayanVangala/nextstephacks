@@ -621,8 +621,13 @@ h1, h2, h3 {
     ui-ux-pro-max 之 Modern Dark 明曰「avoid pure #000000 (OLED smear)」;
     incredibles.dev 量之,其墨 rgb(43,43,43),其地 rgb(241,241,241),
     無一處用純黑純白。
-  今從 app 之地 #0e1116 —— 瀝青之色。二者既同,則 landing 與器為一物,
+  今從 app 之地 —— 瀝青之色。二者既同,則 landing 與器為一物,
   而 OLED 之屏不復拖影。
+
+  MUST reference the token, not its value. This was hard-coded #0e1116, so when
+  the ground deepened to #090c13 the landing silently kept the old colour while
+  the tool moved — two halves of one product on two different blacks. Verified
+  on the deployed site: --color-canvas read #090c13 while body painted #0e1116.
   Pure black is avoided on both counts: OLED smear, and neither reference site
   uses it. Adopting the app's asphalt ground also makes the two halves of the
   product one colour instead of two.
@@ -630,7 +635,7 @@ h1, h2, h3 {
 html:has(.landing),
 html:has(.landing) body,
 .landing {
-  background: #0e1116;
+  background: var(--color-canvas);
 }
 
 /*
