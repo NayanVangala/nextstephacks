@@ -36,6 +36,35 @@
   on screen is a measurement.
 */
 @theme {
+  /*
+    ── 器之色,別於資之色 ──────────────────────────────────────────────
+    曝之階三色(青、黃、赤)為所量之值,非所飾之意。而器之中,黃兼任「其估不可信」
+    「其溫為推」「此為假設」「其地但存於此機」,赤兼任「此欄有誤」「其饋已陳」——
+    於 Index 一表,琥珀之入息誤與琥珀之蔭率同行而異義,相去六欄。
+    是以一色而二義,則其色不復能任其一。
+
+    今別立二籤,皆在曝之階之外:
+      notice —— 中性而重。凡「當審之」者用之。不假一色,故永不與階相犯;
+                其不確之義,紋與其文已載之。
+      error  —— 玫瑰之赤,別於曝之赤(#dc2626/#ff5f4d)—— 其色偏紫,故可辨。
+                --destructive 於暗題正為 #ff5f4d,與 fullsun 一色不差,不可用。
+
+    The ramp is measured data, not decoration. Amber had come to mean "estimate
+    is unreliable", "temperature is inferred", "this is a what-if" and "stored
+    only on this device"; red meant both "full sun" and "this field is invalid".
+    In the Index table an amber margin-of-error sits six columns from an amber
+    shade percentage. A colour that means two things means neither.
+
+    notice is deliberately hueless — emphasis, not a colour — so it can never
+    collide with the ramp. error is rose rather than the ramp's orange-red;
+    shadcn's --destructive is #ff5f4d in dark, byte-identical to --color-fullsun,
+    which is why it could not be reused.
+  */
+  --color-notice: #3f3f46;
+  --color-notice-soft: #e4e4e7;
+  --color-error: #be123c;
+  --color-error-soft: #ffe4e6;
+
   --color-shade: #1d4ed8;
   --color-shade-soft: #dbeafe;
   --color-midsun: #a16207;
@@ -394,6 +423,30 @@ body {
   line-height: 1.2;
 }
 
+/*
+  說之頁,其文成段而非成句。
+  行高一點二者,句之律也 —— 一行一義,如 landing 之所書。而說之頁有段長四五行
+  者,是求人讀之,非求人掃之;此律施於段,則其行相犯而目不能自返其首。
+  故獨於此頁鬆之,其餘一如故。
+  The landing's 1.2 leading is a rhythm for one-line statements. The explanation
+  pages carry four- and five-line paragraphs meant to be read rather than
+  scanned, and at 1.2 the eye loses its place returning to the next line. Scoped
+  to .info-prose so nothing else moves. Unlayered and after the rule above, so
+  equal specificity resolves in this one's favour.
+*/
+.landing.info-prose p,
+.landing.info-prose li {
+  line-height: 1.55;
+}
+
+/*
+  問答之開闔。details 之默認三角已去,故其字必自明其可點 ——
+  其鈕之色隨其懸而變,而 summary 全行為其的。
+*/
+.info-qa summary:hover span:first-child {
+  opacity: 0.65;
+}
+
 /* 節之標:十六而輕。前此十二而重,故其標如註,不如標。 */
 .landing-label {
   font-size: 16px;
@@ -636,6 +689,26 @@ html:has(.landing),
 html:has(.landing) body,
 .landing {
   background: var(--color-canvas);
+}
+
+/*
+  landing 與說之頁,其文皆書 text-white —— 是其地不可隨題之擇而變。
+  帶之鈕擇淡,則 --color-canvas 轉為 #fbfaf9,而其文猶白,故全頁皆空。
+  今於此二頁釘其暗值:地與曝之三色皆然(曝之色亦為淡地而設,於暗地則晦)。
+
+  MUST outrank :root[data-theme="light"] (specificity 0,2,0), hence the extra
+  :root here — 0,3,1. Without it the theme toggle wins and the page renders
+  white-on-white. The toggle lives in the app header, so the sequence is
+  ordinary: switch to light in the tool, click Help, get a blank page.
+
+  其擇非在此廢 —— 但器之中行之,不及此二頁。The choice still applies to the
+  tool itself; it is only these two dark-by-construction surfaces that opt out.
+*/
+html:root[data-theme="light"]:has(.landing) {
+  --color-canvas: #090c13;
+  --color-shade: #4d9fff;
+  --color-midsun: #f5b23c;
+  --color-fullsun: #ff5f4d;
 }
 
 /*
@@ -1014,6 +1087,11 @@ summary {
     ramp is the product's only load-bearing colour, so it is the right place
     to spend saturation.
   */
+  --color-notice: #d4d4d8;
+  --color-notice-soft: #27272a;
+  --color-error: #ff6392;
+  --color-error-soft: #3d1521;
+
   --color-shade: #4d9fff;
   --color-shade-soft: #0e2440;
   --color-midsun: #f5b23c;
@@ -1113,6 +1191,11 @@ summary {
 */
 :root[data-theme="light"] {
     color-scheme: light;
+
+    --color-notice: #3f3f46;
+    --color-notice-soft: #e4e4e7;
+    --color-error: #be123c;
+    --color-error-soft: #ffe4e6;
 
     --color-shade: #1d4ed8;
     --color-shade-soft: #dbeafe;
@@ -1238,4 +1321,36 @@ body:has(.landing) {
 :root:not([data-theme="light"]) .街瓦 {
   filter: invert(1) hue-rotate(180deg) brightness(0.88) contrast(0.92)
     saturate(0.55);
+}
+
+/*
+  ── leaflet 之控,亦當從其題 ────────────────────────────────────────────
+  瓦既反其色而為暗,而 leaflet 自有之控猶其本色(白地灰邊)——
+  故縮放之鈕、層之擇、其屬之條,three 者遂為全屏最明之物,
+  而其一乃版權之注。所欲人見者為其網,而所最明者為其注,是其序倒也。
+
+  Leaflet ships its controls as #fff on #ccc. Against the inverted dark
+  basemap they became the three brightest objects on screen — one of which is
+  a copyright notice. This follows the theme instead.
+
+  但施於暗。淡題自有其常,不必易之 —— 見下之 :root[data-theme="light"] 不設此。
+*/
+:root:not([data-theme="light"]) .leaflet-control-layers,
+:root:not([data-theme="light"]) .leaflet-bar a {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border-color: var(--color-line);
+}
+:root:not([data-theme="light"]) .leaflet-bar a:hover {
+  background: var(--color-panel);
+  color: var(--color-ink);
+}
+:root:not([data-theme="light"]) .leaflet-control-attribution {
+  /* 半透者,所以不奪其圖 —— 而其文之比猶足(量之 7.4:1)。 */
+  background: color-mix(in srgb, var(--color-paper) 88%, transparent);
+  color: var(--color-ink);
+}
+/* 量之於 #10141e:6.4:1。淡題之 #00506f 存於其本處,此不涉之。 */
+:root:not([data-theme="light"]) .leaflet-control-attribution a {
+  color: #7cc4ff;
 }
