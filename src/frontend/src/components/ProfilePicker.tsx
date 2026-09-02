@@ -5,17 +5,17 @@ const 之項: { key: keyof ProfileFlags; label: string; hint: string }[] = [
   {
     key: "wheelchair",
     label: "Wheelchair user",
-    hint: "Excludes steps, steep grades, raised kerbs, and narrow or unpaved segments.",
+    hint: "Leaves out steps, steep slopes, high curbs, and sidewalk that is too narrow or unpaved.",
   },
   {
     key: "heat_sensitive",
     label: "Heat-sensitive",
-    hint: "Weights sun exposure heavily. For MS, POTS, cardiac conditions, or heat-reactive medication.",
+    hint: "Counts sun very heavily. For MS, POTS, a heart condition, or medication that reacts to heat.",
   },
   {
     key: "blind_low_vision",
     label: "Blind or low vision",
-    hint: "Penalizes unsignalized crossings and prefers segments with tactile paving.",
+    hint: "Avoids crossings with no signal, and prefers sidewalk with tactile paving.",
   },
 ];
 
