@@ -9,6 +9,7 @@ import { MetricCard } from "../components/MetricCard";
 import { useEnter } from "../motion/useEnter";
 import { 停運之狀 } from "../data/停運";
 import { 成址 } from "../data/路之址";
+import { Reveal } from "../motion/reveal";
 
 const 午後 = 4; // hour_buckets[4] === 14:00
 
@@ -82,21 +83,25 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
       >
         <MetricCard
+          序={0}
           題="Network traversable"
           數={百分(報.通.率)}
           註={`${公里(報.通.可通米)} of ${公里(報.通.總米)}`}
         />
         <MetricCard
+          序={1}
           題={`Shaded at ${pack.manifest.hour_buckets[hourIdx]}:00`}
           數={百分(報.蔭.率)}
           註={`${公里(報.蔭.蔭米)} of traversable network`}
         />
         <MetricCard
+          序={2}
           題="Sidewalk cut off for this profile"
           數={百分(報.斷.率)}
           註={`${報.斷.斷之節.toLocaleString()} of ${報.斷.眾人之節.toLocaleString()} connected points`}
         />
         <MetricCard
+          序={3}
           題="Destinations with no step-free approach"
           數={String(納涼無階.length + 公交無階.length)}
           註={`of ${pack.destinations.length} within 400 m`}
@@ -104,6 +109,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </section>
 
       {站總 > 0 && 有輪椅之欄 === false && (
+        <Reveal>
         <section aria-label="Transit accessibility data gap" className="mt-8">
           <h2 className="题-accent h-xs">Transit accessibility data is not published</h2>
           <p className="mt-1 max-w-[68ch] text-sm">
@@ -120,8 +126,10 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
             the first is answerable here.
           </p>
         </section>
+        </Reveal>
       )}
 
+      <Reveal>
       <section aria-label="Severance" className="mt-8">
         <h2 className="题-accent h-xs">What the traversable figure hides</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
@@ -154,7 +162,9 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
             : `${報.無階.length} of the destinations in this extract sit more than 400 m from the step-free network — for the rest, proximity is not the barrier. Connectivity is.`}
         </p>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section aria-label="Building height coverage" className="mt-8">
         <h2 className="题-accent h-xs">Building height coverage</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
@@ -189,7 +199,9 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           the hatch marks say so on every segment.
         </p>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section aria-label="Data confidence" className="mt-8">
         <h2 className="题-accent h-xs">Data confidence</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
@@ -207,7 +219,9 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           ))}
         </ul>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section aria-label="Heat traps" className="mt-8">
         <h2 className="题-accent h-xs">Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
         <p className="mt-1 max-w-[68ch] text-sm text-muted-foreground">
@@ -248,8 +262,10 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           ))}
         </ol>
       </section>
+      </Reveal>
 
       {停.有源 && (
+        <Reveal>
         <section aria-label="Service disruption feed" className="mt-8">
           <h2 className="题-accent h-xs">Service disruption data</h2>
           <p className="mt-1 max-w-[68ch] text-sm">
@@ -284,8 +300,10 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
             </>
           )}
         </section>
+        </Reveal>
       )}
 
+      <Reveal>
       <section aria-label="Paratransit" className="mt-8">
         <h2 className="题-accent h-xs">Paratransit</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
@@ -296,6 +314,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           one — no public scheduling API exists to model it.
         </p>
       </section>
+      </Reveal>
     </main>
   );
 }
