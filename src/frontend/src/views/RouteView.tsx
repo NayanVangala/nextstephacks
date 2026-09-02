@@ -228,7 +228,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   if (loadError) {
     return (
       <main className="py-8">
-        <h1 className="h-sm">Passable</h1>
+        <h1 className="h-lg">Passable</h1>
         <p role="alert" className="mt-2 text-error">
           Could not load city data: {loadError}
         </p>
@@ -241,7 +241,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     <main className="py-6">
       {/* 城之名已在頂帶,不復言之。 */}
       <header>
-        <h1 className="h-sm">Route</h1>
+        <h1 className="h-lg">Route</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Heat-safe, step-free walking routes over{" "}
           <span className="数">{pack.edges.length.toLocaleString()}</span> sidewalk segments.
