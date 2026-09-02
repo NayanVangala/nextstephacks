@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { SignIn } from "../auth/SignIn";
 
 /**
@@ -12,14 +12,39 @@ import { SignIn } from "../auth/SignIn";
  *
  * 捲則其地漸實 —— 初則透,俾hero之字不為所奪。
  */
-const 之節: { id: string; label: string }[] = [
-  { id: "what", label: "What it is" },
-  { id: "figures", label: "Figures" },
-  { id: "does", label: "What it does" },
-  { id: "found", label: "Findings" },
+export interface 節之目 {
+  href: string;
+  label: string;
+}
+
+/* landing 之節。說之頁自授其目 —— 彼無此諸錨,若仍指之則墜於 landing。 */
+const 之節: 節之目[] = [
+  { href: "#what", label: "What it is" },
+  { href: "#figures", label: "Figures" },
+  { href: "#does", label: "What it does" },
+  { href: "#found", label: "Findings" },
+  { href: "#/help", label: "How to use it" },
 ];
 
-export function Nav({ onEnter }: { onEnter: () => void }) {
+/**
+ * 一目所屬之頁。
+ *
+ * 錨之目(#what)不出當頁,故其名為空 —— 凡空者皆同頁。頁之目(#/help)則各異。
+ * 二目相鄰而其頁異,乃以點隔之:同頁之節相從,異頁之鏈相斷。
+ * A dot marks a jump to a different page; section anchors within the current
+ * page run together without one.
+ */
+function 頁之名(href: string): string {
+  return href.startsWith("#/") ? href.slice(2).split(/[?#]/)[0] : "";
+}
+
+export function Nav({
+  onEnter,
+  節 = 之節,
+}: {
+  onEnter: () => void;
+  節?: 節之目[];
+}) {
   const [實, set實] = useState(false);
 
   useEffect(() => {
@@ -32,7 +57,9 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ease-quint ${
-        實 ? "bg-[#0e1116]/85 backdrop-blur-sm" : "bg-transparent"
+        // 必書其籤,不書其值 —— index.css 之「MUST reference the token」正為此。
+        // 其地既深為 #090c13,而此猶書 #0e1116,則捲過之後此帶淡於其頁。
+        實 ? "bg-canvas/85 backdrop-blur-sm" : "bg-transparent"
       }`}
     >
       <nav
@@ -46,18 +73,25 @@ export function Nav({ onEnter }: { onEnter: () => void }) {
           Passable
         </a>
 
-        {/* 小屏則但存其鈕 —— 四鏈於三百七十五像素之屏不可容,而摺疊之menu
-            於此頁無所必需:全頁可捲,節皆相接。 */}
-        <ul className="hidden items-center gap-7 md:flex">
-          {之節.map((s) => (
-            <li key={s.id}>
-              <a
-                href={`#${s.id}`}
-                className="landing-label text-white/70 transition-colors hover:text-white"
-              >
-                {s.label}
-              </a>
-            </li>
+        {/* 小屏則但存其鈕 —— 五鏈於七六八之屏亦不可容(量之,逾其地),
+            而摺疊之menu於此頁無所必需:全頁可捲,節皆相接。 */}
+        <ul className="hidden items-center gap-7 lg:flex">
+          {節.map((s, i) => (
+            <Fragment key={s.href}>
+              {i > 0 && 頁之名(節[i - 1].href) !== 頁之名(s.href) && (
+                <li aria-hidden className="-mx-3 text-white/30">
+                  ·
+                </li>
+              )}
+              <li>
+                <a
+                  href={s.href}
+                  className="landing-label text-white/70 transition-colors hover:text-white"
+                >
+                  {s.label}
+                </a>
+              </li>
+            </Fragment>
           ))}
         </ul>
 
