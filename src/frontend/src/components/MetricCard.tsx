@@ -1,14 +1,60 @@
+import { motion, useReducedMotion } from "motion/react";
 import { Card } from "@/components/ui/card";
+import { useCountUp, 解數 } from "../landing/useCountUp";
+import { 曲巨, 時中 } from "../motion/预设";
+
+/**
+ * 其數自零而升。
+ *
+ * landing 之四數皆升,而器中之四數靜 —— 是同一物而二手。且此升非為飾:
+ * 其行之際,人之目自隨之,故所當讀者不待指而自明。
+ * 凡不可解為數者(「—」「n/a」之類)直書之,不強為之升。
+ * The landing's figures count up and the tool's identical four-up row did not.
+ * The motion also earns its place: the eye follows a moving number, so the
+ * thing to read announces itself. Anything unparseable is rendered as-is.
+ */
+function MetricFigure({ 數 }: { 數: string }) {
+  const 解 = 解數(數);
+  const 減 = useReducedMotion();
+  const { ref, 值 } = useCountUp(解?.數 ?? 0, { 時: 700 });
+  if (!解 || 減) return <>{數}</>;
+  /*
+    其位數必從其所書者,不可自度之。
+    前此以「其數小於百則一位」為法 —— 而「99.0%」之數正為九十九,其餘為零,
+    遂書為「99%」,是奪其一位有效之數。所書者為所量之精,非此處所可改。
+    MUST take the precision from the source string. The old rule inferred it
+    from the value, so a deliberate "99.0%" rendered as "99%" — dropping a
+    significant figure the measurement chose to publish.
+  */
+  const 位 = /\.(\d+)/.exec(數)?.[1].length ?? 0;
+  const 文 =
+    位 > 0
+      ? 值.toFixed(位)
+      : 解.數 >= 1000
+        ? Math.round(值).toLocaleString()
+        : String(Math.round(值));
+  return (
+    <span ref={ref}>
+      {解.前}
+      {文}
+      {解.後}
+    </span>
+  );
+}
 
 export function MetricCard({
   題,
   數,
   註,
+  序 = 0,
 }: {
   題: string;
   數: string;
   註?: string;
+  /** 其序,所以錯落其入也。 */
+  序?: number;
 }) {
+  const 減 = useReducedMotion();
   return (
     /*
       懸則其界稍明。無影 —— 所法者舉site無一 box-shadow,而此樹亦然。
@@ -25,6 +71,11 @@ export function MetricCard({
       classes here were colouring a zero-width border: the documented hover lift
       had never once fired.
     */
+    <motion.div
+      initial={減 ? false : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={減 ? { duration: 0 } : { duration: 時中, ease: 曲巨, delay: 序 * 0.06 }}
+    >
     <Card className="gap-0 px-4 py-3.5 ring-1 ring-line transition-[box-shadow] duration-200 ease-quint hover:ring-accent-ink/50">
       {/* 籤為刻,故等寬;而其註為語,故仍其常 —— 註者句也,非刻也。 */}
       {/*
@@ -43,9 +94,10 @@ export function MetricCard({
         decided on.
       */}
       <div className="数 mt-1.5 text-[2.5rem] font-semibold leading-none tracking-[-0.03em]">
-        {數}
+        <MetricFigure 數={數} />
       </div>
       {註 && <div className="mt-2 text-xs text-muted-foreground">{註}</div>}
     </Card>
+    </motion.div>
   );
 }

@@ -386,10 +386,11 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           aria-label="Route summary"
           className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
         >
-          <MetricCard 題="Distance" 數={路之數.長} 註={`${result.edges.length} segments`} />
-          <MetricCard 題="Peak sun exposure" 數={路之數.峰} 註={`at ${hourLabel}`} />
-          <MetricCard 題="Shaded" 數={路之數.蔭} 註="of route length" />
+          <MetricCard 序={0} 題="Distance" 數={路之數.長} 註={`${result.edges.length} segments`} />
+          <MetricCard 序={1} 題="Peak sun exposure" 數={路之數.峰} 註={`at ${hourLabel}`} />
+          <MetricCard 序={2} 題="Shaded" 數={路之數.蔭} 註="of route length" />
           <MetricCard
+            序={3}
             題="Unverified segments"
             數={String(路之數.未驗)}
             註="accessibility not tagged in OpenStreetMap"
