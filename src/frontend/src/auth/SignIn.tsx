@@ -84,7 +84,7 @@ export function SignIn({ 暗 = false }: { 暗?: boolean }) {
         </button>
       </div>
       {誤 && (
-        <p role="alert" className={`text-xs ${暗 ? "text-white/70" : "text-fullsun"}`}>
+        <p role="alert" className={`text-xs ${暗 ? "text-white/70" : "text-error"}`}>
           Sign-in failed: {誤}
         </p>
       )}

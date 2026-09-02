@@ -33,7 +33,7 @@ export function HazardPicker({
       <p className="mt-1.5 text-xs text-muted-foreground">
         {value.description}
         {value.hypothetical && (
-          <span className="font-semibold text-midsun"> This is a what-if, not a live alert.</span>
+          <span className="font-semibold text-notice"> This is a what-if, not a live alert.</span>
         )}
       </p>
     </div>

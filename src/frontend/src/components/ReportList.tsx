@@ -26,7 +26,7 @@ export function ReportList({
       </h2>
 
       {!供給有無 && (
-        <p role="note" className="mt-1 text-sm text-midsun">
+        <p role="note" className="mt-1 text-sm text-notice">
           Reports are stored on this device only — no server is configured, so nothing
           you submit is shared with other people yet.
         </p>

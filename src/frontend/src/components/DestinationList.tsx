@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import type { Destination } from "../types";
 
 const 類之文: Record<string, string> = {
-  cooling_center: "Cooling centre",
-  evacuation_center: "Evacuation centre",
+  cooling_center: "Cooling center",
+  evacuation_center: "Evacuation center",
   rest_stop: "Rest stop",
   transit_stop: "Transit stop",
 };

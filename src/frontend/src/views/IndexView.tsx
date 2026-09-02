@@ -33,7 +33,7 @@ function 一行({ r, i }: { r: 區之度; i: number }) {
     r.入息 != null && r.入息之誤 != null && r.入息之誤 > r.入息 * 可信之誤比;
   const 孤 = r.連之率 != null && r.連之率 < 0.5;
   return (
-    <tr className={`border-b border-line last:border-0 ${孤 ? "bg-fullsun-soft" : ""}`}>
+    <tr className={`border-b border-line last:border-0 ${孤 ? "bg-error-soft" : ""}`}>
       <td className="数 py-2 pr-3 text-xs text-muted-foreground">{i + 1}</td>
       <td className="py-2 pr-3 text-sm">{區名(r.geoid)}</td>
       <td className="数 py-2 pr-3 text-right text-sm font-semibold">
@@ -45,13 +45,47 @@ function 一行({ r, i }: { r: 區之度; i: number }) {
         {錢(r.入息)}
         {r.入息之誤 != null && (
           // 誤必與其估同見。獨見其估,則以未知為已知。
-          <span className={`ml-1 text-xs ${誤大 ? "text-midsun" : "text-muted-foreground"}`}>
+          <span className={`ml-1 text-xs ${誤大 ? "text-notice" : "text-muted-foreground"}`}>
             ±{r.入息之誤.toLocaleString()}
           </span>
         )}
       </td>
     </tr>
   );
+}
+
+/**
+ * 入息之判。必自其數而出,不可預書於文。
+ *
+ * MUST be derived. This sentence was hardcoded as "The sign flips and the
+ * magnitude collapses", which was measured from Los Angeles and then rendered
+ * over every city. Verified across all sixteen packs, it is false in five —
+ * Miami (+0.35 -> +0.51), New York (+0.28 -> +0.47), Boston (-0.13 -> -0.34),
+ * San Francisco (-0.17 -> -0.27) and Chicago — where the credible subset is
+ * STRONGER, not weaker. In St. Louis it rendered "correlates at 0.89 … the sign
+ * flips and the magnitude collapses" with zero credible estimates behind it.
+ *
+ * 此物之旨,正在「所不知者不可以已知之貌出之」。而此一語,
+ * 乃以一城之所見,冒十六城之名 —— 是自違其所以立。
+ * For a tool whose entire claim is that unknown must never render as known, a
+ * conclusion asserted over data that does not support it is the worst possible
+ * defect. The three branches below each state only what its own numbers show.
+ */
+function 入息之判(c: {
+  蔭與入息: number | null;
+  蔭與入息_可信: number | null;
+  可信者: number;
+}): string {
+  const 全 = c.蔭與入息;
+  const 信 = c.蔭與入息_可信;
+  if (信 == null || c.可信者 === 0) {
+    return "Too few estimates here are precise enough to test the relationship at all — the figure on the left is not a result.";
+  }
+  if (全 == null) return "";
+  if (Math.abs(信) < Math.abs(全)) {
+    return "The magnitude collapses on the credible subset, which means the apparent relationship is carried by the least reliable estimates.";
+  }
+  return "The relationship holds on the credible subset — but one downtown extract cannot establish a citywide pattern, and the sign does not hold still across the other fifteen cities.";
 }
 
 export function IndexView({ cityId = "la" }: { cityId?: string }) {
@@ -74,7 +108,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
   if (載之誤) {
     return (
       <main className="py-8">
-        <p role="alert" className="text-fullsun">
+        <p role="alert" className="text-error">
           Could not load city data: {載之誤}
         </p>
       </main>
@@ -119,7 +153,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
       {孤島.length > 0 && (
         <section
           aria-label="Stranded block groups"
-          className="mt-4 rounded-lg border border-fullsun/40 bg-fullsun-soft p-4"
+          className="mt-4 rounded-lg border border-error/40 bg-error-soft p-4"
         >
           <h2 className="text-base font-semibold">
             {孤島.length === 1 ? "One block group is" : `${孤島.length} block groups are`}{" "}
@@ -149,7 +183,8 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
           className="mt-4 rounded-lg border border-line p-4"
         >
           <h2 className="text-base font-semibold">
-            Does any of this track income? Not measurably, at this scale.
+            Does any of this track income? A study area this size cannot answer
+            that.
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             We joined median household income to every block group and looked for
@@ -166,9 +201,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
             <span className="数 font-semibold text-ink">
               {c.蔭與入息_可信 == null ? "too few to say" : c.蔭與入息_可信.toFixed(2)}
             </span>
-            . The sign flips and the magnitude collapses, which means the apparent
-            relationship is carried by the least reliable estimates.
-          </p>
+            . {入息之判(c)}          </p>
           <p className="mt-2 text-sm text-muted-foreground">
             A study area this size cannot answer the question. These are downtown
             extracts of roughly three kilometres, block-group income margins here

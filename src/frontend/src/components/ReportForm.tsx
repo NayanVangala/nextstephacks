@@ -95,14 +95,14 @@ export function ReportForm({
           </span>
         )}
         {果 === "fail" && (
-          <span role="alert" className="text-sm font-semibold text-fullsun">
+          <span role="alert" className="text-sm font-semibold text-error">
             Could not save. Nothing was recorded.
           </span>
         )}
       </div>
 
       {!就緒 && (
-        <p role="alert" className="mt-2 text-xs text-fullsun">
+        <p role="alert" className="mt-2 text-xs text-error">
           Local storage is unavailable, so reports cannot be saved on this device.
           {庫之誤 ? ` (${庫之誤})` : ""}
         </p>

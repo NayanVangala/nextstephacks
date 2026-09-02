@@ -80,9 +80,9 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
     setStatus(
       cooling > 0
         ? `${r.reachableNodes.size.toLocaleString()} points reachable. ` +
-            `${cooling} cooling centre${cooling === 1 ? "" : "s"} within budget.`
+            `${cooling} cooling center${cooling === 1 ? "" : "s"} within budget.`
         : `${r.reachableNodes.size.toLocaleString()} points reachable. ` +
-            "No cooling centre is reachable from here under this scenario.",
+            "No cooling center is within your sun budget from here. Raising the budget or picking an earlier hour will widen the range.",
     );
   }, [pack, origin, flags, hourIdx, tempC, budget, 警狀]);
 
@@ -108,7 +108,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
     return (
       <main className="py-8">
         <h1 className="h-sm">Reach</h1>
-        <p role="alert" className="mt-2 text-fullsun">
+        <p role="alert" className="mt-2 text-error">
           Could not load city data: {loadError}
         </p>
       </main>
