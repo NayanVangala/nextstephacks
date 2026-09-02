@@ -238,6 +238,9 @@ export default function App() {
         the CTA visibly shrank the content from 1344px to 976px, which reads as
         arriving at a different product. One grid across both surfaces.
       */}
+      {/* 地之暈。見 index.css 之「器之地」—— 其色即曝之二端,故非無謂之飾。 */}
+      <div aria-hidden className="器之暈" />
+
       <div className="grid-container">
         {/* 帶既黏於上,則跳之的須讓其高,不然其題隱於帶下。 */}
         <div id="主" ref={面} tabIndex={-1} className="scroll-mt-28">

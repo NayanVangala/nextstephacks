@@ -504,6 +504,29 @@ html:has(.landing) body {
   padding-left: 0.7rem;
 }
 
+/*
+  器之地,其上有一暈 —— 暑與蔭之二色,極淡。
+  landing 有其場(HeatField),而器中之地純然一色;二面遂如二物。
+  此非飾:其色即曝之階之二端(赤與青),故雖淡,其義與其圖同源。
+  三之百而已 —— 逾此則與其上之資爭其目,而資者此頁之所以存也。
+  fixed 而不隨其捲,故不觸 layout,亦不與 leaflet 之重畫相干。
+
+  The landing has HeatField; the tool's ground was flat colour, so the two
+  halves read as different products. The two stops are the ramp's own ends —
+  full sun and shade — so even at 3% the wash means the same thing the map
+  does. Fixed and pointer-transparent: no layout cost, and it never enters
+  Leaflet's repaint path.
+*/
+.器之暈 {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 40rem at 12% -10%, color-mix(in oklab, var(--color-fullsun) 3%, transparent), transparent 70%),
+    radial-gradient(55rem 38rem at 92% 8%, color-mix(in oklab, var(--color-shade) 3%, transparent), transparent 70%);
+}
+
 /* impeccable-disable-next-line side-tab -- heading rule mark, not a card edge */
 .题-accent::before {
   content: "";
@@ -514,6 +537,32 @@ html:has(.landing) body {
   width: 3px;
   border-radius: 2px;
   background: var(--color-accent-ink);
+  /*
+    其標自上而下畫,如落筆。
+    landing 之界隨其入而行(見 RevealRule),而器中之標直現 —— 二面之手不一。
+    用 CSS 而不用 motion 之節點:此標於 Index、Report 二面凡數十處,
+    各裹一 motion 元件則其費不值,而 scale-y 行於 compositor,不觸 layout。
+    The landing draws its rules on entry; the tool's accent marks simply
+    appeared. Done in CSS rather than a motion node per heading because these
+    number in the dozens across Report and Index, and scaleY is compositor-only.
+  */
+  transform-origin: top;
+  /*
+    無 fill —— 其始之狀當由其動自書,不可預書於樣。
+    書 both 者,動未發則其標留於 scaleY(0),即不可見:凡動不發之時
+    (無動之瀏覽器、為外物所禁、隱於背景之頁),此標遂永隱。
+    無 fill 則其常為 scaleY(1),動發乃自零而長,動不發則其標自在。
+    此與 useEnter 之戒同 —— 見其註:「其隱之始必出於其動,不出於其樣」。
+    NO fill-mode: with `both` the mark rests at scaleY(0) until the animation
+    runs, so anywhere animation never starts it is permanently invisible. The
+    natural state must be the visible one — the same rule useEnter documents.
+  */
+  animation: 標之落 var(--duration-slow, 0.42s) var(--ease-quint);
+}
+
+@keyframes 標之落 {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
 }
 
 /* 大字斷行求勻 —— 孤字懸於末行,最傷顯示之字。 */
