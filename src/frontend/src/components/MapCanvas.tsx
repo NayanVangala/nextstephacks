@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import type { CityPack, Edge, ProfileFlags, RouteResult } from "../types";
 import { edgeAllowed } from "../routing/graph";
 import { 曝之階 } from "../routing/曝之色";
+import { ExposureKey } from "./ExposureStrip";
 
 /**
  * 圖。Leaflet 而非 MapLibre。
@@ -67,14 +68,40 @@ const 底圖 = {
  * thing the map exists to show. Resolved against the live document so the ramp
  * follows the theme.
  */
-function 取曝之板(): Record<ReturnType<typeof 曝之階>, string> {
+interface 板 {
+  shade: string;
+  midsun: string;
+  fullsun: string;
+  route: string;
+  routeUnder: string;
+  reach: string;
+  origin: string;
+  dest: string;
+}
+
+function 取曝之板(): 板 {
   const s = getComputedStyle(document.documentElement);
   const 取 = (名: string, 底: string) =>
     s.getPropertyValue(`--color-${名}`).trim() || 底;
+  /*
+    其資之階既取於其籤,而其路、其所及、其標,前此皆書淡地之實值 ——
+    #7c3aed、#22c55e、#2563eb、#dc2626。故於暗底,路與所及最晦,
+    而其始之標(#2563eb)去 --color-shade(#4d9fff)不過一階,
+    是以人視其始,若視一在蔭之段 —— 正 index.css 所戒者。
+    The ramp was resolved from tokens and then every other colour on the map was
+    hard-coded to the light palette. Two consequences: route and reach were the
+    muddiest possible choice over dark tiles, and the origin marker sat one hue
+    step from the shade colour, so the start pin read as a shaded segment.
+  */
   return {
-    shade: 取("shade", "#5b9bff"),
-    midsun: 取("midsun", "#e2a63c"),
-    fullsun: 取("fullsun", "#ff6b5b"),
+    shade: 取("shade", "#4d9fff"),
+    midsun: 取("midsun", "#f5b23c"),
+    fullsun: 取("fullsun", "#ff5f4d"),
+    route: 取("route", "#2ee6a8"),
+    routeUnder: 取("canvas", "#090c13"),
+    reach: 取("reach", "#b28bff"),
+    origin: 取("accent-ink", "#22d3c5"),
+    dest: 取("fullsun", "#ff5f4d"),
   };
 }
 
@@ -83,7 +110,7 @@ function 段之樣(
   flags: ProfileFlags,
   hourIdx: number,
   暗底: boolean,
-  板: Record<ReturnType<typeof 曝之階>, string>,
+  板: 板,
 ): L.PathOptions {
   if (!edgeAllowed(e, flags)) {
     return {
@@ -274,12 +301,14 @@ export function MapCanvas({
     const g = 所及層.current;
     if (!g) return;
     g.clearLayers();
+    const 板 = 取曝之板();
     for (const e of reachEdges ?? []) {
       L.polyline(反其座(e.geometry), {
-        color: "#7c3aed", weight: 3, opacity: 0.8, interactive: false,
+        color: 板.reach, weight: 3, opacity: 0.85, interactive: false,
       }).addTo(g);
     }
-  }, [reachEdges]);
+    // 暗題易則其板易 —— 其值讀諸 DOM,非 React 所能見,故必列於此。
+  }, [reachEdges, 暗題]);
 
   useEffect(() => {
     const g = 路層.current;
@@ -288,14 +317,17 @@ export function MapCanvas({
     if (!route) return;
     // route.polyline 已正其向 —— 段之四分之一逆行,照存之序則線奔而復返。
     const pts = 反其座(route.polyline);
-    L.polyline(pts, { color: "#052e16", weight: 9, opacity: 0.9, interactive: false }).addTo(g);
-    L.polyline(pts, { color: "#22c55e", weight: 5, interactive: false }).addTo(g);
-  }, [route]);
+    const 板 = 取曝之板();
+    // 其下一道暗者,所以別其路於其網 —— 取地之色,故不為第四色。
+    L.polyline(pts, { color: 板.routeUnder, weight: 9, opacity: 0.9, interactive: false }).addTo(g);
+    L.polyline(pts, { color: 板.route, weight: 5, interactive: false }).addTo(g);
+  }, [route, 暗題]);
 
   useEffect(() => {
     const g = 標層.current;
     if (!g) return;
     g.clearLayers();
+    const 板 = 取曝之板();
     const 置 = (p: { lon: number; lat: number }, 色: string, 名: string) => {
       L.circleMarker([p.lat, p.lon], {
         radius: 8, color: "#fff", weight: 2, fillColor: 色, fillOpacity: 1,
@@ -303,9 +335,9 @@ export function MapCanvas({
         .bindTooltip(名)
         .addTo(g);
     };
-    if (origin) 置(origin, "#2563eb", "Start");
-    if (dest) 置(dest, "#dc2626", "Destination");
-  }, [origin, dest]);
+    if (origin) 置(origin, 板.origin, "Start");
+    if (dest) 置(dest, 板.dest, "Destination");
+  }, [origin, dest, 暗題]);
 
   if (圖之誤) {
     return (
@@ -324,11 +356,24 @@ export function MapCanvas({
   }
 
   return (
-    <div
-      ref={ref}
-      role="application"
-      aria-label={`Map of ${pack.manifest.name}. The same route is available as a text itinerary below.`}
-      className="h-[42vh] min-h-[300px] w-full overflow-hidden md:h-full md:min-h-[520px]"
-    />
+    /*
+      鑰釘於圖中,不待路而見 —— 圖自初載即以其色畫其全網,則其鑰不可俟。
+      leaflet 主其內之一層,故不可置子於其中;別為一外層,而鑰浮其上。
+      z 取五百:逾其瓦,而不及 leaflet 之控(千),故不奪其縮放之鈕。
+      Leaflet owns its container's children, so the key sits in a wrapper
+      instead. z-500 clears the tiles and stays under Leaflet's own controls at
+      z-1000, so it can never cover the zoom buttons.
+    */
+    <div className="relative h-[42vh] min-h-[300px] w-full overflow-hidden md:h-full md:min-h-[520px]">
+      <div
+        ref={ref}
+        role="application"
+        aria-label={`Map of ${pack.manifest.name}. The same route is available as a text itinerary below.`}
+        className="absolute inset-0"
+      />
+      <div className="pointer-events-none absolute bottom-2 left-2 z-[500] rounded-md bg-paper/90 px-2 py-1.5 shadow-sm backdrop-blur-sm">
+        <ExposureKey />
+      </div>
+    </div>
   );
 }

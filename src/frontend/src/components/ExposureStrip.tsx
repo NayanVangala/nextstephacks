@@ -81,20 +81,42 @@ export function ExposureStrip({
           );
         })}
       </div>
-      <div className="mt-1 flex justify-between text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-2 rounded-sm bg-shade" aria-hidden />
-          shade
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="纹-low inline-block h-2 w-4 rounded-sm border border-line" aria-hidden />
-          hatched = inferred data
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-2 rounded-sm bg-fullsun" aria-hidden />
-          full sun
-        </span>
-      </div>
+      <ExposureKey className="mt-1" />
     </div>
+  );
+}
+
+/**
+ * 曝之鑰。
+ *
+ * 前此其鑰但存於此條之下,而此條待路而後見 —— 是圖自初載即以青黃赤畫其全網,
+ * 而其色之義無一處可考。REACH 一面尤甚:其面全不取此條,故終無鑰。
+ * 又其鑰止於二色,而其階有三 —— 黃者,所量之中階也,非二者之間。
+ * 缺其一,則人以黃為「未定」,而不知其為一實測之階。
+ *
+ * The key previously lived under the strip, which mounts only once a route
+ * exists — while the map paints the full network on the ramp from first load,
+ * and ReachView never renders the strip at all. It also listed two of three
+ * bands, teaching yellow as "in between" rather than as a measured state.
+ * One definition, used by the strip and pinned inside the map.
+ */
+export function ExposureKey({ className = "" }: { className?: string }) {
+  return (
+    <ul className={`flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground ${className}`}>
+      {[
+        ["bg-shade", "shade"],
+        ["bg-midsun", "partial sun"],
+        ["bg-fullsun", "full sun"],
+      ].map(([c, t]) => (
+        <li key={t} className="flex items-center gap-1">
+          <span className={`inline-block h-2 w-3 rounded-sm ${c}`} aria-hidden />
+          {t}
+        </li>
+      ))}
+      <li className="flex items-center gap-1">
+        <span className="纹-low inline-block h-2 w-4 rounded-sm border border-line" aria-hidden />
+        no data
+      </li>
+    </ul>
   );
 }
