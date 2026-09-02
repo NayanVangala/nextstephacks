@@ -339,11 +339,27 @@ function HelpPage() {
           </Step>
 
           <Step n="05" h="Read the route">
-            <p>
+            <p className="mb-5">
               You get two things: a colored line drawn on the map, and the same
               route written out as a list of directions you can read without
               looking at the map at all. The colors are explained below.
             </p>
+            {/* 此頁言其五步而不示其一 —— 一圖足抵其全文。 */}
+            <figure>
+              <img
+                src={`${import.meta.env.BASE_URL}shot-route.jpg`}
+                width={1600}
+                height={1075}
+                loading="lazy"
+                decoding="async"
+                alt="The Route screen. A green step-free path runs from El Pueblo to the Los Angeles Central Library across a map of downtown, with the surrounding sidewalks colored red for full sun and blue for shade. The wheelchair profile is ticked and the time is set to 2pm."
+                className="sun-rule w-full rounded-lg border"
+              />
+              <figcaption className="mt-4 text-white/55">
+                Downtown Los Angeles at 2pm, wheelchair profile. The green line
+                is the route. Red is full sun, blue is shade.
+              </figcaption>
+            </figure>
           </Step>
         </RevealGroup>
       </Section>

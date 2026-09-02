@@ -19,6 +19,7 @@ export interface 節之目 {
 
 /* landing 之節。說之頁自授其目 —— 彼無此諸錨,若仍指之則墜於 landing。 */
 const 之節: 節之目[] = [
+  { href: "#see", label: "See it" },
   { href: "#what", label: "What it is" },
   { href: "#figures", label: "Figures" },
   { href: "#does", label: "What it does" },
