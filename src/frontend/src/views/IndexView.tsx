@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import type { CityPack, 區之度 } from "../types";
 import { loadCityPack } from "../data/loadCityPack";
 import { useEnter } from "../motion/useEnter";
@@ -28,13 +29,30 @@ function 區名(geoid: string): string {
   return `Tract ${geoid.slice(5, 11)}, BG ${geoid.slice(11)}`;
 }
 
-function 一行({ r, i }: { r: 區之度; i: number }) {
+/*
+  其行依序而起。
+  五十七行,若各遲六十毫秒則其末待三秒有半 —— 是以動阻其讀。
+  故其間止於十二毫秒,且逾二十行者不復遲,直現而已:
+  所以識其為一列者,前之數行足矣。
+  57 rows at a normal 60ms stagger would make the last one wait 3.4s — motion
+  standing between the reader and the data. 12ms, and rows past the twentieth
+  do not wait at all: the first few are enough to read the list as a list.
+*/
+const 錯落之限 = 20;
+
+function IndexRow({ r, i }: { r: 區之度; i: number }) {
+  const 減 = useReducedMotion();
   const 誤大 =
     r.入息 != null && r.入息之誤 != null && r.入息之誤 > r.入息 * 可信之誤比;
   const 孤 = r.連之率 != null && r.連之率 < 0.5;
   return (
     /* 其行必自有其地 —— 黏之格取 bg-inherit,無地則其數透其下。 */
-    <tr className={`border-b border-line last:border-0 ${孤 ? "bg-error-soft" : "bg-canvas"}`}>
+    <motion.tr
+      initial={減 ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={減 ? { duration: 0 } : { duration: 0.3, delay: Math.min(i, 錯落之限) * 0.012 }}
+      className={`border-b border-line last:border-0 ${孤 ? "bg-error-soft" : "bg-canvas"}`}
+    >
       <td className="数 py-2 pr-3 text-xs text-muted-foreground">{i + 1}</td>
       <td className="sticky left-0 z-10 bg-inherit py-2 pr-3 text-sm">{區名(r.geoid)}</td>
       <td className="数 py-2 pr-3 text-right text-sm font-semibold">
@@ -51,7 +69,7 @@ function 一行({ r, i }: { r: 區之度; i: number }) {
           </span>
         )}
       </td>
-    </tr>
+    </motion.tr>
   );
 }
 
@@ -268,7 +286,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
             </thead>
             <tbody>
               {序.map((r, i) => (
-                <一行 key={r.geoid} r={r} i={i} />
+                <IndexRow key={r.geoid} r={r} i={i} />
               ))}
             </tbody>
           </table>
