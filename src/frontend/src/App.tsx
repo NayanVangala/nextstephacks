@@ -17,7 +17,7 @@ type 之view = "route" | "reach" | "report" | "index";
 const 之tabs: { id: 之view; label: string; blurb: string }[] = [
   { id: "route", label: "Route", blurb: "What is my safest path right now?" },
   { id: "reach", label: "Reach", blurb: "What can I get to, and can I get out?" },
-  { id: "report", label: "Report", blurb: "Where does this city fail?" },
+  { id: "report", label: "City audit", blurb: "Where does this city fail?" },
   { id: "index", label: "Index", blurb: "Which neighbourhoods are cut off?" },
 ];
 
@@ -83,7 +83,9 @@ export default function App() {
   }, [入app, city, view]);
 
   const 退 = () => {
-    location.hash = "";
+    // replaceState 而不書其 hash —— 直書之則遺一孤井(…/#),且每出入各塞一history。
+    // 出、入、出、入,則欲離此頁者須退四次。入者當塞其一(其往也),出者不當。
+    history.replaceState(null, "", location.pathname + location.search);
     set入app(false);
     set說頁(null);
     scrollTo({ top: 0 });
