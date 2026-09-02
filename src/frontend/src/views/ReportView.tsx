@@ -8,6 +8,7 @@ import { TimeSlider } from "../components/TimeSlider";
 import { MetricCard } from "../components/MetricCard";
 import { useEnter } from "../motion/useEnter";
 import { 停運之狀 } from "../data/停運";
+import { 成址 } from "../data/路之址";
 
 const 午後 = 4; // hour_buckets[4] === 14:00
 
@@ -61,7 +62,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
   return (
     <main className="py-6">
       <header>
-        <h1 className="h-sm">Report</h1>
+        <h1 className="h-lg">City audit</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Where this city fails its disabled residents, measured on{" "}
           {pack.edges.length.toLocaleString()} sidewalk segments.
@@ -105,13 +106,13 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       {站總 > 0 && 有輪椅之欄 === false && (
         <section aria-label="Transit accessibility data gap" className="mt-8">
           <h2 className="题-accent h-xs">Transit accessibility data is not published</h2>
-          <p className="mt-1 text-sm">
+          <p className="mt-1 max-w-[68ch] text-sm">
             The GTFS specification has carried a <code>wheelchair_boarding</code> field
             since 2011. {pack.manifest.name}'s published feeds omit that column
             entirely — not blank, absent — across every stop in both the bus and rail
             datasets.
           </p>
-          <p className="mt-2 text-sm">
+          <p className="mt-2 max-w-[68ch] text-sm">
             So for all <strong>{站總}</strong> stops in this area, whether a wheelchair
             user can board is <strong>unknown</strong> from published data. This tool
             will not guess. What it can measure is the sidewalk approach, reported
@@ -123,13 +124,13 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       <section aria-label="Severance" className="mt-8">
         <h2 className="题-accent h-xs">What the traversable figure hides</h2>
-        <p className="mt-1 text-sm">
+        <p className="mt-1 max-w-[68ch] text-sm">
           <strong className="数">{百分(報.通.率)}</strong> of the sidewalk network is
           traversable for this profile, which sounds close to solved. It is not the
           number that matters. The blocked segments are mostly short flights of steps,
           and each one severs whatever sits behind it.
         </p>
-        <p className="mt-2 text-sm">
+        <p className="mt-2 max-w-[68ch] text-sm">
           Counting connectivity instead of length:{" "}
           <strong className="数">{報.斷.此身之節.toLocaleString()}</strong> points are
           reachable for this profile against{" "}
@@ -147,7 +148,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           400 m. The card directly above already computes this; the prose was
           simply ignoring it.
         */}
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 max-w-[68ch] text-sm text-muted-foreground">
           {報.無階.length === 0
             ? "Every destination in this extract sits within 400 m of the step-free network, so proximity is not the barrier here. Connectivity is."
             : `${報.無階.length} of the destinations in this extract sit more than 400 m from the step-free network — for the rest, proximity is not the barrier. Connectivity is.`}
@@ -156,7 +157,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       <section aria-label="Building height coverage" className="mt-8">
         <h2 className="题-accent h-xs">Building height coverage</h2>
-        <p className="mt-1 text-sm">
+        <p className="mt-1 max-w-[68ch] text-sm">
           Shade is computed by projecting building shadows, so it is only as good as
           OpenStreetMap's height data — and that varies enormously by city.{" "}
           <strong className="数">
@@ -179,7 +180,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           landing quotes 9% (the real figure is 8.6%). Both errors are leftovers
           from when the project shipped two cities.
         */}
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 max-w-[68ch] text-sm text-muted-foreground">
           For comparison: New York publishes heights for 95% of its downtown
           buildings and Los Angeles for 92%, while Las Vegas publishes them for
           6% and Green Bay for 2%. Across all thirty-eight downtowns, 47,375 of
@@ -191,7 +192,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       <section aria-label="Data confidence" className="mt-8">
         <h2 className="题-accent h-xs">Data confidence</h2>
-        <p className="mt-1 text-sm">
+        <p className="mt-1 max-w-[68ch] text-sm">
           Accessibility attributes come from OpenStreetMap. A segment is only{" "}
           <strong>high</strong> confidence when a wheelchair, kerb, or steps tag was
           explicitly present. Everything else was inferred, and an inferred segment is
@@ -209,16 +210,40 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       <section aria-label="Heat traps" className="mt-8">
         <h2 className="题-accent h-xs">Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 max-w-[68ch] text-sm text-muted-foreground">
           Segments carrying the most foot traffic <em>and</em> the most sun. Traffic is
           estimated by sampling shortest paths, so these are approximate rankings, not
           measured counts.
         </p>
-        <ol className="mt-2 text-sm">
+        {/*
+          每條可點而見之於圖。
+          前此但列其長與其曝 —— 三米、二十八米,無街名,無交口,無所在:
+          是一榜而無一人能行其事。囊中之段本無其名(OSM 之 name 未入其囊),
+          故不能書其街;而其兩端之節則有其號,以之為一路,則圖上自見此段。
+          Each row was "3 m · exposure 100%" — no street, no cross street, no
+          location, so nothing could be done with it. The pack carries no street
+          names, but every edge knows its two end nodes, so routing between them
+          puts exactly this segment on the map.
+        */}
+        <ol className="mt-2 max-w-[68ch] text-sm">
           {報.陷.map((x) => (
-            <li key={x.edge.id} className="border-b border-line py-1 last:border-0">
-              {Math.round(x.edge.length_m)} m · exposure {(x.曝 * 100).toFixed(0)}%
-              {x.edge.confidence !== "high" && ` · ${x.edge.confidence} confidence`}
+            <li key={x.edge.id} className="border-b border-line last:border-0">
+              <a
+                className="flex min-h-11 flex-wrap items-center gap-x-2 py-1 underline-offset-4 hover:underline"
+                href={成址({
+                  city: cityId, view: "route",
+                  origin: x.edge.from, dest: x.edge.to,
+                  flags, hourIdx,
+                })}
+              >
+                <span className="数">{Math.round(x.edge.length_m)} m</span>
+                <span className="text-muted-foreground">·</span>
+                <span>exposure <span className="数">{(x.曝 * 100).toFixed(0)}%</span></span>
+                {x.edge.confidence !== "high" && (
+                  <span className="text-muted-foreground">· {x.edge.confidence} confidence</span>
+                )}
+                <span className="ml-auto text-xs text-accent-ink">Show on map →</span>
+              </a>
             </li>
           ))}
         </ol>
@@ -227,7 +252,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       {停.有源 && (
         <section aria-label="Service disruption feed" className="mt-8">
           <h2 className="题-accent h-xs">Service disruption data</h2>
-          <p className="mt-1 text-sm">
+          <p className="mt-1 max-w-[68ch] text-sm">
             {pack.manifest.name} publishes no service-alerts endpoint. The nearest
             public equivalent is canceled trips, which currently reports{" "}
             <strong className="数">{停.總}</strong> canceled across{" "}
@@ -263,7 +288,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       <section aria-label="Paratransit" className="mt-8">
         <h2 className="题-accent h-xs">Paratransit</h2>
-        <p className="mt-1 text-sm">
+        <p className="mt-1 max-w-[68ch] text-sm">
           {pack.manifest.name}'s ADA paratransit operator requires advance booking. A
           wildfire or a heat emergency does not give that much notice, so the transit
           mode many disabled residents depend on is structurally unavailable in exactly
