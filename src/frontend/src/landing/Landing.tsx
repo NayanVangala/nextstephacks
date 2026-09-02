@@ -89,8 +89,8 @@ function Figure({
 }
 
 const 數: { n: string; t: string; s: string; 缺?: boolean }[] = [
-  { n: "227k", t: "sidewalk segments", s: "modelled across sixteen US downtowns" },
-  { n: "667", t: "census block groups", s: "scored for step-free connectivity" },
+  { n: "478k", t: "sidewalk segments", s: "modelled across thirty-eight US downtowns" },
+  { n: "1,288", t: "neighborhoods scored", s: "for whether their step-free sidewalk connects" },
   { n: "91%", t: "of Phoenix buildings", s: "have no published height at all", 缺: true },
   { n: "0", t: "accounts required", s: "everything runs in your browser" },
 ];
@@ -113,18 +113,19 @@ const 何以為之 = [
 */
 const 事: { h: string; p: string; 式: 式 }[] = [
   { h: "ROUTE", 式: "route",
-    p: "Every routing app optimises for shortest. A handful optimise for shade. None optimise for both at once, and the step-free path is usually the longer, more exposed one." },
+    p: "Every routing app optimizes for shortest. A handful optimize for shade. None optimize for both at once, and the step-free path is usually the longer, more exposed one. You get a line on the map and the same walk written out as directions — printable, and shareable as a link that opens exactly what you saw." },
   { h: "REACH", 式: "reach",
-    p: "Not where you want to go, but where you can actually get. Run the graph to exhaustion under a heat budget and ask whether any cooling centre falls inside it." },
+    p: "Not where you want to go, but where you can actually get. Tell it how much sun you can take today and it draws the edge of your range — then says whether a cooling center is inside it." },
   { h: "REPORT", 式: "report",
-    p: "98.9% of the network is traversable, which sounds close to solved. It is the wrong number. 488 points of usable sidewalk cannot be reached at all." },
+    p: "99.1% of the network is traversable, which sounds close to solved. It is the wrong number. Thirty-six neighborhoods across sixteen cities are 100% step-free and 0% connected — every meter passes, none of it reaches the city." },
 ];
 
 const 所發現 = [
   "LA Metro's public feeds omit the GTFS wheelchair_boarding field entirely — not blank, absent — across all 299 stops in the study area.",
   "Its canceled-service endpoint answers 200, with open CORS and well-formed JSON. The data is from October 2022.",
   "Phoenix publishes building heights for 9% of its downtown. Green Bay publishes them for 2%. The two cities have almost nothing else in common, and neither has anything to do with how much either one needs the shade.",
-  "We looked for a link between shade and household income. Across 667 block groups we could not find one that survives the margins of error, and the tool says so.",
+  "Chicago's sidewalk network is 97.7% traversable for a wheelchair user. It also strands 1,948 connected points — 9.2% of its walkable graph — behind short flights of steps. Both numbers are true. Only one of them is about whether you can get anywhere.",
+  "We joined median household income to the 1,288 neighborhoods and got a figure back for 1,101 of them. Only eighteen cities have income estimates precise enough to test against shade, and across those eighteen the sign will not hold still: +0.51 in Miami, −0.34 in Boston, +0.03 in Los Angeles. A downtown extract cannot answer this question, and every city page says so.",
 ];
 
 export function Landing({ onEnter }: { onEnter: () => void }) {
@@ -219,10 +220,20 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       </section>
 
       <div className="border-t border-white/10 py-[20px]">
+        {/*
+          此列為所取之源,故其中不可有無所本者。去其二:
+          「Works offline」—— 無 service worker,無 PWA,其囊每載必取諸網,離網則全不見。
+          「King County Metro」—— 但為 bel 與 sea 之 paratransit 之名,未嘗取其 GTFS;
+            十六城之中,有公交之站者惟洛城一城而已。
+          Two removed as unsupported: there is no service worker or PWA config
+          anywhere, so the app renders nothing offline; and King County Metro
+          appears only as a paratransit operator name — no GTFS feed is fetched
+          for it, and only LA has any transit stops at all.
+        */}
         <Marquee items={[
           "OpenStreetMap", "Open-Meteo", "US Census TIGER", "ACS 5-year",
-          "National Weather Service", "LA Metro GTFS", "King County Metro",
-          "Client-side A*", "Projected shadows", "Works offline",
+          "National Weather Service", "LA Metro GTFS", "Client-side A*",
+          "Projected shadows", "No API keys", "No account",
         ]} />
       </div>
 
@@ -236,10 +247,11 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         </Reveal>
         <Reveal 延={0.1}>
           <p className="t-xs mt-[36px] max-w-2xl text-white/60">
-            Passable models every sidewalk segment in sixteen downtowns for whether
+            Passable models every sidewalk segment in thirty-eight downtowns for whether
             you can physically use it and how much sun falls on it, hour by hour.
-            It runs entirely in your browser — no account, no server, no tracking —
-            and it says plainly when the underlying data does not know something.
+            It runs in your browser — no account, nowhere for us to store anything,
+            and no tracking — and it says plainly when the underlying data does not
+            know something.
           </p>
         </Reveal>
         {/*
@@ -334,9 +346,34 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       <ReachProbe onEnter={onEnter} />
 
       <footer className="border-t border-white/10 py-[36px]">
-        <div className="grid-container t-xs flex flex-wrap items-center justify-between gap-[20px] text-white/45">
+        {/*
+          說之頁在此。前此全頁無一鏈出於其外 —— 讀至其末而有疑者,無所往。
+          The four explanation pages are reachable from the nav at 1024px and up;
+          the footer is where anyone below that width, or anyone who has read to
+          the end still unsure, actually finds them.
+        */}
+        <nav aria-label="More about Passable" className="grid-container">
+          <ul className="t-xs flex flex-wrap gap-x-[36px] gap-y-[20px]">
+            {[
+              ["#/help", "How to use it"],
+              ["#/questions", "Questions and answers"],
+              ["#/about", "Who it's for"],
+              ["#/limits", "What we don't know"],
+            ].map(([href, label]) => (
+              <li key={href}>
+                <a
+                  href={href}
+                  className="border-b border-white/25 pb-1 transition-colors duration-150 ease-quint hover:border-white"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="grid-container t-xs mt-[36px] flex flex-wrap items-center justify-between gap-[20px] text-white/45">
           <span>NextStep Hacks 2026 · Earth Forward</span>
-          <span>Sixteen US cities</span>
+          <span>Thirty-eight US downtowns</span>
           <span>Not medical guidance</span>
         </div>
       </footer>

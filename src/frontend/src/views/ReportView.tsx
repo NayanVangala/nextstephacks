@@ -137,9 +137,20 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           unrestricted pedestrian — <strong className="数">{報.斷.斷之節.toLocaleString()}</strong>{" "}
           points of usable sidewalk exist but cannot be reached.
         </p>
+        {/*
+          此語必自其數而出。前此書「皆在一百四米之內」—— 乃洛城之量,而施於十六城:
+          量之,綠灣之最遠者三一七米,紐約四一八米,且有十處出其四百米之外。
+          其上之卡正已算之,而其文顧不用其所算。
+          MUST be derived. This read "Every destination here sits within 104 m",
+          which is a Los Angeles measurement rendered over all sixteen cities —
+          Green Bay's furthest is 317 m and New York has ten destinations beyond
+          400 m. The card directly above already computes this; the prose was
+          simply ignoring it.
+        */}
         <p className="mt-2 text-sm text-muted-foreground">
-          Every destination here sits within 104 m of the step-free network, so
-          proximity is not the barrier in this bounding box. Connectivity is.
+          {報.無階.length === 0
+            ? "Every destination in this extract sits within 400 m of the step-free network, so proximity is not the barrier here. Connectivity is."
+            : `${報.無階.length} of the destinations in this extract sit more than 400 m from the step-free network — for the rest, proximity is not the barrier. Connectivity is.`}
         </p>
       </section>
 
@@ -160,11 +171,21 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           </strong>{" "}
           of them with no published height, filled in at an assumed 7 storeys.
         </p>
+        {/*
+          前此曰「鳳凰城已量而棄之,不為第三城」—— 而鳳凰城正在其城之列(第三),
+          且其文書其比為六,而其實為九。二誤同出一處,皆二城之世之遺。
+          This paragraph said Phoenix "was measured and rejected as a third city"
+          while Phoenix is city #3 in the picker, and quoted 6% coverage where the
+          landing quotes 9% (the real figure is 8.6%). Both errors are leftovers
+          from when the project shipped two cities.
+        */}
         <p className="mt-2 text-sm text-muted-foreground">
-          For comparison: Los Angeles publishes heights for 92% of downtown buildings,
-          Seattle for 45%, and Phoenix for 6%. Phoenix was measured and rejected as a
-          third city on exactly this basis — at 6% coverage the shade model would be
-          almost entirely invented, which is worse than not shipping it.
+          For comparison: New York publishes heights for 95% of its downtown
+          buildings and Los Angeles for 92%, while Las Vegas publishes them for
+          6% and Green Bay for 2%. Across all thirty-eight downtowns, 47,375 of
+          81,864 building footprints — 58% — have no published height at all.
+          Where coverage is this thin the shade model is mostly inference, and
+          the hatch marks say so on every segment.
         </p>
       </section>
 
@@ -215,7 +236,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
           {停.陳否 && (
             <p className="纹-low mt-2 rounded border border-line p-3 text-sm">
-              <strong className="text-fullsun">This feed is stale.</strong> It answers
+              <strong className="text-error">This feed is stale.</strong> It answers
               with a 200 and well-formed data, but its own timestamp reads{" "}
               <span className="数">{停.更新於 ?? "unknown"}</span>. Displaying it as
               current conditions would be a fabrication, so it is shown here as a data

@@ -130,10 +130,10 @@ function 算(式: 式, 網: 網, 圖: 網圖): 所出 {
 
   /*
     所斷者。自其大者而洪,通者乃行;其所不至,即輪椅之所不至。
-    此非擬也:全網之九八點九可通,而其餘之數百段,自城之中無路可達。
+    此非擬也:全網之九九點一可通,而其餘之數百段,自城之中無路可達。
     節之末所稱者,正此數。
     Run the flood over step-free edges only and everything it never reaches is,
-    for a wheelchair user, unreachable — the "98.9% traversable" number and the
+    for a wheelchair user, unreachable — the "99.1% traversable" number and the
     488 stranded points in this section's own copy are this picture.
   */
   // 大域即所至。其外之通段,自城之中無路可達。
