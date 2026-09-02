@@ -937,10 +937,23 @@ summary {
 .h-lg  { font-size: var(--font-size-h-lg); }
 
 /* 中題三階,用文之族而重五百。距負零點零二 —— 收之不如其大者。 */
+/*
+  零點八六為顯之字之律 —— 一塊,其行相銜。而此三階用於器中,其題皆折行:
+  「Transit accessibility data is not published」二行,
+  「Destinations with no step-free approach」三行,
+  二十四像素之字置於二十點六之行,其 g、p、y 之垂正犯其下行之升。
+  landing 已為此自零點八六退至零點八八(見「題之行高」),而器中猶取其舊。
+  彼之題皆短語而不折,此之題折,故不可同律。
+
+  0.86 is a rhythm for single-line display blocks. These three steps are used
+  for the app's headings, which DO wrap in its narrow columns, so descenders
+  collide with the ascenders of the next line. The landing already backed off
+  0.86 for exactly this reason; its headings are short phrases, these are not.
+*/
 .h-md, .h-sm, .h-xs {
   font-family: var(--font-sans);
   font-weight: 500;
-  line-height: 0.86;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 .h-md { font-size: var(--font-size-h-md); }
