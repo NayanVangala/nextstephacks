@@ -69,6 +69,18 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   // 址所載之狀,必待囊至而後驗 —— 囊未至則節之有無不可知。
   useEffect(() => {
     if (!pack) return;
+    /*
+      址所指之城,非今之城,則其狀一概不取。
+      易城則此 view 重掛(App 之 key={city}),而 址之初 為 useMemo,讀者為新掛之
+      身,所讀猶是舊城之 hash。以舊城之節驗新城之囊,其節必不在,遂舉「陳鏈」之
+      告 —— 而人未嘗開一鏈,但易其城耳。其身、其時亦隨之而誤。
+      MUST bail before restoring: changing city remounts this view via key={city},
+      and the fresh instance's memoized hash still describes the OLD city. Its node
+      ids are absent from the new pack, so 驗其節 reports them missing and the
+      "that shared link is out of date" banner fires at somebody who never opened
+      a link. The profile flags and hour were carried across silently too.
+    */
+    if (址之初.city && 址之初.city !== cityId) return;
     if (址之初.flags) setFlags(址之初.flags);
     if (址之初.hourIdx != null && 址之初.hourIdx < pack.manifest.hour_buckets.length) {
       setHourIdx(址之初.hourIdx);
@@ -78,7 +90,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     if (驗.dest != null) setDest(驗.dest);
     if (驗.失之節.length > 0) set陳鏈(true);
     // 一囊一驗。址之初為 useMemo,其身不變。
-  }, [pack, 址之初]);
+  }, [pack, 址之初, cityId]);
 
   useEffect(() => {
     if (!pack) return;
@@ -149,8 +161,9 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       // 則其斷非身之故。此路僅於無路之時算之,故其費不入常途。
       set阻(阻之故(pack, flags, origin, dest, hourIdx, temp.tempC));
       setStatus(
-        "No route exists for this profile between those points. " +
-          "The barrier is accessibility, not distance.",
+        "There is no step-free way between these two points with the boxes you " +
+          "have ticked. The problem is what is in the way, not the distance. Try " +
+          "a nearby start or destination, or untick a box to see what changes.",
       );
     }
   }, [pack, origin, dest, flags, hourIdx, temp, 罰, 警狀]);
@@ -216,7 +229,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
     return (
       <main className="py-8">
         <h1 className="h-sm">Passable</h1>
-        <p role="alert" className="mt-2 text-fullsun">
+        <p role="alert" className="mt-2 text-error">
           Could not load city data: {loadError}
         </p>
       </main>
@@ -244,7 +257,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       </p>
 
       {陳鏈 && (
-        <p role="alert" className="mt-2 rounded-lg border border-midsun/40 bg-midsun-soft px-4 py-3 text-sm">
+        <p role="alert" className="mt-2 rounded-lg border border-notice/40 bg-notice-soft px-4 py-3 text-sm">
           <span className="font-semibold">That shared link is out of date.</span>{" "}
           One or both of its points no longer exist in this city's sidewalk data,
           which is rebuilt as OpenStreetMap changes. Nothing has been guessed —
@@ -255,7 +268,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       {阻 && (
         <section
           aria-label="Why there is no route"
-          className="mt-2 rounded-lg border border-fullsun/40 bg-fullsun-soft px-4 py-3 text-sm"
+          className="mt-2 rounded-lg border border-error/40 bg-error-soft px-4 py-3 text-sm"
         >
           {阻.眾人亦不可至 ? (
             <p>
@@ -296,7 +309,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       <HeatAlert 狀={警狀} />
 
       {temp.estimated && (
-        <p role="note" className="mt-2 text-sm text-midsun">
+        <p role="note" className="mt-2 text-sm text-notice">
           Live weather is unavailable — routing is using an estimated{" "}
           <span className="数">{temp.tempC}</span>°C.
         </p>
@@ -459,7 +472,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                   )].map((k) => k.replace(/_/g, " "));
                   return (
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                      <span className={st.罰 > 0 ? "text-midsun" : "text-muted-foreground"}>
+                      <span className={st.罰 > 0 ? "text-notice" : "text-muted-foreground"}>
                         <span className="数 font-semibold">{st.總數}</span>{" "}
                         {st.總數 === 1 ? "report" : "reports"}
                         {st.確認 > 0 && (
@@ -556,7 +569,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             return (
               <>
                 {" "}
-                <span className={率 > 0.3 ? "font-semibold text-midsun" : ""}>
+                <span className={率 > 0.3 ? "font-semibold text-notice" : ""}>
                   {補} of them ({Math.round(率 * 100)}%) have no height in OpenStreetMap
                   and were assumed to be 7 storeys
                 </span>
