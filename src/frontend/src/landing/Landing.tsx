@@ -245,43 +245,6 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <Marquee items={CITIES.map((c) => c.label)} />
       </div>
 
-      {/*
-        器之貌。
-        前此全頁無一處示其器 —— landing、help 所有者皆抽象之圖(日晷、網之像),
-        而人所將點者為「Open the tool」一鈕。老而不習於此者,見一鈕而不知其後
-        為何物,則不點。一圖之效,過於 help 一頁之全文。
-        Until now nothing anywhere showed the actual product: the landing and
-        Help carry abstract diagrams, and the button says "Open the tool" with
-        no indication of what that is. For an older, non-technical visitor
-        deciding whether to click, one picture of a real route does more than
-        the entire Help page.
-
-        其圖為真:洛城,輪椅之身,午後二時,自 El Pueblo 至中央圖書館。
-        BASE_URL 之故 —— 站在 /nextstephacks/ 之下,絕對之路則四百。
-      */}
-      <Section id="see" label="What it looks like">
-        <SectionLabel>What it looks like</SectionLabel>
-        <Reveal>
-          <figure>
-            <img
-              src={`${import.meta.env.BASE_URL}shot-route.jpg`}
-              width={1600}
-              height={1075}
-              loading="lazy"
-              decoding="async"
-              alt="The Route screen. A green step-free path runs from El Pueblo to the Los Angeles Central Library across a map of downtown, with the surrounding sidewalks coloured red for full sun and blue for shade. The wheelchair profile is ticked and the time is set to 2pm."
-              className="sun-rule w-full rounded-lg border"
-            />
-            <figcaption className="t-xs mt-5 max-w-2xl text-white/55">
-              A real result: downtown Los Angeles, wheelchair profile, 2pm. Green
-              is the route it chose. Red is full sun, blue is shade. The same
-              walk comes out written as directions underneath, which you can
-              print or send to someone.
-            </figcaption>
-          </figure>
-        </Reveal>
-      </Section>
-
       <Section id="what" label="What it is">
         <SectionLabel>What it is</SectionLabel>
         <Reveal>
