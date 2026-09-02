@@ -33,9 +33,10 @@ function 一行({ r, i }: { r: 區之度; i: number }) {
     r.入息 != null && r.入息之誤 != null && r.入息之誤 > r.入息 * 可信之誤比;
   const 孤 = r.連之率 != null && r.連之率 < 0.5;
   return (
-    <tr className={`border-b border-line last:border-0 ${孤 ? "bg-error-soft" : ""}`}>
+    /* 其行必自有其地 —— 黏之格取 bg-inherit,無地則其數透其下。 */
+    <tr className={`border-b border-line last:border-0 ${孤 ? "bg-error-soft" : "bg-canvas"}`}>
       <td className="数 py-2 pr-3 text-xs text-muted-foreground">{i + 1}</td>
-      <td className="py-2 pr-3 text-sm">{區名(r.geoid)}</td>
+      <td className="sticky left-0 z-10 bg-inherit py-2 pr-3 text-sm">{區名(r.geoid)}</td>
       <td className="数 py-2 pr-3 text-right text-sm font-semibold">
         {百分(r.連之率)}
       </td>
@@ -120,7 +121,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
   if (!pack.index) {
     return (
       <main className="py-6" ref={面}>
-        <h1 className="h-sm">Index</h1>
+        <h1 className="h-lg">Index</h1>
         <p role="note" className="mt-4 rounded-lg border border-line bg-panel p-4 text-sm">
           <span className="font-semibold">Not computed for this city.</span>{" "}
           The block-group index needs Census boundary and income data, and that
@@ -144,7 +145,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
 
   return (
     <main className="py-6" ref={面}>
-      <h1 className="h-sm">Index</h1>
+      <h1 className="h-lg">Index</h1>
       <p className="mt-0.5 text-sm text-muted-foreground">
         Every census block group in the study area, ranked by how much of its
         step-free sidewalk actually connects to the rest of the city.
@@ -155,7 +156,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
           aria-label="Stranded block groups"
           className="mt-4 rounded-lg border border-error/40 bg-error-soft p-4"
         >
-          <h2 className="text-base font-semibold">
+          <h2 className="题-accent h-xs">
             {孤島.length === 1 ? "One block group is" : `${孤島.length} block groups are`}{" "}
             fully step-free and almost entirely cut off
           </h2>
@@ -182,7 +183,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
           aria-label="Income relationship"
           className="mt-4 rounded-lg border border-line p-4"
         >
-          <h2 className="text-base font-semibold">
+          <h2 className="题-accent h-xs">
             Does any of this track income? A study area this size cannot answer
             that.
           </h2>
@@ -216,7 +217,39 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
         <h2 className="题-accent h-xs">
           Ranked worst-connected first
         </h2>
-        <div className="mt-2 overflow-x-auto">
+        {/*
+          首行黏於其帶之下,首列黏於其左。
+          橫捲則坊之名隨其數而去 —— 三百七十五之屏,「Median income」在其外,
+          而其名亦在其外,故所見者六數而無所主。
+          縱捲則其首行去於第八行,而 Connected、Step-free、Shaded 皆百分之數,
+          既無其首,則不可辨其孰為孰。
+          七 rem 者,讓其帶之高(帶黏於頂,見 App 之 chrome)。
+          Horizontal scroll took the block-group name off screen with the income
+          column, leaving a row of six unlabelled numbers; vertical scroll lost
+          the header by row 8, and three of the columns are percentages.
+        */}
+        {/*
+          此表自為一捲之器,其高不過七十之百。
+          橫捲者必為捲器,而 overflow-x:auto 之側,overflow-y 雖書 clip 亦計為
+          hidden(規所定:一軸為 clip 而他軸非 visible/clip,則 clip 計為 hidden)——
+          既為捲器,則 sticky 之 top 附於此器而非其頁,而其器之高即其表之高,
+          故縱黏終不發。量之,其首行去而不返。
+          今限其高,則此器真為縱捲之主,首行黏於其上,自其第一行至第五十七行不去。
+          A horizontally scrollable box cannot also host page-level sticky
+          headers: with overflow-x:auto, overflow-y:clip computes to hidden, so
+          the box becomes the scrollport and top-28 stuck to a box exactly as
+          tall as its content — i.e. never. Bounding the height makes the box the
+          real vertical scroller, and the header sticks to it.
+
+          tabIndex 與 role —— 凡可捲者,鍵盤必能至之,不然則但鼠可讀。
+          A scrollable region must be keyboard reachable.
+        */}
+        <div
+          role="region"
+          aria-label="Block groups ranked by connectivity"
+          tabIndex={0}
+          className="mt-2 max-h-[70vh] overflow-auto"
+        >
           <table className="w-full min-w-[34rem] border-collapse">
             <caption className="sr-only">
               Census block groups ranked by the share of step-free sidewalk
@@ -225,12 +258,12 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
             </caption>
             <thead>
               <tr className="border-b border-line text-left">
-                <th scope="col" className="py-2 pr-3 text-xs font-semibold text-muted-foreground">#</th>
-                <th scope="col" className="py-2 pr-3 text-xs font-semibold text-muted-foreground">Block group</th>
-                <th scope="col" className="py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Connected</th>
-                <th scope="col" className="py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Step-free</th>
-                <th scope="col" className="py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Shaded 14:00</th>
-                <th scope="col" className="py-2 text-right text-xs font-semibold text-muted-foreground">Median income</th>
+                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-xs font-semibold text-muted-foreground">#</th>
+                <th scope="col" className="sticky top-0 left-0 z-20 bg-canvas py-2 pr-3 text-xs font-semibold text-muted-foreground">Block group</th>
+                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Connected</th>
+                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Step-free</th>
+                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Shaded 14:00</th>
+                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 text-right text-xs font-semibold text-muted-foreground">Median income</th>
               </tr>
             </thead>
             <tbody>
@@ -249,7 +282,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
           <span className="数">2023</span> ACS 5-year summary file, shown with its
           published margin of error. Margins wider than{" "}
           <span className="数">{Math.round(可信之誤比 * 100)}%</span> of the estimate
-          are marked in amber; an estimate is not a measurement.
+          are called out beside the figure; an estimate is not a measurement.
           {無路者 > 0 && (
             <>
               {" "}
