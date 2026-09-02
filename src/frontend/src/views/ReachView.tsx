@@ -98,16 +98,31 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
     };
   }, [pack, result]);
 
-  const coordOf = (id: number | null) => {
-    if (!pack || id == null) return null;
-    const n = pack.nodes.find((x) => x.id === id);
-    return n ? { lon: n.lon, lat: n.lat } : null;
-  };
+  /*
+    節之表,一囊一立。
+    前此每呼 coordOf 皆遍其節而求之,而其呼在 render 之中,一render 二呼 ——
+    洛城一萬四千七百六十九節,紐約二萬四千九百三十二,則曳一桿、點一匣,
+    皆再遍其全表。今以 Map 代之,一囊一立,其求為常數。
+    coordOf was a linear scan over every node, called twice per render — 24,932
+    nodes in New York, re-scanned on every slider step and every checkbox.
+  */
+  const 節之表 = useMemo(
+    () => new Map(pack ? pack.nodes.map((n) => [n.id, n]) : []),
+    [pack],
+  );
+  const coordOf = useCallback(
+    (id: number | null) => {
+      if (id == null) return null;
+      const n = 節之表.get(id);
+      return n ? { lon: n.lon, lat: n.lat } : null;
+    },
+    [節之表],
+  );
 
   if (loadError) {
     return (
       <main className="py-8">
-        <h1 className="h-sm">Reach</h1>
+        <h1 className="h-lg">Reach</h1>
         <p role="alert" className="mt-2 text-error">
           Could not load city data: {loadError}
         </p>
@@ -119,7 +134,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
   return (
     <main className="py-6">
       <header>
-        <h1 className="h-sm">Reach</h1>
+        <h1 className="h-lg">Reach</h1>
         {/* 其問已在頂帶,此不復問,但言其法與其度。 */}
         <p className="mt-0.5 text-sm text-muted-foreground">
           Everywhere within a distance or sun-exposure budget from one point —
