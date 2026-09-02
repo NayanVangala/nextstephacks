@@ -1,6 +1,8 @@
 # Passable
 
-**Heat-safe, step-free walking routes across seven US downtowns.**
+**Heat-safe, step-free walking routes across 38 US downtowns.**
+
+**Live: <https://nayanvangala.github.io/nextstephacks/>**
 
 Google Maps will route a wheelchair user down a flight of stairs, and it will
 route someone with MS across four blocks of unshaded asphalt at 2pm in Phoenix.
@@ -9,11 +11,18 @@ Passable models both, and says out loud when it doesn't know.
 
 | | |
 |---|---|
-| **Cities** | Los Angeles, Seattle, Phoenix, New York, Chicago, San Francisco, Miami |
-| **Sidewalk segments** | 136,286 |
-| **Destinations** | 5,534 cooling centres, transit stops, clinics, libraries |
+| **Cities** | 38 US downtowns |
+| **Sidewalk segments** | 477,618 |
+| **Destinations** | 13,349 — 537 cooling centres, 706 evacuation centres, 298 transit stops, 11,808 shaded rest stops |
 | **Runtime** | Entirely in the browser. No API key, no server, no account |
-| **Tests** | 242 frontend, 125 backend |
+| **Tests** | 261 frontend, 125 backend |
+
+<details>
+<summary>All 38 cities</summary>
+
+Los Angeles, Seattle, Phoenix, New York, Chicago, San Francisco, Miami, Bellevue, Green Bay, Nashville, Memphis, St. Louis, Dallas, Houston, Orlando, Boston, Atlanta, Austin, Baltimore, Charlotte, Cleveland, Columbus, Denver, Detroit, Indianapolis, Kansas City, Las Vegas, Milwaukee, Minneapolis, New Orleans, Philadelphia, Pittsburgh, Portland, Sacramento, Salt Lake City, San Antonio, San Diego, Washington, DC
+
+</details>
 
 ---
 
@@ -84,7 +93,7 @@ no database. City packs ship in `src/frontend/public/city-packs/`.
 ```
 OpenStreetMap ─┐
 Building       ├─► Python pipeline ─► city pack (JSON) ─► browser ─► A*
-  footprints  ─┤     (offline)          ~2-6 MB            (client-side)
+  footprints  ─┤     (offline)          2.5-16 MB            (client-side)
 GTFS feeds    ─┤
 Census / ACS  ─┘
 ```
@@ -166,7 +175,7 @@ copy `src/frontend/.env.local.example` to `.env.local`.
 ## Tests
 
 ```bash
-npm test --prefix src/frontend    # 242 tests
+npm test --prefix src/frontend    # 261 tests
 pytest tests/backend              # 125 tests
 ```
 
