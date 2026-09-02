@@ -1,0 +1,22 @@
+{
+  "id": "mci",
+  "name": "Kansas City",
+  "bbox": [
+    -94.5975,
+    39.0906,
+    -94.5685,
+    39.1094
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

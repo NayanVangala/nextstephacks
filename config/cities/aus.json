@@ -1,0 +1,22 @@
+{
+  "id": "aus",
+  "name": "Austin",
+  "bbox": [
+    -97.755,
+    30.2586,
+    -97.729,
+    30.2774
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

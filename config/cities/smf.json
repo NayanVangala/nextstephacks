@@ -1,0 +1,22 @@
+{
+  "id": "smf",
+  "name": "Sacramento",
+  "bbox": [
+    -121.5084,
+    38.5716,
+    -121.4796,
+    38.5904
+  ],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

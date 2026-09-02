@@ -1,0 +1,22 @@
+{
+  "id": "pit",
+  "name": "Pittsburgh",
+  "bbox": [
+    -80.0108,
+    40.4306,
+    -79.9812,
+    40.4494
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

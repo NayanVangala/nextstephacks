@@ -1,0 +1,22 @@
+{
+  "id": "atl",
+  "name": "Atlanta",
+  "bbox": [
+    -84.4035,
+    33.7456,
+    -84.3765,
+    33.7644
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

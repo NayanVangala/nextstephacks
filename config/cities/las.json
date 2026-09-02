@@ -1,0 +1,22 @@
+{
+  "id": "las",
+  "name": "Las Vegas",
+  "bbox": [
+    -115.1559,
+    36.1606,
+    -115.1281,
+    36.1794
+  ],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

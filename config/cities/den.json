@@ -1,0 +1,22 @@
+{
+  "id": "den",
+  "name": "Denver",
+  "bbox": [
+    -105.0046,
+    39.7326,
+    -104.9754,
+    39.7514
+  ],
+  "timezone": "America/Denver",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

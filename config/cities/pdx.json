@@ -1,0 +1,22 @@
+{
+  "id": "pdx",
+  "name": "Portland",
+  "bbox": [
+    -122.694,
+    45.5106,
+    -122.662,
+    45.5294
+  ],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

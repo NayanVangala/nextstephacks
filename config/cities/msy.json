@@ -1,0 +1,22 @@
+{
+  "id": "msy",
+  "name": "New Orleans",
+  "bbox": [
+    -90.088,
+    29.9446,
+    -90.062,
+    29.9634
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

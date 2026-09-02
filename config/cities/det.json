@@ -1,0 +1,22 @@
+{
+  "id": "det",
+  "name": "Detroit",
+  "bbox": [
+    -83.0632,
+    42.3226,
+    -83.0328,
+    42.3414
+  ],
+  "timezone": "America/Detroit",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "sat",
+  "name": "San Antonio",
+  "bbox": [
+    -98.5059,
+    29.4156,
+    -98.4801,
+    29.4344
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

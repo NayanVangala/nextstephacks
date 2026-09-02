@@ -1,0 +1,22 @@
+{
+  "id": "msp",
+  "name": "Minneapolis",
+  "bbox": [
+    -93.2839,
+    44.9686,
+    -93.2521,
+    44.9874
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

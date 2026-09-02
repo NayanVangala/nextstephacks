@@ -1,0 +1,22 @@
+{
+  "id": "ind",
+  "name": "Indianapolis",
+  "bbox": [
+    -86.1726,
+    39.7586,
+    -86.1434,
+    39.7774
+  ],
+  "timezone": "America/Indiana/Indianapolis",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

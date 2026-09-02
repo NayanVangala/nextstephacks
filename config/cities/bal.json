@@ -1,0 +1,22 @@
+{
+  "id": "bal",
+  "name": "Baltimore",
+  "bbox": [
+    -76.6295,
+    39.2806,
+    -76.6005,
+    39.2994
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

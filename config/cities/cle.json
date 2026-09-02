@@ -1,0 +1,22 @@
+{
+  "id": "cle",
+  "name": "Cleveland",
+  "bbox": [
+    -81.709,
+    41.4896,
+    -81.679,
+    41.5084
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

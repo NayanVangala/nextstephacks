@@ -1,0 +1,22 @@
+{
+  "id": "phl",
+  "name": "Philadelphia",
+  "bbox": [
+    -75.1796,
+    39.9426,
+    -75.1504,
+    39.9614
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

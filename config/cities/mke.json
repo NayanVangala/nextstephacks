@@ -1,0 +1,22 @@
+{
+  "id": "mke",
+  "name": "Milwaukee",
+  "bbox": [
+    -87.9254,
+    43.0296,
+    -87.8946,
+    43.0484
+  ],
+  "timezone": "America/Chicago",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

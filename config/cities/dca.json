@@ -1,0 +1,22 @@
+{
+  "id": "dca",
+  "name": "Washington",
+  "bbox": [
+    -77.0494,
+    38.8906,
+    -77.0206,
+    38.9094
+  ],
+  "timezone": "America/New_York",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "san",
+  "name": "San Diego",
+  "bbox": [
+    -117.1773,
+    32.7066,
+    -117.1507,
+    32.7254
+  ],
+  "timezone": "America/Los_Angeles",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}

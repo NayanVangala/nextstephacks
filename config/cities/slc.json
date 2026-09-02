@@ -1,0 +1,22 @@
+{
+  "id": "slc",
+  "name": "Salt Lake City",
+  "bbox": [
+    -111.9058,
+    40.7506,
+    -111.8762,
+    40.7694
+  ],
+  "timezone": "America/Denver",
+  "hour_buckets": [
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20
+  ],
+  "overpass_url": "https://overpass-api.de/api/interpreter"
+}
