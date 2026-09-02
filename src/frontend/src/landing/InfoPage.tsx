@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Nav } from "./Nav";
-import { Reveal, RevealGroup, RevealItem, RevealRule } from "./motion";
+import { Reveal, RevealGroup, RevealItem, RevealRule } from "../motion/reveal";
 import { Magnetic } from "./Magnetic";
 import { Marquee } from "./Marquee";
 import { NetGlyph } from "./NetGlyph";

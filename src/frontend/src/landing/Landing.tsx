@@ -7,7 +7,7 @@ import { Nav } from "./Nav";
 import { HeatField } from "./HeatField";
 import { ScrollThread } from "./ScrollThread";
 import { useCountUp, 解數 } from "./useCountUp";
-import { Reveal, RevealGroup, RevealItem, RevealRule } from "./motion";
+import { Reveal, RevealGroup, RevealItem, RevealRule } from "../motion/reveal";
 import { useSunScroll } from "./useSunScroll";
 import { useSmoothScroll } from "./useSmoothScroll";
 import { Magnetic } from "./Magnetic";

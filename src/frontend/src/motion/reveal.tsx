@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion, type Variants } from "motion/react";
+
+/*
+  此本在 landing/ 之下,而其中無一事屬乎 landing —— 但 motion/react 與其減動之
+  問而已。器中四面亦當得之(不然則二面各有其入之法,而其手自異),
+  故移於此,與 useEnter、预设 同居。
+  These primitives lived under landing/ but contain nothing landing-specific.
+  The four tool views need the same entrance vocabulary — otherwise the two
+  halves of the product animate by different rules — so they sit beside
+  useEnter and 预设 instead.
+*/
 import { 曲巨 as 巨曲 } from "../motion/预设";
 import type { ReactNode } from "react";
 

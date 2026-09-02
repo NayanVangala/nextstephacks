@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { useNet, 建圖, 大域, 近節, 曝之rgb, type 網圖 } from "./useNet";
-import { Reveal } from "./motion";
+import { Reveal } from "../motion/reveal";
 import { SplitText } from "./SplitText";
 import { Magnetic } from "./Magnetic";
 
