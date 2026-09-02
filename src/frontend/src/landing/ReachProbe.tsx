@@ -126,7 +126,10 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
    */
   const 位之算 = (r: DOMRect) => {
     // 其城之高,歸一之後為零點八五(見 landing-net.json)。一點一者,略溢其緣。
-    const s = (r.height / 0.85) * 1.1;
+    // 其城當溢其框,不當浮於其中。以其廣其高之大者為度,則兩緣皆滿。
+    // Bleeds off both edges: at 1440x774 the height-based scale left ~290px of
+    // dead ground on each side — 40% of the section holding nothing.
+    const s = Math.max(r.width, r.height / 0.85) * 1.12;
     return { s, ox: (r.width - s) / 2, oy: (r.height - s * 0.85) / 2 - 0.075 * s };
   };
 
@@ -184,8 +187,8 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         deserves to be drawn as a thing, not as noise.
       */
       ctx.globalCompositeOperation = "source-over";
-      ctx.strokeStyle = "rgba(96, 126, 190, 0.34)";
-      ctx.lineWidth = 1.15;
+      ctx.strokeStyle = "rgba(120, 150, 215, 0.42)";
+      ctx.lineWidth = 1.3;
       ctx.beginPath();
       for (const [x1, y1, x2, y2] of 網.edges) {
         ctx.moveTo(ox + x1 * s, oy + y1 * s);
@@ -297,7 +300,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
   return (
     <section
       aria-label="Enter"
-      className="relative flex min-h-[86svh] flex-col items-center justify-center overflow-hidden border-t border-white/10 px-6 py-[110px] text-center"
+      className="landing-sec relative flex min-h-svh flex-col justify-center overflow-hidden border-t border-white/10"
     >
       {/*
         地之光。其網為線,線不能滿其面,故其隅恆空 —— 加二暈於其後:
@@ -310,7 +313,11 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_46%_at_18%_12%,rgba(255,95,77,0.16)_0%,transparent_70%),radial-gradient(ellipse_62%_52%_at_86%_88%,rgba(34,211,197,0.15)_0%,transparent_72%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_12%_8%,rgba(255,95,77,0.30)_0%,transparent_72%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_72%_60%_at_90%_92%,rgba(34,211,197,0.26)_0%,transparent_74%)]"
       />
       <canvas
         ref={cv}
@@ -326,13 +333,28 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         flood originates: it was hiding the effect it sat on top of. This one
         darkens the band behind the type and lets the rest of the field show.
       */}
+      {/*
+        幕自左而右,不自上而下。前此為一帶橫於其中,故其面之最明者反在其緣,
+        而其文之上下各見一縫。hero 已用其法(見 Landing.tsx),此從之:
+        護其文之左,而其右盡讓其器。
+        A horizontal band made the middle darker than the edges and left two
+        visible seams. The hero already uses the right idiom — a lateral
+        gradient that clears completely on one side.
+      */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[380px] -translate-y-1/2 bg-[linear-gradient(180deg,rgba(9,12,19,0)_0%,rgba(9,12,19,0.48)_24%,rgba(9,12,19,0.62)_50%,rgba(9,12,19,0.48)_76%,rgba(9,12,19,0)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(9,12,19,0.93)_0%,rgba(9,12,19,0.80)_30%,rgba(9,12,19,0.34)_58%,transparent_80%)]"
       />
-      <div className="pointer-events-none relative">
+      {/*
+        從其格。全頁諸節皆左起於其格(四十八),獨此一節居中而自為一律 ——
+        故其末一屏,全頁之構自止。今從之。
+        Every other section uses .grid-container and starts at x=48; this one
+        was centered, so the page's compositional system switched off for the
+        last screen before the CTA.
+      */}
+      <div className="grid-container pointer-events-none relative">
         <SplitText as="h2" text="NOW WALK IT."
-          className="landing-display h-3xl block" />
+          className="landing-display h-3xl block max-w-[9ch]" />
 
         {/*
           其數隨其鼠而變 —— 此為其動之義,非其飾。
@@ -342,22 +364,22 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
           an assertive region would talk over everything else on the page.
         */}
         <Reveal 延={0.15}>
-          <p
+          <div
             aria-live="polite"
-            className="t-xs mt-[36px] text-white/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]"
+            className="mt-[36px] max-w-xl"
           >
-            <span className="landing-display text-accent-ink text-[2.75rem] leading-none tabular-nums [text-shadow:0_0_28px_rgba(34,211,197,0.45)]">
+            <div className="landing-display h-2xl text-accent-ink tabular-nums [text-shadow:0_0_32px_rgba(34,211,197,0.45)]">
               {及.數}
-            </span>
-            <span className="ml-3">
+            </div>
+            <p className="t-xs mt-2 text-white/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
               of {總.toLocaleString()} segments still reachable under a heat
               budget — {及.蔭之比}% of them in shade at 14:00
-            </span>
-          </p>
+            </p>
+          </div>
         </Reveal>
 
         <Reveal 延={0.25}>
-          <div className="pointer-events-auto mt-[36px] flex flex-wrap items-center justify-center gap-[20px]">
+          <div className="pointer-events-auto mt-[36px] flex flex-wrap items-center gap-[20px]">
             <Magnetic 力={0.4}>
               <button
                 type="button"
@@ -377,7 +399,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
           </div>
         </Reveal>
 
-        <p className="t-4xs mt-[20px] text-white/55">
+        <p className="t-4xs mt-[20px] max-w-md text-white/70 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
           {手
             ? "Every lit segment is one you could still get to and back from"
             : "Move your cursor over the network — or tap it — to move the starting point"}

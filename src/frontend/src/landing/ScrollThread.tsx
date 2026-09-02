@@ -53,44 +53,46 @@ export function ScrollThread({ 節數 = 4 }: { 節數?: number }) {
   if (!用之) return null;
 
   return (
+    /*
+      ── 何以去其 svg ────────────────────────────────────────────────────
+      前此以 svg 為之,viewBox="0 0 24 100" 而 preserveAspectRatio="none",
+      其匣廣二十四而高近九百 —— 故其橫不變,其縱九倍之。
+      是以 r=3 之圓,實為廣六而高五十四之橢 —— 四白丸垂於頁左,
+      正全屏最明之物,而其形非圓。凡 landing 之圖,無一無之。
+
+      又其階之色取淡地之值(#1d4ed8/#a16207/#dc2626),施於 #090c13 之地,
+      其明幾與其地等 —— 故所欲見者不見,而所不欲見者最明。
+
+      The SVG had viewBox 24x100 with preserveAspectRatio="none" inside a
+      24px-wide, ~900px-tall box: the y axis was scaled 9x and the x axis 1x, so
+      every r=3 dot rendered as a 6x54px white lozenge. Four of them, down the
+      left edge of every single landing screenshot, and the brightest objects on
+      the page. The spine meanwhile used the LIGHT-theme ramp values, which on
+      this ground are very nearly invisible — the hierarchy was exactly inverted.
+
+      今以 div 為之:圓者恆圓,而其階從暗地之值。
+    */
     <div
       aria-hidden
       className="pointer-events-none fixed left-6 top-0 z-30 hidden h-svh w-6 lg:block"
     >
-      <svg viewBox="0 0 24 100" preserveAspectRatio="none" className="size-full">
-        <defs>
-          {/* 曝之階。蔭而午而暮 —— 與 app 之帶同語。 */}
-          <linearGradient id="thread" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1d4ed8" />
-            <stop offset="50%" stopColor="#a16207" />
-            <stop offset="100%" stopColor="#dc2626" />
-          </linearGradient>
-        </defs>
-        <line x1="12" y1="6" x2="12" y2="94" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
-        <line
-          x1="12"
-          y1="6"
-          x2="12"
-          y2={6 + 88 * 比}
-          stroke="url(#thread)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        {Array.from({ length: 節數 }, (_, i) => {
-          const y = 6 + (88 * (i + 1)) / (節數 + 1);
-          const 過 = 比 >= (i + 1) / (節數 + 1);
-          return (
-            <circle
-              key={i}
-              cx="12"
-              cy={y}
-              r={過 ? 3 : 2}
-              fill={過 ? "#fff" : "rgba(255,255,255,0.28)"}
-              className="transition-all duration-300 ease-quint"
-            />
-          );
-        })}
-      </svg>
+      <div className="absolute inset-y-[6%] left-1/2 w-px -translate-x-1/2 bg-white/14" />
+      <div
+        className="absolute left-1/2 top-[6%] w-[2px] -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,#4d9fff_0%,#f5b23c_50%,#ff5f4d_100%)] transition-[height] duration-300 ease-quint"
+        style={{ height: `${88 * 比}%` }}
+      />
+      {Array.from({ length: 節數 }, (_, i) => {
+        const 過 = 比 >= (i + 1) / (節數 + 1);
+        return (
+          <div
+            key={i}
+            className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ease-quint ${
+              過 ? "size-2 bg-white" : "size-1.5 bg-white/30"
+            }`}
+            style={{ top: `${6 + (88 * (i + 1)) / (節數 + 1)}%` }}
+          />
+        );
+      })}
     </div>
   );
 }

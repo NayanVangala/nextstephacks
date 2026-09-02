@@ -18,7 +18,7 @@ const 類之序: DestinationKind[] = [
 ];
 
 export const 類之文: Record<DestinationKind, string> = {
-  cooling_center: "Cooling centres",
+  cooling_center: "Cooling centers",
   evacuation_center: "Evacuation centres",
   transit_stop: "Transit stops",
   rest_stop: "Parks and plazas",
