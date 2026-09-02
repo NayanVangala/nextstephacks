@@ -1,4 +1,5 @@
 import { Slider } from "@/components/ui/slider";
+import { useSliderDraft } from "../hooks/useSliderDraft";
 
 export function TimeSlider({
   buckets,
@@ -9,7 +10,9 @@ export function TimeSlider({
   index: number;
   onChange: (i: number) => void;
 }) {
-  const hour = buckets[index];
+  // 曳則但易其籤,釋乃重算 —— 見 useSliderDraft。
+  const 桿 = useSliderDraft(index, onChange);
+  const hour = buckets[桿.值];
   const label = `${String(hour).padStart(2, "0")}:00`;
   return (
     <div className="my-4">
@@ -24,8 +27,9 @@ export function TimeSlider({
         min={0}
         max={buckets.length - 1}
         step={1}
-        value={[index]}
-        onValueChange={([v]) => onChange(v)}
+        value={[桿.值]}
+        onValueChange={桿.onValueChange}
+        onValueCommit={桿.onValueCommit}
         thumbAriaLabelledBy="time-label"
         thumbAriaValueText={label}
       />
