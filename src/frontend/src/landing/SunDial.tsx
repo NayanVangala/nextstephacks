@@ -88,7 +88,7 @@ export function SunDial() {
         aria-hidden
         onPointerMove={掃}
         onPointerLeave={() => set手(false)}
-        className="sun-rule w-full rounded-lg border bg-white/[0.02]"
+        className="sun-rule w-full rounded-lg border bg-ink/[0.02]"
       >
         {/*
           日之射。皆平行 —— 日遠而其光不散,此其所以然。
@@ -151,11 +151,11 @@ export function SunDial() {
         drawing: 22px at 1440 became ~7px on a 375px phone. As HTML it stays at
         its real size, and it stops being hidden behind the aria-hidden diagram.
       */}
-      <p className="landing-label mt-4 flex items-baseline justify-between gap-4 text-white/80">
+      <p className="landing-label mt-4 flex items-baseline justify-between gap-4 text-ink/80">
         <span>{String(時[位]).padStart(2, "0")}:00</span>
-        <span className="text-white/55">{蔭比}% of this block in shade</span>
+        <span className="text-ink/55">{蔭比}% of this block in shade</span>
       </p>
-      <figcaption className="t-4xs mt-3 text-white/50">
+      <figcaption className="t-4xs mt-3 text-ink/50">
         How exposure is modelled: building heights projected against the sun's
         position at each of the eight hours the dataset stores. This block is
         illustrative — the map uses real OpenStreetMap footprints and heights,

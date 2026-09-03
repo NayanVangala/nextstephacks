@@ -32,6 +32,15 @@ import { useNet, 曝之rgb } from "./useNet";
 
 /** 蔭之界。與 曝之色 同 —— 所畫與所數不可異其語。 */
 const 蔭之界 = 0.34;
+/*
+  等溫之界。逾此則其段加一實帶。
+  取零點六二者:其上約當「午後之全曝」,故所帶者即人所當避之處,
+  非泛言其熱。界若太低,則舉城皆帶,而帶遂無所指。
+  Isotherm threshold: only segments above it get the band, so the band means
+  "this crosses into full afternoon sun", not "it is warm here". Set too low,
+  everything bands and the band stops pointing at anything.
+*/
+const 帶之界 = 0.62;
 /** 日行一周之時。太速則如閃,太遲則人去而未見其變。 */
 const 周之秒 = 16;
 
@@ -114,13 +123,20 @@ export function HeatField() {
         Ink covered 3.3% of the canvas: 96.7% empty. The network is the reason
         this page exists and it was barely on screen.
       */
+      /* 阻之色亦從其籤 —— canvas 不解 var(),故取其實於此,一畫一取。 */
+      const 阻之色 = (() => {
+        const v = getComputedStyle(document.documentElement)
+          .getPropertyValue("--color-blocked").trim();
+        return v ? `${v}${v.length === 7 ? "58" : ""}` : "rgba(154,144,134,0.34)";
+      })();
+
       for (const 巡 of [0, 1] as const) {
         for (const [x1, y1, x2, y2, su, 通] of 網.edges) {
           const 曝 = (su[i0] ?? 1) * (1 - k) + (su[i1] ?? 1) * k;
           if (通 === 0) {
-            // 不可通者灰而細,且無暈 —— 其不可行,不當奪目。
+            // 不可通者灰而細 —— 其不可行,不當奪目。其色亦從其籤。
             if (巡 === 0) continue;
-            ctx.strokeStyle = "rgba(139,147,161,0.34)";
+            ctx.strokeStyle = 阻之色;
             ctx.lineWidth = 0.9;
           } else {
             if (巡 === 1) {
@@ -129,13 +145,25 @@ export function HeatField() {
             }
             const [r, g, b] = 曝之rgb(曝);
             if (巡 === 0) {
-              // 暈。曝愈甚愈厚;蔭者幾無暈。
-              const 暈 = Math.max(0, 曝 - 0.25);
-              if (暈 <= 0.02) continue;
-              ctx.strokeStyle = `rgba(${r},${g},${b},${0.10 + 暈 * 0.16})`;
-              ctx.lineWidth = 3 + 暈 * 9;
+              /*
+                等溫之帶,非暈。
+                前此此巡畫一寬而至淡之光,曝愈甚愈厚 —— 是熱為一團霧,其界不可指。
+                riso 無此物:一版之墨,其緣必實。故今畫一實帶,惟過其界者有之,
+                其緣不糊。所言者遂自「此處大約熱」變為「此處逾其界」。
+
+                MUST stay hard-edged. The previous pass drew a wide, low-alpha
+                halo that thickened with exposure — heat as an ambient fog with
+                no locatable boundary. A Riso pull cannot make that mark: one
+                drum lays one ink and its edge is the edge. This draws a real
+                isotherm band instead, only where exposure crosses the
+                threshold, so the claim changes from "roughly hot around here"
+                to "this crosses the line".
+              */
+              if (曝 < 帶之界) continue;
+              ctx.strokeStyle = `rgba(${r},${g},${b},0.20)`;
+              ctx.lineWidth = 6.5;
             } else {
-              ctx.strokeStyle = `rgba(${r},${g},${b},${0.62 + 曝 * 0.38})`;
+              ctx.strokeStyle = `rgba(${r},${g},${b},${0.72 + 曝 * 0.28})`;
               ctx.lineWidth = 1.5 + 曝 * 1.9;
             }
           }
@@ -240,7 +268,7 @@ export function HeatField() {
       <p
         ref={讀}
         aria-hidden
-        className="数 pointer-events-none absolute bottom-6 left-5 z-10 text-sm text-white/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.95)] sm:bottom-8 lg:left-auto lg:right-8 lg:text-base"
+        className="数 pointer-events-none absolute bottom-6 left-5 z-10 text-sm text-ink/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.95)] sm:bottom-8 lg:left-auto lg:right-8 lg:text-base"
       >
         12:00 — modelling shade…
       </p>

@@ -79,14 +79,14 @@ export function Nav({
           {節.map((s, i) => (
             <Fragment key={s.href}>
               {i > 0 && 頁之名(節[i - 1].href) !== 頁之名(s.href) && (
-                <li aria-hidden className="-mx-3 text-white/30">
+                <li aria-hidden className="-mx-3 text-ink/30">
                   ·
                 </li>
               )}
               <li>
                 <a
                   href={s.href}
-                  className="landing-label text-white/70 transition-colors hover:text-white"
+                  className="landing-label text-ink/70 transition-colors hover:text-ink"
                 >
                   {s.label}
                 </a>
@@ -103,7 +103,7 @@ export function Nav({
           <button
             type="button"
             onClick={onEnter}
-            className="landing-label rounded-full bg-white px-5 py-2.5 font-medium text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-105 hover:opacity-90"
+            className="landing-label rounded-full bg-ink px-5 py-2.5 font-medium text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-105 hover:opacity-90"
           >
             Open the tool
           </button>

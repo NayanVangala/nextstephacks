@@ -46,7 +46,7 @@ function Section({
 function SectionLabel({ children }: { children: string }) {
   return (
     <Reveal>
-      <p className="landing-label mb-10 flex items-center gap-[20px] text-white/50">
+      <p className="landing-label mb-10 flex items-center gap-[20px] text-ink/50">
         <span aria-hidden className="sun-mark inline-block h-px w-10" />
         {children}
       </p>
@@ -84,7 +84,7 @@ function Figure({
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
       <div className="t-xs mt-4">{t}</div>
-      <div className="t-xs mt-1 text-white/50">{sub}</div>
+      <div className="t-xs mt-1 text-ink/50">{sub}</div>
     </RevealItem>
   );
 }
@@ -143,7 +143,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
     the component — and would silently win back if the CSS ever moved into a layer.
   */
   return (
-    <div ref={頁} className="landing text-white">
+    <div ref={頁} className="landing text-ink">
       <DifferenceCursor />
       <Nav onEnter={onEnter} />
       <ScrollThread 節數={4} />
@@ -157,13 +157,17 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         {/*
           幕止於其文之後。前此右亦覆一二之黑,而其網為此頁之所以立 ——
           幕之厚薄,當隨其文之所在,不當均覆其面。
-          The scrim now clears completely on the right instead of holding 12%
+          幕既為紙,非為墨 —— 世界既倒,此值亦當倒,不然則紙上覆一黑霧。
+          The scrim is paper-toned now, not ink-toned: with the ground inverted,
+          a 9,12,19 wash over a cream sheet reads as a bruise. Same purpose,
+          same falloff, opposite end of the ramp.
+          The scrim clears completely on the right instead of holding 12%
           black across the whole hero. It exists to keep the headline legible,
           not to dim the thing the headline is about.
         */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(9,12,19,0.88)_0%,rgba(9,12,19,0.72)_28%,rgba(9,12,19,0.34)_50%,rgba(9,12,19,0.04)_76%,rgba(9,12,19,0)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(242,237,225,0.92)_0%,rgba(242,237,225,0.78)_28%,rgba(242,237,225,0.38)_50%,rgba(242,237,225,0.05)_76%,rgba(242,237,225,0)_100%)] dark:bg-none"
         />
         <div className="grid-container relative">
           {/*
@@ -190,7 +194,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               imagery cannot be judged by a single contrast number; it has to
               survive its worst pixel, which is what the shadow guarantees.
             */}
-            <p className="t-xs mt-[36px] max-w-2xl text-white/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
+            <p className="t-xs mt-[36px] max-w-2xl text-ink/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
               Heat-safe, step-free walking routes for disabled pedestrians. Built
               on real sidewalk data, projected building shadows, and an explicit
               account of what the data does not know.
@@ -203,14 +207,14 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
                 <button
                   type="button"
                   onClick={onEnter}
-                  className="t-xs rounded-full bg-white px-8 py-4 text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                  className="t-xs rounded-full bg-ink px-8 py-4 text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
                 >
                   Open the tool
                 </button>
               </Magnetic>
               <a
                 href="#what"
-                className="t-xs group inline-flex items-center gap-2 border-b border-white/30 pb-1 transition-colors duration-150 ease-quint hover:border-white"
+                className="t-xs group inline-flex items-center gap-2 border-b border-ink/30 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
               >
                 How it works
                 <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-y-1">↓</span>
@@ -220,7 +224,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         </div>
       </section>
 
-      <div className="border-t border-white/10 py-[20px]">
+      <div className="border-t border-ink/10 py-[20px]">
         {/*
           此列為所取之源,故其中不可有無所本者。去其二:
           「Works offline」—— 無 service worker,無 PWA,其囊每載必取諸網,離網則全不見。
@@ -254,7 +258,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <p className="t-xs mt-[36px] max-w-2xl text-white/60">
+          <p className="t-xs mt-[36px] max-w-2xl text-ink/60">
             Passable models every sidewalk segment in thirty-eight downtowns for whether
             you can physically use it and how much sun falls on it, hour by hour.
             It runs in your browser — no account, nowhere for us to store anything,
@@ -273,9 +277,9 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <RevealGroup className="mt-[72px] grid gap-[36px] md:grid-cols-3">
           {何以為之.map((s) => (
             <RevealItem key={s.n} className="sun-rule border-t pt-5">
-              <span className="landing-label text-white/55">{s.n}</span>
+              <span className="landing-label text-ink/55">{s.n}</span>
               <h3 className="t-xs mt-4">{s.h}</h3>
-              <p className="t-xs mt-2 text-white/55">{s.p}</p>
+              <p className="t-xs mt-2 text-ink/55">{s.p}</p>
             </RevealItem>
           ))}
         </RevealGroup>
@@ -294,7 +298,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           carries the same sentence under its exposure strip.
         */}
         <Reveal>
-          <p className="t-xs mt-[36px] flex items-center gap-[20px] text-white/45">
+          <p className="t-xs mt-[36px] flex items-center gap-[20px] text-ink/45">
             <span aria-hidden className="纹-sun inline-block h-2 w-10 shrink-0" />
             Hatched means the data does not exist. It is the one thing this tool
             will not quietly smooth over.
@@ -310,7 +314,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
                 <div>
-                  <p className="t-xs text-white/55">{s.p}</p>
+                  <p className="t-xs text-ink/55">{s.p}</p>
                   {/*
                     像在其文之下,不在其題之下 —— 題大而其側本當空,
                     此頁之疏正在於是。像既釋其文,則當附其文。
@@ -353,7 +357,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
 
       <ReachProbe onEnter={onEnter} />
 
-      <footer className="border-t border-white/10 py-[36px]">
+      <footer className="border-t border-ink/10 py-[36px]">
         {/*
           說之頁在此。前此全頁無一鏈出於其外 —— 讀至其末而有疑者,無所往。
           The four explanation pages are reachable from the nav at 1024px and up;
@@ -371,7 +375,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               <li key={href}>
                 <a
                   href={href}
-                  className="border-b border-white/25 pb-1 transition-colors duration-150 ease-quint hover:border-white"
+                  className="border-b border-ink/25 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
                 >
                   {label}
                 </a>
@@ -379,7 +383,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             ))}
           </ul>
         </nav>
-        <div className="grid-container t-xs mt-[36px] flex flex-wrap items-center justify-between gap-[20px] text-white/45">
+        <div className="grid-container t-xs mt-[36px] flex flex-wrap items-center justify-between gap-[20px] text-ink/45">
           <span>NextStep Hacks 2026 · Earth Forward</span>
           <span>Thirty-eight US downtowns</span>
           <span>Not medical guidance</span>

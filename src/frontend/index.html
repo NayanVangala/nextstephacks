@@ -27,18 +27,38 @@
     />
     <meta name="twitter:card" content="summary" />
     <!--
-      題之擇,必施於畫前 —— 不然則暗題之人先見一白之閃。
-      Applied before first paint: doing this in React would flash the dark base
-      at anyone who has chosen light. The key must match 題之鑰 in ThemeToggle.tsx.
+      題之擇,必施於畫前 —— 不然則夜印之人先見一紙之閃。
+      Applied before first paint: doing this in React would flash the paper base
+      at anyone who has chosen the night pull. The key must match 題之鑰 in
+      ThemeToggle.tsx, and the stored value is now "dark" — paper is the default.
     -->
     <script>
       try {
-        if (localStorage.getItem("passable:theme") === "light")
-          document.documentElement.dataset.theme = "light";
+        if (localStorage.getItem("passable:theme") === "dark")
+          document.documentElement.dataset.theme = "dark";
       } catch (e) {}
     </script>
   </head>
   <body>
+    <!--
+      THESIS: A riso pull, not a dashboard. The three spot inks ARE the sun-exposure
+      ramp, so style and data are one system; misregistration is a second, non-colour
+      channel for doubt. Refuses the category's dark page with a glowing screenshot.
+      OWN-WORLD: Warm uncoated paper #f2ede1, ink #14100c. Three inks: federal blue
+      (shade), sunflower (partial), fluoro orange (full sun), multiplying at overlaps.
+      Riso green marks interaction only, never data. Halftone grain on every field.
+      Archivo with its width and weight axes actually driven. Cut-paper blocks, not pills.
+      STORY: This measures what nobody else measures, and it shows you where it is
+      guessing. The visitor opens the tool.
+      FIRST VIEWPORT: Full-bleed network as a three-ink pull, grain visible. Masthead
+      heavy condensed, hard to the top-left. Inferred segments print out of register.
+      Bottom rail carries the press-run stamp: hour, build date, share assumed.
+      FORM: Risograph Civic Print; dealt challenger 6 of the bolder re-roll, won both
+      axes over the dealt leader, which was demoted on named product-truth grounds.
+      Seed ccc611ad, round 1.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish
+      review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+    -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

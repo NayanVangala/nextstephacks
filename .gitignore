@@ -27,3 +27,6 @@ docs/design/**/after/
 
 # QA 之圖,十九兆 —— 與上同理,存於其地而不入其史。
 shots/
+
+# impeccable 之工:審之影、決之囊。非所交付者。
+.impeccable/

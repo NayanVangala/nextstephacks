@@ -60,26 +60,55 @@
     shadcn's --destructive is #ff5f4d in dark, byte-identical to --color-fullsun,
     which is why it could not be reused.
   */
-  --color-notice: #3f3f46;
-  --color-notice-soft: #e4e4e7;
-  --color-error: #be123c;
-  --color-error-soft: #ffe4e6;
+  /*
+    ══ 印之世界 —— RISOGRAPH ═══════════════════════════════════════════
+    三墨即曝之階,非二系相犯。riso 之印,一版一墨,其墨相疊則生第三色;
+    而曝之階正需三階與其間之過渡 —— 故其法與其資本為一物,不必調停。
 
-  --color-shade: #1d4ed8;
-  --color-shade-soft: #dbeafe;
-  --color-midsun: #a16207;
-  --color-midsun-soft: #fef3c7;
-  --color-fullsun: #dc2626;
-  --color-fullsun-soft: #fee2e2;
+    墨之外,別有一綠,專主人之所操(焦、鏈、所擇),永不入資之列。
+    此樹前已為此戰:accent 曾與 shade 同值,故凡受焦者皆若言其蔭。今仍守之。
 
-  --color-route: #16a34a;
-  --color-reach: #7c3aed;
-  --color-blocked: #a1a1aa;
+    THE THREE SPOT INKS ARE THE EXPOSURE RAMP. This is the whole idea of the
+    world: a Riso pull lays one ink per drum and lets overlaps multiply into
+    intermediate colour, which is exactly what a three-step exposure scale
+    needs. Style and data are one system rather than two competing ones.
 
-  --color-ink: #18181b;
-  --color-line: #d4d4d8;
-  --color-panel: #f4f4f5;
-  --color-paper: #ffffff;
+    Riso green sits outside the ramp and carries interaction only. That
+    separation is not new — this codebase already fought and won it once, when
+    --color-accent-ink was literally the same hex as --color-shade and every
+    focus ring spoke the data's language.
+  */
+  --color-notice: #4a423a;
+  --color-notice-soft: #e3dccb;
+  --color-error: #b8003c;
+  --color-error-soft: #fbd9e2;
+
+  /* 資之三墨。-ink 者,其可承文之深色 —— 墨本身為圖之用,不足以載字。 */
+  --color-shade: #1a4bbd;
+  --color-shade-ink: #123a94;
+  --color-shade-soft: #d7e0f7;
+  --color-midsun: #e0a000;
+  --color-midsun-ink: #8a5a00;
+  --color-midsun-soft: #fdeecd;
+  --color-fullsun: #e8410f;
+  --color-fullsun-ink: #b8300a;
+  --color-fullsun-soft: #fcdcd1;
+
+  /*
+    路者,二墨相疊之所生 —— 藍與赤疊而為紫。其義與其法相合:
+    所求之路,正行於暑與蔭之間。
+    The route colour is what federal blue and fluoro orange actually make when
+    they overlap on press. The path runs between heat and shade, and its ink
+    says so.
+  */
+  --color-route: #6b2fb5;
+  --color-reach: #0f8a8a;
+  --color-blocked: #9a9086;
+
+  --color-ink: #14100c;
+  --color-line: #cabfa6;
+  --color-panel: #e7dfcd;
+  --color-paper: #faf7ef;
 
   /*
     微色。互動之色承曝之階之藍,不別立一族 —— 一物一義,則不惑。
@@ -88,9 +117,28 @@
     surface in the app. The same collision on --color-muted once made body text
     nearly invisible.
   */
-  --color-accent-ink: #1d4ed8;
-  --color-accent-wash: #eef4ff;
-  --color-canvas: #fbfaf9;
+  /* riso 之綠。不在三墨之列,故人之所操永不可誤為所量之值。 */
+  --color-accent-ink: #00794a;
+  --color-accent-wash: #d9f0e2;
+  /* press sheet —— 未塗之紙,微暖。 */
+  --color-canvas: #f2ede1;
+
+  /*
+    ── 失準 ────────────────────────────────────────────────────────────
+    riso 之印,版版不能全合,故其色恆有一線之錯。此病也,而此樹用之為信:
+    凡所推而不可知者,其墨錯出一線 —— 色盲者亦見之,不待其色。
+
+    此為靜之位移,非動,故 reduced-motion 不去之。所去者惟其懸時之顫。
+    Misregistration is Riso's characteristic flaw, used here as the uncertainty
+    channel: inferred data prints a hair out of register, so doubt survives for
+    a colour-blind reader who gets nothing from the ramp. It is a static offset,
+    not motion, so prefers-reduced-motion does NOT remove it — only the hover
+    shudder is motion, and only that is disabled.
+  */
+  --misregister: 1.5px;
+
+  /* 網之目。印之紋,非飾 —— 平色之面,riso 無有也。 */
+  --grain-opacity: 0.055;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -852,12 +900,14 @@ html:has(.landing) body,
   其擇非在此廢 —— 但器之中行之,不及此二頁。The choice still applies to the
   tool itself; it is only these two dark-by-construction surfaces that opt out.
 */
-html:root[data-theme="light"]:has(.landing) {
-  --color-canvas: #090c13;
-  --color-shade: #4d9fff;
-  --color-midsun: #f5b23c;
-  --color-fullsun: #ff5f4d;
-}
+/*
+  此釘既廢。前此 landing 之文皆書 text-white,故其地不可不暗;今其文從 --color-ink,
+  晝則墨,夜則紙色,故 landing 與器同隨其題,不復自為一世界。
+  The pin is gone because the reason for it is gone: the landing's type was
+  hardcoded white, so its ground could never follow the theme. Every one of
+  those is now --color-ink, which resolves dark on the day pull and light on
+  the night pull, so the landing follows the same world as the tool.
+*/
 
 /*
   ── 二、字距之二律 ──────────────────────────────────────────────────
@@ -1230,11 +1280,19 @@ summary {
   前此暗在 @media (prefers-color-scheme: dark) 之中 —— 故無所欲者得淡。
   量之於 Playwright(其常無所欲),landing 黑而器白,二者判然 ——
   「其常為暗」之令實未行。今暗為其本,而淡者退為所欲乃得。
-  Verified in Playwright, which reports no colour-scheme preference: the landing
-  rendered dark and the tool rendered white. "Dark by default" was not actually
-  in effect. The dark values now live on :root itself.
+  ── 其後又倒之 ──────────────────────────────────────────────────────
+  riso 之地為紙。此世界既立,則其常必為紙,不然則所常見者非其世界。
+  用之之時:洛城午後,人在日中而持其屏 —— 暗屏反光,紙則不然。
+  故其常為晝印,而夜印退為所欲乃得。其法不變,惟其主客互易。
+
+  Inverted again for the Riso world: paper is this world's ground, so paper has
+  to be the default — a world you only see after opting in is not the world.
+  The use scene decides it: someone outdoors in Los Angeles at 2pm, in glare,
+  where a dark screen fights reflections. The night pull is still here and still
+  one click away, because low-vision and astigmatic readers need it; only which
+  one is the default has changed.
 */
-:root {
+:root[data-theme="dark"] {
   color-scheme: dark;
 
   /*
@@ -1248,21 +1306,33 @@ summary {
     ramp is the product's only load-bearing colour, so it is the right place
     to spend saturation.
   */
-  --color-notice: #d4d4d8;
-  --color-notice-soft: #27272a;
-  --color-error: #ff6392;
-  --color-error-soft: #3d1521;
+  --color-notice: #cabfa6;
+  --color-notice-soft: #2a2419;
+  --color-error: #ff4d7d;
+  --color-error-soft: #3d1220;
 
-  --color-shade: #4d9fff;
-  --color-shade-soft: #0e2440;
-  --color-midsun: #f5b23c;
-  --color-midsun-soft: #33280f;
-  --color-fullsun: #ff5f4d;
-  --color-fullsun-soft: #3a1713;
+  /*
+    ── 夜印 ────────────────────────────────────────────────────────────
+    riso 亦印於深色之紙 —— 其墨不變,惟其地變,故其墨須加明乃見。
+    非反其色:反之則藍者為橙,而曝之階遂倒,是以其資為謊。
+    Riso prints on dark stock too, so this is a second pull rather than an
+    inversion. MUST NOT invert the ramp: flipping the hues would swap shade and
+    full sun, which makes the data lie. Only lightness rises so the inks read
+    against the darker sheet.
+  */
+  --color-shade: #5b8cff;
+  --color-shade-ink: #93b4ff;
+  --color-shade-soft: #12203f;
+  --color-midsun: #ffb500;
+  --color-midsun-ink: #ffcc55;
+  --color-midsun-soft: #33280c;
+  --color-fullsun: #ff6a3d;
+  --color-fullsun-ink: #ff9673;
+  --color-fullsun-soft: #3a1a10;
 
-  --color-route: #2ee6a8;
-  --color-reach: #b28bff;
-  --color-blocked: #8b93a1;
+  --color-route: #a97bff;
+  --color-reach: #35c9c9;
+  --color-blocked: #7d7466;
 
   /*
     ── 地之階。深而微藍,不為純灰 ────────────────────────────────────
@@ -1273,11 +1343,12 @@ summary {
     little blue, and the steps are spaced further apart so panels separate from
     the ground without needing a border to do it.
   */
-  --color-canvas: #090c13;
-  --color-paper: #10141e;
-  --color-panel: #161b28;
-  --color-line: #252c3d;
-  --color-ink: #e9edf5;
+  /* 深色之紙。仍暖 —— 其為紙,非為屏。 */
+  --color-canvas: #16130e;
+  --color-paper: #1e1a13;
+  --color-panel: #2a2419;
+  --color-line: #3d3527;
+  --color-ink: #f2ede1;
 
   /*
     ── 其所操者之色 ────────────────────────────────────────────────────
@@ -1289,15 +1360,15 @@ summary {
     Teal sits outside the shade/midsun/fullsun ramp, so chrome can never be
     mistaken for data.
   */
-  --color-accent-ink: #22d3c5;
-  --color-accent-wash: #0b2f2e;
+  --color-accent-ink: #2fd18a;
+  --color-accent-wash: #132a20
 
-  --background: #090c13;
-  --foreground: #e9edf5;
-  --card: #10141e;
-  --card-foreground: #e9edf5;
-  --popover: #10141e;
-  --popover-foreground: #e9edf5;
+  --background: #16130e;
+  --foreground: #f2ede1;
+  --card: #1e1a13;
+  --card-foreground: #f2ede1;
+  --popover: #1e1a13;
+  --popover-foreground: #f2ede1;
   --primary: #e9edf5;
   --primary-foreground: #090c13;
   --secondary: #1c2331;
@@ -1353,37 +1424,47 @@ summary {
 :root[data-theme="light"] {
     color-scheme: light;
 
-    --color-notice: #3f3f46;
-    --color-notice-soft: #e4e4e7;
-    --color-error: #be123c;
-    --color-error-soft: #ffe4e6;
+    /*
+      晝印 —— 此即其本世界之紙,與 @theme 所書者同。
+      MUST mirror the @theme block above, not the pre-Riso neutrals it used to
+      hold: dark is the base :root, so this block is what an explicit light
+      reader actually gets. Left stale, the theme toggle would hand them the
+      discarded palette while every other surface spoke the new one.
+    */
+    --color-notice: #4a423a;
+    --color-notice-soft: #e3dccb;
+    --color-error: #b8003c;
+    --color-error-soft: #fbd9e2;
 
-    --color-shade: #1d4ed8;
-    --color-shade-soft: #dbeafe;
-    --color-midsun: #a16207;
-    --color-midsun-soft: #fef3c7;
-    --color-fullsun: #dc2626;
-    --color-fullsun-soft: #fee2e2;
+    --color-shade: #1a4bbd;
+    --color-shade-ink: #123a94;
+    --color-shade-soft: #d7e0f7;
+    --color-midsun: #e0a000;
+    --color-midsun-ink: #8a5a00;
+    --color-midsun-soft: #fdeecd;
+    --color-fullsun: #e8410f;
+    --color-fullsun-ink: #b8300a;
+    --color-fullsun-soft: #fcdcd1;
 
-    --color-route: #16a34a;
-    --color-reach: #7c3aed;
-    --color-blocked: #a1a1aa;
+    --color-route: #6b2fb5;
+    --color-reach: #0f8a8a;
+    --color-blocked: #9a9086;
 
-    --color-canvas: #fbfaf9;
-    --color-paper: #ffffff;
-    --color-panel: #f4f4f5;
-    --color-line: #d4d4d8;
-    --color-ink: #18181b;
+    --color-canvas: #f2ede1;
+    --color-paper: #faf7ef;
+    --color-panel: #e7dfcd;
+    --color-line: #cabfa6;
+    --color-ink: #14100c;
 
-    --color-accent-ink: #1d4ed8;
-    --color-accent-wash: #eef4ff;
+    --color-accent-ink: #00794a;
+    --color-accent-wash: #d9f0e2;
 
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
+    --background: #f2ede1;
+    --foreground: #14100c;
+    --card: #faf7ef;
+    --card-foreground: #14100c;
+    --popover: #faf7ef;
+    --popover-foreground: #14100c;
     --primary: oklch(0.205 0 0);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
@@ -1394,11 +1475,11 @@ summary {
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
+    --border: #cabfa6;
+    --input: #cabfa6;
     --ring: oklch(0.708 0 0);
 
-    --hatch: rgba(24, 24, 27, 0.55);
+    --hatch: rgba(20, 16, 12, 0.5);
 }
 
 :root[data-theme="light"] .chrome {
@@ -1428,6 +1509,7 @@ body {
     transparent 0
   );
   background-size: 24px 24px;
+  background-attachment: local;
 }
 
 /* landing 自有其網,其地不當復有點 —— 二紋相犯則皆亂。 */
@@ -1568,4 +1650,96 @@ body:has(.landing) {
 }
 .leaflet-control-layers label input {
   cursor: pointer;
+}
+
+/*
+  ══ 印之二材 —— 目與失準 ═══════════════════════════════════════════════
+  riso 之為 riso,在其目與其錯。平色之面,riso 無有也;版版全合,riso 亦無有也。
+  二者皆非飾:目者其墨落紙之實,錯者此樹用以言其所不知。
+*/
+
+/*
+  ── 目 ──────────────────────────────────────────────────────────────
+  一層之噪,覆於全屏而不受其事。晝則相乘(墨入紙),夜則相濾(墨浮於暗紙)。
+  其值極低 —— 可數則太過,當如手触其纸而觉其粗,非见其点。
+  Riso grain: one fixed noise layer over everything, multiply on the day pull
+  (ink sinking into paper) and screen on the night pull (ink sitting on dark
+  stock). Kept low enough to register as surface rather than as pattern.
+*/
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+:root[data-theme="light"] body::after {
+  mix-blend-mode: multiply;
+}
+
+/*
+  ── 失準 ────────────────────────────────────────────────────────────
+  凡所推而不可知者,其墨錯出一線:藍偏左,橙偏右。
+  色盲者不得其階之色,而猶見其錯 —— 是以疑不繫於色。
+
+  IMPORTANT: this is a static offset, not an animation. prefers-reduced-motion
+  MUST NOT remove it — it carries data. Only .失準-顫 below is motion, and only
+  that is disabled. Stripping the offset would silently delete the uncertainty
+  signal for exactly the readers most likely to have it enabled.
+*/
+.失準 {
+  text-shadow:
+    var(--misregister) 0 0 color-mix(in srgb, var(--color-fullsun) 45%, transparent),
+    calc(var(--misregister) * -1) 0 0 color-mix(in srgb, var(--color-shade) 45%, transparent);
+}
+
+/* 塊之失準。文用其影,塊用其匡。 */
+.失準-塊 {
+  box-shadow:
+    var(--misregister) 0 0 color-mix(in srgb, var(--color-fullsun) 30%, transparent),
+    calc(var(--misregister) * -1) 0 0 color-mix(in srgb, var(--color-shade) 30%, transparent);
+}
+
+/*
+  懸則其版微動,如press之震。此為動,故 reduced-motion 去之 —— 上之靜錯不去。
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .失準-顫:hover {
+    transition: text-shadow 0.12s steps(2);
+    text-shadow:
+      calc(var(--misregister) * 2) 0 0 color-mix(in srgb, var(--color-fullsun) 55%, transparent),
+      calc(var(--misregister) * -2) 0 0 color-mix(in srgb, var(--color-shade) 55%, transparent);
+  }
+}
+
+/*
+  ── 器之面 ──────────────────────────────────────────────────────────
+  凡非所畫者,亦當從其世界:所選之文、其柱、其焦、其數。
+  此最易遺,而遺之則其頁如所拼,非所作。
+  The surfaces nobody draws — selection, scrollbar, caret, numerals — ship with
+  browser defaults belonging to no design system. Theming them is the cheapest
+  signal a page was built rather than assembled.
+*/
+::selection {
+  background: var(--color-midsun);
+  color: var(--color-ink);
+}
+:root {
+  caret-color: var(--color-accent-ink);
+  scrollbar-color: var(--color-line) transparent;
+  scrollbar-width: thin;
+}
+/* 凡量之數皆等寬 —— 上下相較,其位必齊。 */
+.数,
+table,
+[class*="tabular"] {
+  font-variant-numeric: tabular-nums;
+}
+a {
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: from-font;
 }

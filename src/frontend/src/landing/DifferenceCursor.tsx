@@ -69,7 +69,7 @@ export function DifferenceCursor() {
     <div
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[9998] size-8 rounded-full bg-white mix-blend-difference"
+      className="pointer-events-none fixed left-0 top-0 z-[9998] size-8 rounded-full bg-ink mix-blend-difference"
     />
   );
 }

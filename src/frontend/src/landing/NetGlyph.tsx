@@ -266,7 +266,7 @@ export function NetGlyph({ 式: m }: { 式: 式 }) {
         explanation — the caption is what makes it readable, including to anyone
         who cannot separate the red from the amber.
       */}
-      <p className="t-4xs mt-3 text-white/50">{說[m]}</p>
+      <p className="t-4xs mt-3 text-ink/50">{說[m]}</p>
     </div>
   );
 }

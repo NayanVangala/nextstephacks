@@ -300,7 +300,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
   return (
     <section
       aria-label="Enter"
-      className="landing-sec relative flex min-h-svh flex-col justify-center overflow-hidden border-t border-white/10"
+      className="landing-sec relative flex min-h-svh flex-col justify-center overflow-hidden border-t border-ink/10"
     >
       {/*
         地之光。其網為線,線不能滿其面,故其隅恆空 —— 加二暈於其後:
@@ -371,7 +371,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
             <div className="landing-display h-2xl text-accent-ink tabular-nums [text-shadow:0_0_32px_rgba(34,211,197,0.45)]">
               {及.數}
             </div>
-            <p className="t-xs mt-2 text-white/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
+            <p className="t-xs mt-2 text-ink/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
               of {總.toLocaleString()} segments still reachable under a heat
               budget — {及.蔭之比}% of them in shade at 14:00
             </p>
@@ -384,14 +384,14 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
               <button
                 type="button"
                 onClick={onEnter}
-                className="t-xs rounded-full bg-white px-10 py-4 text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                className="t-xs rounded-full bg-ink px-10 py-4 text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
               >
                 Open the tool
               </button>
             </Magnetic>
             <a
               href="https://github.com/NayanVangala/nextstephacks"
-              className="t-xs group inline-flex items-center gap-2 border-b border-white/30 pb-1 transition-colors duration-150 ease-quint hover:border-white"
+              className="t-xs group inline-flex items-center gap-2 border-b border-ink/30 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
             >
               Read the source
               <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-x-1">→</span>
@@ -399,7 +399,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
           </div>
         </Reveal>
 
-        <p className="t-4xs mt-[20px] max-w-md text-white/70 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
+        <p className="t-4xs mt-[20px] max-w-md text-ink/70 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
           {手
             ? "Every lit segment is one you could still get to and back from"
             : "Move your cursor over the network — or tap it — to move the starting point"}

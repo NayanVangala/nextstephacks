@@ -25,10 +25,10 @@ type 題 = "dark" | "light";
 
 function 讀其擇(): 題 {
   try {
-    return localStorage.getItem(題之鑰) === "light" ? "light" : "dark";
+    return localStorage.getItem(題之鑰) === "dark" ? "dark" : "light";
   } catch {
-    // 私密之窗或禁其存者,從其常。
-    return "dark";
+    // 私密之窗或禁其存者,從其常 —— 其常為晝印。
+    return "light";
   }
 }
 
@@ -36,8 +36,14 @@ export function ThemeToggle() {
   const [題, set題] = useState<題>(讀其擇);
 
   useEffect(() => {
-    // 暗為其本,故暗不書其屬 —— 屬之有無即其別。
-    if (題 === "light") document.documentElement.dataset.theme = "light";
+    /*
+      晝印為其本,故晝不書其屬 —— 屬之有無即其別。
+      riso 之世界立於紙,故其常必為紙;夜印猶在,一擊可得,為好淡者、
+      為散光者、為讀之有障者而存 —— 所易者惟其主客。
+      Paper is the base now, so the day pull writes no attribute. The night pull
+      is one click away and stays for readers who need it.
+    */
+    if (題 === "dark") document.documentElement.dataset.theme = "dark";
     else delete document.documentElement.dataset.theme;
     try {
       localStorage.setItem(題之鑰, 題);

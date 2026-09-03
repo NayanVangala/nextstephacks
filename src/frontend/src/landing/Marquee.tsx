@@ -15,7 +15,7 @@ export function Marquee({
   const 兩份 = [...items, ...items];
   return (
     <div
-      className="relative flex overflow-hidden border-y border-white/20 py-4"
+      className="relative flex overflow-hidden border-y border-ink/20 py-4"
       role="marquee"
       aria-label={items.join(", ")}
     >
@@ -27,7 +27,7 @@ export function Marquee({
         {兩份.map((t, i) => (
           <span
             key={i}
-            className="landing-label whitespace-nowrap text-white/70"
+            className="landing-label whitespace-nowrap text-ink/70"
           >
             {t}
           </span>

@@ -152,7 +152,7 @@ function 反其座(g: [number, number][]): L.LatLngExpression[] {
 }
 
 /**
- * 暗題乎。ThemeToggle 立其 data-theme 於 html,暗則無其屬(暗為其本)。
+ * 暗題乎。ThemeToggle 立其 data-theme 於 html,晝則無其屬(晝印為其本)。
  *
  * 名必為 ASCII。hook 之名,React 辨之以 /^use[A-Z]/ —— "use" 而繼以中文者,
  * rules-of-hooks 不能驗之而報其誤。見 CLAUDE.md。
@@ -160,16 +160,16 @@ function 反其座(g: [number, number][]): L.LatLngExpression[] {
  * 用 MutationObserver 而不用 context:其屬亦由 index.html 之先畫之script所立,
  * 早於 React,故必觀其實,不可但聽其變。
  * Observes the attribute rather than taking it from React state, because the
- * pre-paint script in index.html sets it before React exists. Dark is the base
- * theme, so "no attribute" means dark.
+ * pre-paint script in index.html sets it before React exists. Paper is the base
+ * theme now, so "no attribute" means the day pull.
  */
 function useDarkTheme(): boolean {
   const [暗, set暗] = useState(
     () => typeof document !== "undefined"
-      && document.documentElement.dataset.theme !== "light",
+      && document.documentElement.dataset.theme === "dark",
   );
   useEffect(() => {
-    const 讀 = () => set暗(document.documentElement.dataset.theme !== "light");
+    const 讀 = () => set暗(document.documentElement.dataset.theme === "dark");
     讀();
     const o = new MutationObserver(讀);
     o.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });

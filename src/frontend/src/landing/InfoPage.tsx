@@ -62,7 +62,7 @@ function Section({
 function SectionLabel({ children }: { children: string }) {
   return (
     <Reveal>
-      <p className="landing-label mb-10 flex items-center gap-[20px] text-white/50">
+      <p className="landing-label mb-10 flex items-center gap-[20px] text-ink/50">
         <span aria-hidden className="sun-mark inline-block h-px w-10" />
         {children}
       </p>
@@ -85,12 +85,12 @@ function QA({ q, children }: { q: string; children: React.ReactNode }) {
         <span className="h-xs max-w-3xl">{q}</span>
         <span
           aria-hidden
-          className="mt-0.5 shrink-0 text-xl leading-none text-white/70 transition-transform duration-200 ease-quint group-open:rotate-45"
+          className="mt-0.5 shrink-0 text-xl leading-none text-ink/70 transition-transform duration-200 ease-quint group-open:rotate-45"
         >
           ＋
         </span>
       </summary>
-      <div className="max-w-2xl pb-[28px] text-white/70">{children}</div>
+      <div className="max-w-2xl pb-[28px] text-ink/70">{children}</div>
     </details>
   );
 }
@@ -99,9 +99,9 @@ function QA({ q, children }: { q: string; children: React.ReactNode }) {
 function Step({ n, h, children }: { n: string; h: string; children: React.ReactNode }) {
   return (
     <RevealItem className="sun-rule grid gap-[20px] border-t py-[36px] md:grid-cols-[6rem_1fr_1.3fr]">
-      <span className="landing-label text-white/45">{n}</span>
+      <span className="landing-label text-ink/45">{n}</span>
       <h3 className="h-xs">{h}</h3>
-      <div className="max-w-2xl text-white/65">{children}</div>
+      <div className="max-w-2xl text-ink/65">{children}</div>
     </RevealItem>
   );
 }
@@ -128,7 +128,7 @@ function Figure({
       <div className="数 landing-display h-2xl mt-5">
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
-      <div className="mt-4 text-white/60">{t}</div>
+      <div className="mt-4 text-ink/60">{t}</div>
     </RevealItem>
   );
 }
@@ -143,7 +143,7 @@ function Swatch({ c, name, children }: { c: string; name: string; children: stri
       />
       <div>
         <h3 className="h-xs">{name}</h3>
-        <p className="mt-2 max-w-md text-white/65">{children}</p>
+        <p className="mt-2 max-w-md text-ink/65">{children}</p>
       </div>
     </RevealItem>
   );
@@ -158,7 +158,7 @@ function Hero({ 眉, 題, 引 }: { 眉: string; 題: string; 引: string }) {
       className="grid-container pt-[calc(var(--layout-padding-top)+3rem)] pb-[72px]"
     >
       <Reveal>
-        <p className="landing-label mb-8 text-white/50">{眉}</p>
+        <p className="landing-label mb-8 text-ink/50">{眉}</p>
       </Reveal>
       {/*
         題分其字而入,與 landing 之 hero 同其手 —— 二面既為一物,則其入之法
@@ -166,7 +166,7 @@ function Hero({ 眉, 題, 引 }: { 眉: string; 題: string; 引: string }) {
       */}
       <SplitText as="h1" text={題} 延={120} className="landing-display h-2xl block max-w-5xl" />
       <Reveal 延={0.15}>
-        <p className="mt-[36px] max-w-2xl text-white/70">{引}</p>
+        <p className="mt-[36px] max-w-2xl text-ink/70">{引}</p>
       </Reveal>
     </section>
   );
@@ -190,7 +190,7 @@ function PageFooter({ 當, onEnter }: { 當: 說之頁; onEnter: () => void }) {
                 href={p.href}
                 className="sun-rule block border-t pt-5 transition-opacity duration-150 ease-quint hover:opacity-60"
               >
-                <span className="landing-label text-white/45">Read next</span>
+                <span className="landing-label text-ink/45">Read next</span>
                 <span className="landing-display h-lg mt-4 block">{p.label}</span>
               </a>
             </RevealItem>
@@ -203,14 +203,14 @@ function PageFooter({ 當, onEnter }: { 當: 說之頁; onEnter: () => void }) {
             <button
               type="button"
               onClick={onEnter}
-              className="rounded-full bg-white px-8 py-4 text-black transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+              className="rounded-full bg-ink px-8 py-4 text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
             >
               Open the tool
             </button>
           </Magnetic>
           <a
             href="#top"
-            className="group inline-flex items-center gap-2 border-b border-white/30 pb-1 transition-colors duration-150 ease-quint hover:border-white"
+            className="group inline-flex items-center gap-2 border-b border-ink/30 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
           >
             Back to the front page
           </a>
@@ -236,13 +236,13 @@ function HelpPage() {
         <RevealGroup className="grid gap-[36px] md:grid-cols-3">
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">It works in your web browser</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               On a phone, a tablet or a computer. There is no app to download.
             </p>
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">You need to be online</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               The map of your city has to be downloaded the first time you open
               it, and the temperature is checked live. It will not work with the
               signal off.
@@ -250,7 +250,7 @@ function HelpPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">You do not need an account</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               There is a “Sign in” button. You can ignore it. It only exists so
               that people who want their name attached to a problem they report
               can have it.
@@ -282,17 +282,17 @@ function HelpPage() {
             </p>
             <ul className="mt-4 space-y-3">
               <li>
-                <strong className="font-semibold text-white">Wheelchair user</strong> —
+                <strong className="font-semibold text-ink">Wheelchair user</strong> —
                 leaves out steps, steep slopes, high curbs, and stretches that
                 are too narrow or unpaved.
               </li>
               <li>
-                <strong className="font-semibold text-white">Heat-sensitive</strong> —
+                <strong className="font-semibold text-ink">Heat-sensitive</strong> —
                 counts sun very heavily. Meant for people with MS, POTS, a heart
                 condition, or medication that reacts to heat.
               </li>
               <li>
-                <strong className="font-semibold text-white">Blind or low vision</strong> —
+                <strong className="font-semibold text-ink">Blind or low vision</strong> —
                 avoids crossings with no signal, and prefers sidewalks with
                 tactile paving.
               </li>
@@ -321,17 +321,17 @@ function HelpPage() {
             </p>
             <ul className="space-y-3">
               <li>
-                <strong className="font-semibold text-white">Type it.</strong>{" "}
+                <strong className="font-semibold text-ink">Type it.</strong>{" "}
                 Put a street name or an address in the search box. Pick one of
                 the results and the tool finds the nearest usable sidewalk to
                 it.
               </li>
               <li>
-                <strong className="font-semibold text-white">Tap the map.</strong>{" "}
+                <strong className="font-semibold text-ink">Tap the map.</strong>{" "}
                 One tap sets your start, the next sets your destination.
               </li>
               <li>
-                <strong className="font-semibold text-white">Use my location.</strong>{" "}
+                <strong className="font-semibold text-ink">Use my location.</strong>{" "}
                 Your phone tells the page where you are. Your browser asks
                 permission first, and the page keeps the answer to itself.
               </li>
@@ -351,7 +351,7 @@ function HelpPage() {
       <Section label="What the colors mean">
         <SectionLabel>What the colors mean</SectionLabel>
         <Reveal>
-          <p className="mb-10 max-w-2xl text-white/70">
+          <p className="mb-10 max-w-2xl text-ink/70">
             Every sidewalk is colored by how much sun falls on it at the hour
             you picked. Color is never the only clue — the same information is
             written in words next to it, everywhere it appears.
@@ -390,14 +390,14 @@ function HelpPage() {
           */}
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">ROUTE</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               From here to there, right now. The one to start with.
             </p>
             <NetGlyph 式="route" />
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">REACH</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               Everywhere you could get to from one point before you run out of
               sun budget — and whether a cooling center is inside it.
             </p>
@@ -405,7 +405,7 @@ function HelpPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">REPORT</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               Where this city fails, in numbers. Useful for showing somebody
               else.
             </p>
@@ -413,7 +413,7 @@ function HelpPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">INDEX</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               Which neighborhoods are cut off from the rest of the city on
               foot.
             </p>
@@ -430,7 +430,7 @@ function HelpPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-white/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
             <p>
               On the Reach screen you set a budget in sun-meters, and the tool
               shows you everywhere you could reach before spending it. A meter
@@ -440,7 +440,7 @@ function HelpPage() {
             <p>
               There is no correct number to put here. Start with something you
               know you can manage on a bad day and adjust it.{" "}
-              <strong className="font-semibold text-white">
+              <strong className="font-semibold text-ink">
                 It is a planning tool, not a medical limit.
               </strong>{" "}
               Follow the advice of your own doctor over anything on this screen.
@@ -457,7 +457,7 @@ function HelpPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-white/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
             <p>
               Most maps will route you anyway and let you find the steps
               yourself. This one stops and tells you what is in the way — for
@@ -691,7 +691,7 @@ function AboutPage() {
         the identical names one line below — the band as duplicate rather than
         as texture.
       */}
-      <div className="border-t border-white/10 py-[20px]">
+      <div className="border-t border-ink/10 py-[20px]">
         <Marquee items={[
           "OpenStreetMap", "Open-Meteo", "US Census TIGER", "ACS 5-year",
           "National Weather Service", "LA Metro GTFS", "Client-side A*",
@@ -704,14 +704,14 @@ function AboutPage() {
         <RevealGroup className="grid gap-[36px] md:grid-cols-3">
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">People who use a wheelchair or walking aid</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               A route with three steps in it is not a slightly worse route. It
               is not a route. The tool treats it that way.
             </p>
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">People whose bodies react badly to heat</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               MS, POTS, a heart condition, medication that does not get on with
               the sun, or simply being older in a city that keeps getting
               hotter. Shade is not a comfort here, it is the constraint.
@@ -719,7 +719,7 @@ function AboutPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">People who are blind or have low vision</h3>
-            <p className="mt-4 text-white/65">
+            <p className="mt-4 text-ink/65">
               A crossing with no signal and no tactile paving is a different
               proposition from one with both, and no ordinary map tells you
               which is which.
@@ -738,7 +738,7 @@ function AboutPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-white/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
             <p>
               So the two things that matter most to a disabled pedestrian in a
               hot city pull against each other, and you are left to reconcile
@@ -773,7 +773,7 @@ function AboutPage() {
             <Reveal key={s.h}>
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
-                <p className="max-w-2xl text-white/65">{s.p}</p>
+                <p className="max-w-2xl text-ink/65">{s.p}</p>
               </div>
             </Reveal>
           ))}
@@ -783,7 +783,7 @@ function AboutPage() {
       <Section label="Where the information comes from">
         <SectionLabel>Where the information comes from</SectionLabel>
         <Reveal>
-          <p className="mb-10 max-w-2xl text-white/70">
+          <p className="mb-10 max-w-2xl text-ink/70">
             All of it is public and free for anyone to check. Nothing here is
             private data and nothing was bought.
           </p>
@@ -800,7 +800,7 @@ function AboutPage() {
           ].map(([h, p]) => (
             <RevealItem key={h} className="sun-rule border-t pt-5">
               <h3 className="h-xs">{h}</h3>
-              <p className="mt-4 text-white/60">{p}</p>
+              <p className="mt-4 text-ink/60">{p}</p>
             </RevealItem>
           ))}
         </RevealGroup>
@@ -809,7 +809,7 @@ function AboutPage() {
       <Section label="What it is not">
         <SectionLabel>What it is not</SectionLabel>
         <Reveal>
-          <div className="max-w-2xl space-y-4 text-white/70">
+          <div className="max-w-2xl space-y-4 text-ink/70">
             <p>
               It is not medical guidance, and it does not know anything about
               your health.
@@ -848,7 +848,7 @@ function LimitsPage() {
             <h2 className="landing-display h-lg mt-8">
               Diagonal lines mean nobody knows.
             </h2>
-            <p className="mt-[36px] text-white/70">
+            <p className="mt-[36px] text-ink/70">
               Wherever you see that hatching — on the map, in a figure, in a
               report — the underlying record is missing and the tool has
               refused to guess. It is the one thing it will not quietly smooth
@@ -874,7 +874,7 @@ function LimitsPage() {
           <Figure i={3} n="36" t="neighborhoods that are fully step-free and still cut off" />
         </RevealGroup>
         <Reveal>
-          <p className="mt-[36px] flex items-center gap-[20px] text-white/45">
+          <p className="mt-[36px] flex items-center gap-[20px] text-ink/45">
             <span aria-hidden className="纹-sun inline-block h-2 w-10 shrink-0" />
             Hatched means the data does not exist. The last figure is measured,
             which is why it is not.
@@ -910,7 +910,7 @@ function LimitsPage() {
             <Reveal key={s.h}>
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
-                <p className="max-w-2xl text-white/65">{s.p}</p>
+                <p className="max-w-2xl text-ink/65">{s.p}</p>
               </div>
             </Reveal>
           ))}
@@ -926,7 +926,7 @@ function LimitsPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-white/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
             <p>
               Thirty-six neighborhoods across sixteen cities are 100% step-free
               and 0% connected. Every meter of sidewalk in them passes every test,
@@ -974,7 +974,7 @@ function LimitsPage() {
       <Section label="Not medical guidance">
         <SectionLabel>Not medical guidance</SectionLabel>
         <Reveal>
-          <div className="max-w-2xl space-y-4 text-white/70">
+          <div className="max-w-2xl space-y-4 text-ink/70">
             <p>
               The sun budget is a rough number for planning a walk. It is not a
               clinical threshold, it has not been validated against one, and it
@@ -1011,7 +1011,7 @@ export function InfoPage({ 頁, onEnter }: { 頁: 說之頁; onEnter: () => void
   }, [頁]);
 
   return (
-    <div className="landing info-prose text-white">
+    <div className="landing info-prose text-ink">
       {/* landing 有此記而說之頁無之,則同一物而二手。 */}
       <DifferenceCursor />
       <Nav onEnter={onEnter} 節={頁之目} />
@@ -1026,9 +1026,9 @@ export function InfoPage({ 頁, onEnter }: { 頁: 說之頁; onEnter: () => void
         <PageFooter 當={頁} onEnter={onEnter} />
       </main>
 
-      <footer className="border-t border-white/10 py-[36px]">
-        <div className="grid-container flex flex-wrap items-center justify-between gap-[20px] text-white/45">
-          <a href="#top" className="hover:text-white">
+      <footer className="border-t border-ink/10 py-[36px]">
+        <div className="grid-container flex flex-wrap items-center justify-between gap-[20px] text-ink/45">
+          <a href="#top" className="hover:text-ink">
             NextStep Hacks 2026 · Earth Forward
           </a>
           <span>Thirty-eight US downtowns</span>

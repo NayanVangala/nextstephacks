@@ -6,15 +6,25 @@ import { ThemeToggle } from "../src/components/ThemeToggle";
 
 /**
  * 題之擇。其所驗者三:
- *   一、其常為暗 —— 無所存則不加其屬。此為此改之要,前此其常實為淡。
- *   二、按之則易,且存之。
- *   三、存者為淡,則初起即淡。
+ *   一、其常為晝印(紙)—— 無所存則不加其屬。
+ *   二、按之則為夜印,且存之。
+ *   三、存者為夜,則初起即夜。
  *
- * The default-is-dark assertion is the point of this file: the previous
- * implementation resolved dark through prefers-color-scheme, which reports
- * light for anyone who has not explicitly asked for dark, so the stated default
- * was not the actual default. A regression here would be invisible on a machine
- * set to dark.
+ * ── 何以倒之 ─────────────────────────────────────────────────────────
+ * 此檔前此所驗者正相反:其常為暗,而淡為所欲乃得。riso 之世界既立,
+ * 其地為紙,故其常必為紙 —— 世界而須先擇乃見,則非其世界矣。
+ * 用之之時亦決之:洛城午後,人在日中而持其屏,暗屏反光,紙則不然。
+ *
+ * The assertions here are inverted from what they were, deliberately. This file
+ * used to encode "dark by default, light on request"; the Riso world's ground is
+ * paper, so paper is now the default and the night pull is the opt-in. A world
+ * you only see after opting in is not the default world.
+ *
+ * 其屬之有無仍為其別:常者不書其屬,所欲者乃書之。故此二事不可分驗 ——
+ * 屬去而其存猶在,是其常;屬在而其存為 dark,是其所欲。
+ * The attribute's absence still encodes the default, so "no attribute" now means
+ * the day pull. A regression here would be invisible on a machine already set to
+ * the non-default, which is why the stored value is asserted alongside it.
  */
 
 const 鑰 = "passable:theme";
@@ -25,35 +35,35 @@ beforeEach(() => {
 });
 
 describe("題之擇", () => {
-  it("無所存則為暗 —— 不加其屬", () => {
+  it("無所存則為晝印 —— 不加其屬", () => {
     render(<ThemeToggle />);
     expect(document.documentElement.dataset.theme).toBeUndefined();
-    expect(screen.getByRole("button")).toHaveAccessibleName("Switch to light theme");
-  });
-
-  it("按之則為淡,且存之", async () => {
-    render(<ThemeToggle />);
-    await userEvent.click(screen.getByRole("button"));
-    expect(document.documentElement.dataset.theme).toBe("light");
-    expect(localStorage.getItem(鑰)).toBe("light");
     expect(screen.getByRole("button")).toHaveAccessibleName("Switch to dark theme");
   });
 
-  it("再按之則復為暗,其屬去", async () => {
+  it("按之則為夜印,且存之", async () => {
+    render(<ThemeToggle />);
+    await userEvent.click(screen.getByRole("button"));
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(localStorage.getItem(鑰)).toBe("dark");
+    expect(screen.getByRole("button")).toHaveAccessibleName("Switch to light theme");
+  });
+
+  it("再按之則復為晝印,其屬去", async () => {
     render(<ThemeToggle />);
     await userEvent.click(screen.getByRole("button"));
     await userEvent.click(screen.getByRole("button"));
     expect(document.documentElement.dataset.theme).toBeUndefined();
-    expect(localStorage.getItem(鑰)).toBe("dark");
+    expect(localStorage.getItem(鑰)).toBe("light");
   });
 
-  it("所存者為淡,則初起即淡", () => {
-    localStorage.setItem(鑰, "light");
+  it("所存者為夜,則初起即夜", () => {
+    localStorage.setItem(鑰, "dark");
     render(<ThemeToggle />);
-    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(document.documentElement.dataset.theme).toBe("dark");
   });
 
-  it("所存者不可解,則從其常之暗", () => {
+  it("所存者不可解,則從其常之晝", () => {
     localStorage.setItem(鑰, "chartreuse");
     render(<ThemeToggle />);
     expect(document.documentElement.dataset.theme).toBeUndefined();

@@ -76,7 +76,7 @@ export function ScrollThread({ 節數 = 4 }: { 節數?: number }) {
       aria-hidden
       className="pointer-events-none fixed left-6 top-0 z-30 hidden h-svh w-6 lg:block"
     >
-      <div className="absolute inset-y-[6%] left-1/2 w-px -translate-x-1/2 bg-white/14" />
+      <div className="absolute inset-y-[6%] left-1/2 w-px -translate-x-1/2 bg-ink/14" />
       <div
         className="absolute left-1/2 top-[6%] w-[2px] -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,#4d9fff_0%,#f5b23c_50%,#ff5f4d_100%)] transition-[height] duration-300 ease-quint"
         style={{ height: `${88 * 比}%` }}
@@ -87,7 +87,7 @@ export function ScrollThread({ 節數 = 4 }: { 節數?: number }) {
           <div
             key={i}
             className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ease-quint ${
-              過 ? "size-2 bg-white" : "size-1.5 bg-white/30"
+              過 ? "size-2 bg-ink" : "size-1.5 bg-ink/30"
             }`}
             style={{ top: `${6 + (88 * (i + 1)) / (節數 + 1)}%` }}
           />
