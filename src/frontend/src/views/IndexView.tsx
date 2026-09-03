@@ -51,16 +51,35 @@ function IndexRow({ r, i }: { r: 區之度; i: number }) {
       initial={減 ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={減 ? { duration: 0 } : { duration: 0.3, delay: Math.min(i, 錯落之限) * 0.012 }}
-      className={`border-b border-line last:border-0 ${孤 ? "bg-error-soft" : "bg-canvas"}`}
+      className={`border-b border-line transition-colors last:border-0 ${
+        孤 ? "bg-error-soft hover:bg-error-soft/75" : "bg-paper hover:bg-panel"
+      }`}
     >
-      <td className="数 py-2 pr-3 text-xs text-muted-foreground">{i + 1}</td>
+      <td className="数 py-2 pr-3 pl-3 text-xs text-muted-foreground">{i + 1}</td>
       <td className="sticky left-0 z-10 bg-inherit py-2 pr-3 text-sm">{區名(r.geoid)}</td>
       <td className="数 py-2 pr-3 text-right text-sm font-semibold">
-        {百分(r.連之率)}
+        <span className="连之格">
+          <span>{百分(r.連之率)}</span>
+          {/*
+            其條但重述其數,非代之 —— 五十七行之次第,數不可一目而得,條可。
+            aria-hidden:其義已在其數,重讀則擾。
+            The bar restates the number it sits under, never replaces it: the
+            ranking is the point of this table and 57 right-aligned percentages
+            do not read as a ranking. Hidden from screen readers because the
+            value is already announced by the text beside it.
+          */}
+          {r.連之率 != null && (
+            <span
+              className="连之条"
+              aria-hidden="true"
+              style={{ "--率": `${Math.round(r.連之率 * 100)}%` } as React.CSSProperties}
+            />
+          )}
+        </span>
       </td>
       <td className="数 py-2 pr-3 text-right text-sm">{百分(r.通之率)}</td>
       <td className="数 py-2 pr-3 text-right text-sm">{百分(r.蔭之率)}</td>
-      <td className="数 py-2 text-right text-sm">
+      <td className="数 py-2 pr-3 text-right text-sm">
         {錢(r.入息)}
         {r.入息之誤 != null && (
           // 誤必與其估同見。獨見其估,則以未知為已知。
@@ -266,7 +285,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
           role="region"
           aria-label="Block groups ranked by connectivity"
           tabIndex={0}
-          className="mt-2 max-h-[70vh] overflow-auto"
+          className="mt-2 max-h-[70vh] overflow-auto rounded-lg border border-line bg-paper"
         >
           <table className="w-full min-w-[34rem] border-collapse">
             <caption className="sr-only">
@@ -276,12 +295,12 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
             </caption>
             <thead>
               <tr className="border-b border-line text-left">
-                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-xs font-semibold text-muted-foreground">#</th>
-                <th scope="col" className="sticky top-0 left-0 z-20 bg-canvas py-2 pr-3 text-xs font-semibold text-muted-foreground">Block group</th>
-                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Connected</th>
-                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Step-free</th>
-                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 pr-3 text-right text-xs font-semibold text-muted-foreground">Shaded 14:00</th>
-                <th scope="col" className="sticky top-0 z-10 bg-canvas py-2 text-right text-xs font-semibold text-muted-foreground">Median income</th>
+                <th scope="col" className="sticky top-0 z-10 bg-paper py-2 pr-3 pl-3 text-xs font-semibold text-muted-foreground">#</th>
+                <th scope="col" className="sticky top-0 left-0 z-20 w-full bg-paper py-2 pr-3 text-xs font-semibold text-muted-foreground">Block group</th>
+                <th scope="col" className="sticky top-0 z-10 bg-paper py-2 pr-3 text-right text-xs font-semibold whitespace-nowrap text-muted-foreground">Connected</th>
+                <th scope="col" className="sticky top-0 z-10 bg-paper py-2 pr-3 text-right text-xs font-semibold whitespace-nowrap text-muted-foreground">Step-free</th>
+                <th scope="col" className="sticky top-0 z-10 bg-paper py-2 pr-3 text-right text-xs font-semibold whitespace-nowrap text-muted-foreground">Shaded 14:00</th>
+                <th scope="col" className="sticky top-0 z-10 bg-paper py-2 pr-3 text-right text-xs font-semibold whitespace-nowrap text-muted-foreground">Median income</th>
               </tr>
             </thead>
             <tbody>

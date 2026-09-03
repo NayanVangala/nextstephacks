@@ -505,6 +505,42 @@ html:has(.landing) body {
 }
 
 /*
+  ── 連之條 ──────────────────────────────────────────────────────────
+  Index 一表,其名曰「次第,自最不通者始」—— 而五十七行皆右齊之百分,
+  次第不可一目而得。數者精,而形者速;二者並列,則精與速兼得。
+
+  其色不從曝之階 —— 所量者連,非日也。一色而二義則二義俱失,此樹之戒。
+  故用器之色(accent-ink),與焦點之環同源。
+
+  The bar is measurement, not decoration: this table's stated job is ranking,
+  and 57 right-aligned percentages do not read as a ranking. It uses the
+  interaction colour rather than the exposure ramp because what it encodes is
+  connectivity, not sun — reusing a ramp colour here would make that colour
+  mean two things, which this codebase treats as making it mean neither.
+*/
+.连之格 {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+}
+.连之条 {
+  display: block;
+  width: 4rem;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--color-line);
+  overflow: hidden;
+}
+.连之条::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: var(--率);
+  border-radius: inherit;
+  background: var(--color-accent-ink);
+}
+
+/*
   ── 報之節,題與文分二列 ────────────────────────────────────────────
   其病:節廣一千一百八十四,而文限於六十八字之measure,得六百三十一——
   故每節右五百五十三皆空,幾半頁也。廣而不用,則如未成之器。
