@@ -184,9 +184,18 @@ body {
   焦點必見 —— 鍵盤可用,乃此物之本旨,非附益。
   Visible focus is not decoration here: keyboard operation is a stated product
   requirement, and this app is judged by people who will tab through it.
+
+  其色必從器,不從資。--color-shade 者,曝之階之「此段在蔭」也;以之為環,
+  則凡受焦之物皆若言其蔭。暗題之下 accent-ink 為青碧(#22d3c5),與 --ring
+  同值,故 shadcn 之器與native之器其環如一 —— 前此二系並行而不自知。
+  MUST NOT be a ramp colour. --color-shade means "this segment is shaded" on
+  every map in this app; using it as the focus ring made every focused control
+  speak the data's language. --color-accent-ink is the interaction colour and
+  already equals --ring in both themes, so shadcn primitives and native
+  elements now focus identically instead of running two separate systems.
 */
 :focus-visible {
-  outline: 3px solid var(--color-shade);
+  outline: 3px solid var(--color-accent-ink);
   outline-offset: 2px;
   border-radius: 2px;
 }

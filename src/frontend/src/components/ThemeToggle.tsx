@@ -58,7 +58,7 @@ export function ThemeToggle() {
       */
       aria-label={`Switch to ${次} theme`}
       title={`Switch to ${次} theme`}
-      className="flex size-9 items-center justify-center rounded-md border border-white/20 text-white/70 transition-colors hover:border-white/40 hover:text-white"
+      className="flex size-11 items-center justify-center rounded-md border border-white/20 text-white/70 transition-colors hover:border-white/40 hover:text-white"
     >
       <span aria-hidden className="text-sm leading-none">
         {題 === "dark" ? "☀" : "☾"}

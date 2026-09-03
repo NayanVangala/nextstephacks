@@ -154,7 +154,7 @@ export default function App() {
               onChange={(ev) => setCity(ev.target.value)}
               // 其單亦須從其色,不然則白底黑字之單躍於黑帶之上。
               style={{ colorScheme: "dark" }}
-              className="-ml-1 min-h-11 rounded-md border border-transparent bg-transparent px-1.5 py-1 text-sm font-medium transition-colors duration-150 ease-quint hover:border-white/25 hover:bg-white/10"
+              className="-ml-1 min-h-11 rounded-md border border-transparent bg-transparent px-1.5 py-1 text-sm font-medium transition-colors hover:border-white/25 hover:bg-white/10"
             >
               {CITIES.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -173,7 +173,7 @@ export default function App() {
               */}
               <a
                 href="#/help"
-                className="min-h-11 rounded-md px-2 py-1.5 text-sm text-white/70 transition-colors duration-150 ease-quint hover:bg-white/10 hover:text-white"
+                className="min-h-11 rounded-md px-2 py-1.5 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
               >
                 Help
               </a>
@@ -194,7 +194,7 @@ export default function App() {
                     onClick={() => setView(t.id)}
                     aria-current={當 ? "page" : undefined}
                     title={t.blurb}
-                    className={`relative min-h-11 rounded-t-md px-3 py-2 text-sm transition-colors duration-200 ease-quint sm:px-4 ${
+                    className={`relative min-h-11 rounded-t-md px-3 py-2 text-sm transition-colors sm:px-4 ${
                       當
                         ? "font-semibold text-white"
                         : "text-white/55 hover:bg-white/10 hover:text-white"

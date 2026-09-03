@@ -121,7 +121,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
 
   if (loadError) {
     return (
-      <main className="py-8">
+      <main className="py-6">
         <h1 className="h-lg">Reach</h1>
         <p role="alert" className="mt-2 text-error">
           Could not load city data: {loadError}
@@ -129,7 +129,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       </main>
     );
   }
-  if (!pack) return <p className="py-8 text-muted-foreground">Loading city data…</p>;
+  if (!pack) return <p className="py-6 text-muted-foreground">Loading city data…</p>;
 
   return (
     <main className="py-6">

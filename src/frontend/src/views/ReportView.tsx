@@ -50,7 +50,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
     };
   }, [pack, flags, hourIdx]);
 
-  if (!pack) return <p className="py-8 text-muted-foreground">Loading city data…</p>;
+  if (!pack) return <p className="py-6 text-muted-foreground">Loading city data…</p>;
   if (!報) return null;
 
   const 納涼無階 = 報.無階.filter((d) => d.kind === "cooling_center");

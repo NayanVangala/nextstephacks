@@ -145,14 +145,14 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
 
   if (載之誤) {
     return (
-      <main className="py-8">
+      <main className="py-6">
         <p role="alert" className="text-error">
           Could not load city data: {載之誤}
         </p>
       </main>
     );
   }
-  if (!pack) return <p className="py-8 text-muted-foreground">Loading city data…</p>;
+  if (!pack) return <p className="py-6 text-muted-foreground">Loading city data…</p>;
 
   // 未算者,必明告之。空列與「皆零」不可混。
   if (!pack.index) {
