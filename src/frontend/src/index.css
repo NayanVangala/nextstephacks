@@ -505,6 +505,60 @@ html:has(.landing) body {
 }
 
 /*
+  ── 報之節,題與文分二列 ────────────────────────────────────────────
+  其病:節廣一千一百八十四,而文限於六十八字之measure,得六百三十一——
+  故每節右五百五十三皆空,幾半頁也。廣而不用,則如未成之器。
+
+  今分為二:左為題之脊,右為其文。二列合九百餘,居中,故兩旁之白為所留,
+  非所遺。題復黏於其頂,則捲其長文而猶知所讀者何節。
+
+  measure 不動 —— 六十八字者,讀之所宜,非版之所限。移其版以就其文,
+  不可反之。
+
+  The sections were 1184px wide holding a 631px measure, so 47% of every
+  section was permanently empty — the single loudest "unfinished" signal on
+  this view. The fix moves the layout to fit the measure, never the reverse:
+  a 14rem heading spine plus the existing 68ch column, centred as a pair, so
+  the remaining white is deliberate margin rather than abandoned width.
+  Sticky headings keep the section name visible through long bodies.
+*/
+@media (min-width: 64rem) {
+  .报之节 {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 68ch);
+    gap: 0 2.5rem;
+    /*
+      start 而非 center —— 其上四數之囊自左緣起,節若居中則二者參差,
+      其病甚於所醫。左緣既齊,則右之白為版之邊,非其所棄。
+      Left, not centred: the metric cards above start at the container's left
+      edge, and centring the sections put their left edge 170px inboard of it.
+      A visible mismatch between two stacked blocks reads worse than the empty
+      width it was meant to cure.
+    */
+    justify-content: start;
+    align-items: start;
+  }
+  .报之节 > h2 {
+    grid-column: 1;
+    position: sticky;
+    /*
+      黏於其上之 chrome 之下。chrome 高一百十一,故此取一百三十六 ——
+      餘二十五為其氣。少於其高則題沒於條後,而其文猶行,最為難看。
+      The sticky chrome bar measures 111px; anything less than that here parks
+      the heading behind it while its body keeps scrolling. 8.5rem clears it
+      with room to spare. The spine only applies at >=64rem, where the bar
+      never wraps to a second row.
+    */
+    top: 8.5rem;
+    /* 題入窄列,其行參差則亂;balance 均之。 */
+    text-wrap: balance;
+  }
+  .报之节 > :not(h2) {
+    grid-column: 2;
+  }
+}
+
+/*
   器之地,其上有一暈 —— 暑與蔭之二色,極淡。
   landing 有其場(HeatField),而器中之地純然一色;二面遂如二物。
   此非飾:其色即曝之階之二端(赤與青),故雖淡,其義與其圖同源。

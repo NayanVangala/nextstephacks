@@ -110,7 +110,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       {站總 > 0 && 有輪椅之欄 === false && (
         <Reveal>
-        <section aria-label="Transit accessibility data gap" className="mt-8">
+        <section aria-label="Transit accessibility data gap" className="报之节 mt-8">
           <h2 className="题-accent h-xs">Transit accessibility data is not published</h2>
           <p className="mt-1 max-w-[68ch] text-sm">
             The GTFS specification has carried a <code>wheelchair_boarding</code> field
@@ -130,7 +130,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       )}
 
       <Reveal>
-      <section aria-label="Severance" className="mt-8">
+      <section aria-label="Severance" className="报之节 mt-8">
         <h2 className="题-accent h-xs">What the traversable figure hides</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
           <strong className="数">{百分(報.通.率)}</strong> of the sidewalk network is
@@ -165,7 +165,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </Reveal>
 
       <Reveal>
-      <section aria-label="Building height coverage" className="mt-8">
+      <section aria-label="Building height coverage" className="报之节 mt-8">
         <h2 className="题-accent h-xs">Building height coverage</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
           Shade is computed by projecting building shadows, so it is only as good as
@@ -202,7 +202,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </Reveal>
 
       <Reveal>
-      <section aria-label="Data confidence" className="mt-8">
+      <section aria-label="Data confidence" className="报之节 mt-8">
         <h2 className="题-accent h-xs">Data confidence</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
           Accessibility attributes come from OpenStreetMap. A segment is only{" "}
@@ -222,7 +222,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       </Reveal>
 
       <Reveal>
-      <section aria-label="Heat traps" className="mt-8">
+      <section aria-label="Heat traps" className="报之节 mt-8">
         <h2 className="题-accent h-xs">Heat traps at {pack.manifest.hour_buckets[hourIdx]}:00</h2>
         <p className="mt-1 max-w-[68ch] text-sm text-muted-foreground">
           Segments carrying the most foot traffic <em>and</em> the most sun. Traffic is
@@ -266,7 +266,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
 
       {停.有源 && (
         <Reveal>
-        <section aria-label="Service disruption feed" className="mt-8">
+        <section aria-label="Service disruption feed" className="报之节 mt-8">
           <h2 className="题-accent h-xs">Service disruption data</h2>
           <p className="mt-1 max-w-[68ch] text-sm">
             {pack.manifest.name} publishes no service-alerts endpoint. The nearest
@@ -304,7 +304,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
       )}
 
       <Reveal>
-      <section aria-label="Paratransit" className="mt-8">
+      <section aria-label="Paratransit" className="报之节 mt-8">
         <h2 className="题-accent h-xs">Paratransit</h2>
         <p className="mt-1 max-w-[68ch] text-sm">
           {pack.manifest.name}'s ADA paratransit operator requires advance booking. A
