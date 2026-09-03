@@ -163,6 +163,10 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       */}
       <div className="mt-4 overflow-hidden rounded-xl border border-line bg-paper md:grid md:grid-cols-[minmax(280px,1fr)_2fr] md:divide-x md:divide-line">
         <div ref={器} className="p-4">
+          {/* 指圖之途,自 PlacePicker 移出,故此面亦當自言之。見 RouteView 同處。 */}
+          <p className="mb-3 text-xs text-muted-foreground">
+            Search, pick a known place, or click straight on the map.
+          </p>
           <PlacePicker
             pack={pack}
             label="Starting point"

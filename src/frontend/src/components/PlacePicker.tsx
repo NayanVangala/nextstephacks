@@ -19,12 +19,22 @@ export function PlacePicker({
   value,
   onChange,
   allowLocate = false,
+  助之語 = true,
 }: {
   pack: CityPack;
   label: string;
   value: number | null;
   onChange: (nodeId: number | null, 名: string | null) => void;
   allowLocate?: boolean;
+  /*
+    其助之語見否。二器同列,其語一字不易而重出 —— 目讀之者,一遍足矣。
+    然其語繫於 aria-describedby,故不可去,但隱之:讀屏者二器皆得其告。
+    Whether the hint renders visibly. Two pickers stack in one column and
+    repeated the same sentence verbatim, which reads as unfinished. The element
+    itself must stay — it is the input's aria-describedby target — so the
+    second instance is hidden visually and still announced.
+  */
+  助之語?: boolean;
 }) {
   const 群 = useMemo(() => 可選之地(pack), [pack]);
   const [定位中, set定位中] = useState(false);
@@ -152,7 +162,10 @@ export function PlacePicker({
         className="min-h-11 w-full rounded-md border border-line bg-paper px-2.5 py-2 text-sm"
       />
 
-      <p id={`${求id}-hint`} className="mt-1 text-xs text-muted-foreground">
+      <p
+        id={`${求id}-hint`}
+        className={助之語 ? "mt-1 text-xs text-muted-foreground" : "sr-only"}
+      >
         Type at least three letters. Only places inside the mapped area are
         shown.
       </p>
@@ -257,9 +270,6 @@ export function PlacePicker({
         </p>
       )}
 
-      <p className="mt-1 text-xs text-muted-foreground">
-        You can also select a point directly on the map.
-      </p>
     </div>
   );
 }

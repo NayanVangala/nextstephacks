@@ -332,6 +332,17 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           one panel of inputs.
         */}
         <div ref={器} className="p-4">
+          {/*
+            指圖之一途,前此二器各言其一,一字不易 —— 「亦可直指於圖」重出。
+            其途三者,起訖同之,故當於其首言之一遍,不當隨器而復。
+            Both pickers each carried "You can also select a point directly on
+            the map", verbatim, one under the other. The three ways in are the
+            same for start and destination, so they belong stated once at the
+            top of the panel rather than repeated per field.
+          */}
+          <p className="mb-3 text-xs text-muted-foreground">
+            Search, pick a known place, or click straight on the map.
+          </p>
           <PlacePicker
             pack={pack}
             label="Start"
@@ -344,6 +355,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             label="Destination"
             value={dest}
             onChange={擇地("dest")}
+            助之語={false}
           />
           <ProfilePicker flags={flags} onChange={setFlags} />
           <TimeSlider
