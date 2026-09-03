@@ -105,26 +105,43 @@ function 取曝之板(): 板 {
   };
 }
 
+/*
+  網之重。
+  一萬六千段,粗二點四而不透,則其圖為一片赤網 —— 底圖盡沒,而所問之路
+  與其網同其聲。凡圖之善者,其底靜而其答鳴;此則舉圖皆鳴,故無所鳴。
+
+  所存者其色 —— 曝之階,此物之所以為此物也;所減者其重與其濃。
+  既有路,則網再退,使路為其形而網為其地。網之退非隱:段猶可辨,
+  猶可讀其暑蔭,但不復與所求者爭。
+
+  16,304 segments at weight 2.4 and full opacity render as a solid mesh: the
+  base map disappears and the answer to the user's question carries no more
+  visual weight than the 16,303 segments that are not the answer. The exposure
+  colour is the product and stays; what drops is stroke weight and opacity.
+  When a route exists the network steps back further so the route reads as
+  figure against ground — still legible as heat, no longer competing.
+*/
 function 段之樣(
   e: Edge,
   flags: ProfileFlags,
   hourIdx: number,
   暗底: boolean,
   板: 板,
+  有路: boolean,
 ): L.PathOptions {
   if (!edgeAllowed(e, flags)) {
     return {
       color: 暗底 ? "#e4e4e7" : "#a1a1aa",
-      weight: 暗底 ? 1.4 : 1,
-      opacity: 暗底 ? 0.7 : 0.5,
+      weight: 暗底 ? 1.2 : 1,
+      opacity: 有路 ? 0.28 : 暗底 ? 0.5 : 0.4,
       interactive: false,
     };
   }
   const 曝 = e.sun_exposure ? e.sun_exposure[hourIdx] ?? 1 : 1;
   return {
     color: 板[曝之階(曝)],
-    weight: 暗底 ? 2.4 : 1.8,
-    opacity: 暗底 ? 1 : 0.75,
+    weight: 暗底 ? 1.7 : 1.4,
+    opacity: 有路 ? (暗底 ? 0.42 : 0.35) : 暗底 ? 0.82 : 0.62,
     interactive: false,
   };
 }
@@ -199,6 +216,14 @@ export function MapCanvas({
     now the street tiles are inverted under the dark theme, so they need it too.
   */
   const 暗底 = 星底 || 暗題;
+  /*
+    有路與否,但取其有無 —— 網之效以此為其憑。
+    MUST stay a boolean, never `route` itself: the network effect redraws all
+    16,304 polylines, so keying it to the route object would rebuild the whole
+    network on every recomputation instead of only when a route appears or
+    disappears.
+  */
+  const 有路 = route != null;
   const pickRef = useRef(onPick);
   pickRef.current = onPick;
 
@@ -293,9 +318,9 @@ export function MapCanvas({
     const 板 = 取曝之板();
     g.clearLayers();
     for (const e of pack.edges) {
-      L.polyline(反其座(e.geometry), 段之樣(e, flags, hourIdx, 暗底, 板)).addTo(g);
+      L.polyline(反其座(e.geometry), 段之樣(e, flags, hourIdx, 暗底, 板, 有路)).addTo(g);
     }
-  }, [pack, flags, hourIdx, 暗底, 暗題]);
+  }, [pack, flags, hourIdx, 暗底, 暗題, 有路]);
 
   useEffect(() => {
     const g = 所及層.current;

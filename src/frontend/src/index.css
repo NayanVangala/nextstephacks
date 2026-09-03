@@ -1515,3 +1515,57 @@ body:has(.landing) {
 :root:not([data-theme="light"]) .leaflet-control-attribution a {
   color: #7cc4ff;
 }
+
+/*
+  ── leaflet 之控,其的亦當四十四 ────────────────────────────────────────
+  leaflet 之縮放,其方三十;而 button.tsx 所書之下限四十四。
+  上之一則但正其色,此則正其度 —— 色從題,度從人。
+  不繫於題:手之不能者,不因其好淡好暗而異。
+
+  層之擇,leaflet 本以裸 radio 出之,無襟無地,故如未成之器;
+  今與此樹之囊同其邊、同其圓、同其襟。
+
+  Leaflet's zoom buttons ship at 30px against the 44px floor this project
+  states in button.tsx for people with impaired hand function, and its layer
+  switcher renders as bare radio inputs with no padding. Sizing is not themed:
+  a light-mode user's hands are the same size as a dark-mode user's.
+*/
+/*
+  IMPORTANT: the `.leaflet-touch` selectors are required, not redundant.
+  Leaflet's own sheet sizes these with `.leaflet-touch .leaflet-bar a`
+  (specificity 0,3,1); a plain `.leaflet-bar a` here loses to it and the
+  buttons silently stay 30px. Verified: without them the measured size was
+  still 30x30 after this rule was added.
+*/
+:root .leaflet-touch .leaflet-bar a,
+:root .leaflet-touch .leaflet-bar a:link,
+:root .leaflet-bar a,
+:root .leaflet-bar a:link {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 1.05rem;
+}
+.leaflet-bar {
+  border-radius: var(--radius-lg, 8px);
+  overflow: hidden;
+}
+.leaflet-control-layers {
+  border-radius: var(--radius-lg, 8px);
+  padding: 0.25rem;
+}
+.leaflet-control-layers-expanded {
+  padding: 0.5rem 0.75rem;
+}
+.leaflet-control-layers label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* 其行亦一的也 —— 四十四則指可及,不必正中其小圈。 */
+  min-height: 2.25rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+.leaflet-control-layers label input {
+  cursor: pointer;
+}
