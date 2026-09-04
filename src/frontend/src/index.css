@@ -1312,14 +1312,26 @@ summary {
   The reference's radii are a fixed set, not a derived ramp. This project
   derived everything from a 10px base and matched none of them.
 */
+/*
+  ── 角之階,從切紙 ──────────────────────────────────────────────────
+  上之所量,為前一世界之角(六、八、十二、十六、二十四)。riso 無此角:
+  其塊皆切紙所成,刃過紙而已,故其角近乎無。
+
+  不逐處改其 className(二十七處)而改其階 —— 一改而凡匣、凡格、凡器
+  皆從之。所改者其律,非其用;故後之所增者亦自合。
+  The previous scale was measured from the old world's reference. A Riso block
+  is cut, not moulded, so its corners are essentially square. Retuning the scale
+  itself rather than the 27 call sites means every panel, input and card follows
+  at once — and anything added later inherits it instead of drifting back.
+*/
 @theme {
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
-  --radius-3xl: 24px;
-  --radius-4xl: 24px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 3px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  --radius-4xl: 4px;
 }
 
 /*
@@ -1465,10 +1477,22 @@ summary {
   passes under. The light line is the accent at low alpha, so the chrome has
   one thread of the product's own colour in it.
 */
+/*
+  ── 報頭 ────────────────────────────────────────────────────────────
+  前此為一暗帶(#05070c 至 #080b12),乃前一世界之遺 —— 紙既為地,
+  則此帶為全屏唯一之暗物,如一異物壓於其上,而 landing 與器之判然
+  正由此起。
+
+  riso 之報頭不以暗別之,以其墨之粗界別之:地仍為紙,而其下一粗畫,
+  如版落紙之痕。故其別在其緣,不在其地。
+  The dark band was the last object from the discarded world and the single
+  loudest thing separating the tool from the landing. A Riso masthead is not a
+  dark bar; it is the same sheet with a heavy struck rule under it. The
+  separation moves from the fill to the edge.
+*/
 .chrome {
-  background: linear-gradient(180deg, #05070c 0%, #080b12 100%);
-  border-bottom: 1px solid #1e2534;
-  box-shadow: inset 0 -1px 0 rgba(34, 211, 197, 0.13);
+  background: var(--color-canvas);
+  border-bottom: 2px solid var(--color-ink);
 }
 
 /*
@@ -1562,10 +1586,7 @@ summary {
     --hatch: rgba(20, 16, 12, 0.5);
 }
 
-:root[data-theme="light"] .chrome {
-  background: #18181b;
-  border-bottom: 0;
-}
+/* 晝夜同其法 —— 其地從其紙,其界從其墨,故不必別書。 */
 
 /*
   ── 七、地有其紋 ────────────────────────────────────────────────────
@@ -1888,4 +1909,67 @@ a {
 */
 .切纸-墨:hover {
   background-color: color-mix(in srgb, var(--color-ink) 88%, var(--color-fullsun));
+}
+
+/*
+  ══ leaflet 之控,亦入其世界 ═══════════════════════════════════════════
+  前此但施於夜印(見上)—— 而晝印今為其常,故其控猶為 leaflet 之本色:
+  白匣、灰邊、圓角、native 之 radio。是全圖之上,三物不屬此世界。
+
+  其法與此樹之器同:紙為其地,墨為其界,角近乎無。radio 亦自畫之 ——
+  native 之圓點,於切紙之世界中為異物,且其色不受此樹所制。
+  These were themed for the night pull only, back when that was the default.
+  On paper the zoom bar, the layer switcher and its native radios were the
+  three objects on screen still wearing Leaflet's own chrome. Same treatment as
+  every other control here: paper ground, ink rule, cut corners, and a drawn
+  radio rather than the platform's, whose colour this project cannot reach.
+*/
+:root:not([data-theme="dark"]) .leaflet-control-layers,
+:root:not([data-theme="dark"]) .leaflet-bar a {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+:root:not([data-theme="dark"]) .leaflet-bar a:hover {
+  background: var(--color-panel);
+}
+:root:not([data-theme="dark"]) .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--color-paper) 88%, transparent);
+  color: var(--color-ink);
+}
+:root:not([data-theme="dark"]) .leaflet-control-attribution a {
+  color: var(--color-shade-ink);
+}
+
+/* 匣之角,從切紙之階。leaflet 自書八像素。 */
+.leaflet-bar,
+.leaflet-control-layers {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-ink);
+  box-shadow: none;
+}
+
+/*
+  自畫其 radio —— native 者,其色不受此樹所制,且於此世界為異物。
+  所擇者實其墨,未擇者但存其匡:與曝之階之「已知/所推」同其語。
+*/
+.leaflet-control-layers input[type="radio"],
+.leaflet-control-layers input[type="checkbox"] {
+  appearance: none;
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.leaflet-control-layers input[type="radio"]:checked,
+.leaflet-control-layers input[type="checkbox"]:checked {
+  background: var(--color-ink);
+  box-shadow: inset 0 0 0 2px var(--color-paper);
+}
+.leaflet-control-layers input:focus-visible {
+  outline: 3px solid var(--color-accent-ink);
+  outline-offset: 2px;
 }

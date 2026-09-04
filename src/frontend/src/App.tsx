@@ -131,7 +131,7 @@ export default function App() {
         MUST outrank Leaflet: its controls sit at z-index 1000, so anything less
         here lets the zoom buttons render on top of the sticky header.
       */}
-      <header className="chrome sticky top-0 z-[1200] text-white">
+      <header className="chrome sticky top-0 z-[1200] text-ink">
         <div className="grid-container">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-3">
             <button
@@ -143,7 +143,7 @@ export default function App() {
               Passable
             </button>
 
-            <span aria-hidden className="h-4 w-px bg-white/20" />
+            <span aria-hidden className="h-4 w-px bg-ink/20" />
 
             <label htmlFor="city" className="sr-only">
               City
@@ -152,9 +152,9 @@ export default function App() {
               id="city"
               value={city}
               onChange={(ev) => setCity(ev.target.value)}
-              // 其單亦須從其色,不然則白底黑字之單躍於黑帶之上。
-              style={{ colorScheme: "dark" }}
-              className="-ml-1 min-h-11 rounded-md border border-transparent bg-transparent px-1.5 py-1 text-sm font-medium transition-colors hover:border-white/25 hover:bg-white/10"
+              // 其單從其地。報頭既為紙,則其單亦為紙 —— 前此釘 dark,為暗帶而設。
+              style={{ colorScheme: "light" }}
+              className="-ml-1 min-h-11 rounded-md border border-transparent bg-transparent px-1.5 py-1 text-sm font-medium transition-colors hover:border-ink/25 hover:bg-ink/10"
             >
               {CITIES.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -173,7 +173,7 @@ export default function App() {
               */}
               <a
                 href="#/help"
-                className="min-h-11 rounded-md px-2 py-1.5 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className="min-h-11 rounded-md px-2 py-1.5 text-sm text-ink/70 transition-colors hover:bg-ink/10 hover:text-ink"
               >
                 Help
               </a>
@@ -196,8 +196,8 @@ export default function App() {
                     title={t.blurb}
                     className={`relative min-h-11 rounded-t-md px-3 py-2 text-sm transition-colors sm:px-4 ${
                       當
-                        ? "font-semibold text-white"
-                        : "text-white/55 hover:bg-white/10 hover:text-white"
+                        ? "font-semibold text-ink"
+                        : "text-ink/70 hover:bg-ink/10 hover:text-ink"
                     }`}
                   >
                     {t.label}
@@ -209,7 +209,7 @@ export default function App() {
                             ? { duration: 0 }
                             : { type: "spring", stiffness: 380, damping: 32 }
                         }
-                        className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-white"
+                        className="absolute inset-x-2 bottom-0 h-[3px] bg-ink"
                       />
                     )}
                   </button>
@@ -223,7 +223,7 @@ export default function App() {
               Each view answers one question. That copy previously lived only in
               a title attribute, visible on hover and to nobody on a touchscreen.
             */}
-            <p className="hidden shrink-0 pb-2.5 text-xs text-white/60 lg:block">
+            <p className="hidden shrink-0 pb-2.5 text-xs text-ink/70 lg:block">
               {當之blurb}
             </p>
           </div>
