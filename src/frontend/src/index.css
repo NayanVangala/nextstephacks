@@ -646,13 +646,27 @@ html:has(.landing) body {
   background: var(--color-line);
   overflow: hidden;
 }
+/*
+  其色為墨,非為綠。
+  前此取 accent-ink —— 而此樹自立其戒:綠但主人之所操,永不入資之列。
+  連之率者,所量之值也,非人之所操。是以此條犯其所自立之戒。
+
+  墨者,印之結構之色 —— 而連者,亦網之結構。故以墨畫之,義色相稱,
+  且不與曝之三墨爭(彼言其日,此言其通)。
+  MUST NOT be the interaction colour. This bar encodes a measured value, and
+  this world reserves riso green for interaction alone; using it here made the
+  green mean two things, which this codebase treats as making it mean neither.
+  Ink is the print's structural colour and connectivity is a structural
+  property, so the two agree — and it cannot be confused with the three inks,
+  which speak about sun rather than about reach.
+*/
 .连之条::after {
   content: "";
   display: block;
   height: 100%;
   width: var(--率);
   border-radius: inherit;
-  background: var(--color-accent-ink);
+  background: var(--color-ink);
 }
 
 /*
@@ -741,7 +755,8 @@ html:has(.landing) body {
   bottom: 0.2em;
   width: 3px;
   border-radius: 2px;
-  background: var(--color-accent-ink);
+  /* 標者結構也,非人之所操 —— 故從墨,不從綠。見 .连之条 之註。 */
+  background: var(--color-ink);
   /*
     其標自上而下畫,如落筆。
     landing 之界隨其入而行(見 RevealRule),而器中之標直現 —— 二面之手不一。
