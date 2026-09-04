@@ -455,11 +455,29 @@ body {
 
     此二值為其所繫 —— 欲復其舊者,改此二行而已(800 / 72%)。
     To restore the signage register, these two lines are the only knobs.
+
+    ── riso 之世界既立,則此二鈕當轉 ────────────────────────────────
+    上之所論,為前一世界而發:所法者為刊物,故輕而寬。今其世界為 riso 之印,
+    其理正反 —— 一版一墨,其墨平而厚,故其字必厚乃稱其墨;而輕者於粗目之
+    紙上,一失準即斷。riso 之招貼,自來窄而重:墨盡其量,而幅盡其省。
+
+    取七百而寬八十六:重足以承其墨,而窄足以償其重 —— 故其行之長不逾其舊,
+    上文所記「一〇八〇對一〇三七」之溢不復生。此為驅其二軸,非但加其重。
+
+    The reasoning above was written for the previous world, whose reference was
+    editorial. The Riso world inverts it: one drum lays one flat, dense ink, so
+    the type has to carry that weight, and a light face breaks up on toothy
+    stock the moment registration drifts. Riso posters are condensed and heavy
+    for a reason — maximum ink, minimum width.
+
+    700 at 86% width: heavy enough to hold the ink, condensed enough to pay for
+    the weight, so line length does not grow and the 1080-vs-1037 overflow noted
+    elsewhere does not return. Both axes driven, which is what this face is for.
   */
-  font-weight: 400;
-  font-stretch: 100%;
-  line-height: 0.86;
-  letter-spacing: -0.05em;
+  font-weight: 700;
+  font-stretch: 86%;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
 }
 
 /*
@@ -1573,9 +1591,32 @@ body:has(.landing) {
   Overlays live in separate panes and are NOT filtered, so the exposure ramp
   still renders as the measured colour rather than its inverse.
 */
-:root:not([data-theme="light"]) .街瓦 {
+:root[data-theme="dark"] .街瓦 {
   filter: invert(1) hue-rotate(180deg) brightness(0.88) contrast(0.92)
     saturate(0.55);
+}
+
+/*
+  ── 晝印之瓦,退為底版 ──────────────────────────────────────────────
+  riso 之印,先落一淡色之底,而後以其墨畫其所欲言者。此瓦即其底版。
+
+  其病在:OSM 之瓦自有其橙其黃 —— 正與曝之階同其語。故所量之曝與所繪之路
+  混然一色,人不能辨其孰為資、孰為底。此非小疵:此圖之所以存,正在其色。
+
+  故奪其瓦之彩(存其四分之一),提其明,微降其對 —— 其形猶在(街可循,
+  名可讀),而其色退。底版既淡,則三墨自明。
+  一色一義之戒,於此為地與資之際,非獨於器與資之際。
+
+  The OSM raster carries its own oranges and yellows — the same language as the
+  exposure ramp — so the measured data and the basemap's road casings read as
+  one wash and the map's entire reason for existing gets muddied. Saturation
+  drops to a quarter and brightness lifts: the geometry survives (streets
+  followable, labels readable) and the colour recedes, which is exactly what a
+  key plate does under spot inks. The one-colour-one-meaning rule applies
+  between ground and data, not only between chrome and data.
+*/
+:root:not([data-theme="dark"]) .街瓦 {
+  filter: saturate(0.26) brightness(1.06) contrast(0.94);
 }
 
 /*
@@ -1588,25 +1629,31 @@ body:has(.landing) {
   basemap they became the three brightest objects on screen — one of which is
   a copyright notice. This follows the theme instead.
 
-  但施於暗。淡題自有其常,不必易之 —— 見下之 :root[data-theme="light"] 不設此。
+  但施於夜印。晝印自有其常,不必易之。
+  其選前作 :not([data-theme="light"]) —— 其時暗為其本,故「非淡」即暗。
+  今紙為其本,則「非淡」正指其常,是以瓦反於紙上,全屏最刺目者莫此為甚。
+  MUST be [data-theme="dark"], not :not([data-theme="light"]). That negation
+  meant "dark" only while dark was the base; with paper as the default it
+  matches the default, so the tiles inverted on the paper pull — a dark map
+  sitting in the middle of a cream sheet.
 */
-:root:not([data-theme="light"]) .leaflet-control-layers,
-:root:not([data-theme="light"]) .leaflet-bar a {
+:root[data-theme="dark"] .leaflet-control-layers,
+:root[data-theme="dark"] .leaflet-bar a {
   background: var(--color-paper);
   color: var(--color-ink);
   border-color: var(--color-line);
 }
-:root:not([data-theme="light"]) .leaflet-bar a:hover {
+:root[data-theme="dark"] .leaflet-bar a:hover {
   background: var(--color-panel);
   color: var(--color-ink);
 }
-:root:not([data-theme="light"]) .leaflet-control-attribution {
+:root[data-theme="dark"] .leaflet-control-attribution {
   /* 半透者,所以不奪其圖 —— 而其文之比猶足(量之 7.4:1)。 */
   background: color-mix(in srgb, var(--color-paper) 88%, transparent);
   color: var(--color-ink);
 }
 /* 量之於 #10141e:6.4:1。淡題之 #00506f 存於其本處,此不涉之。 */
-:root:not([data-theme="light"]) .leaflet-control-attribution a {
+:root[data-theme="dark"] .leaflet-control-attribution a {
   color: #7cc4ff;
 }
 
