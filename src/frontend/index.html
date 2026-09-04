@@ -30,11 +30,13 @@
       題之擇,必施於畫前 —— 不然則夜印之人先見一紙之閃。
       Applied before first paint: doing this in React would flash the paper base
       at anyone who has chosen the night pull. The key must match 題之鑰 in
-      ThemeToggle.tsx, and the stored value is now "dark" — paper is the default.
+      ThemeToggle.tsx. The key is versioned: the old world wrote "dark" on mount
+      for every visitor who never chose it, so reading the old key would strand
+      them all on a preference nobody set.
     -->
     <script>
       try {
-        if (localStorage.getItem("passable:theme") === "dark")
+        if (localStorage.getItem("passable:theme:v2") === "dark")
           document.documentElement.dataset.theme = "dark";
       } catch (e) {}
     </script>

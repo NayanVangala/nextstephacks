@@ -18,8 +18,25 @@ import { useEffect, useState } from "react";
  * its own purpose.
  */
 
-/** 其鑰。index.html 於畫前亦讀此,二處不可異其名。 */
-const 題之鑰 = "passable:theme";
+/*
+  其鑰。index.html 於畫前亦讀此,二處不可異其名。
+
+  ── 何以易其鑰 ──────────────────────────────────────────────────────
+  舊鑰(passable:theme)不可復用。前之世界以暗為常,而此效於初掛即書其值 ——
+  故凡曾至此頁者,其機皆存一「dark」,而其人未嘗擇之。今紙為其常,若仍讀舊鑰,
+  則此數人永不得見其新世界:其所見者,乃一無人所擇之舊擇。
+
+  舊值與真擇不可辨(其形同為 "dark"),故不可以其值決之;惟易其鑰,
+  則舊之自動所書者自廢,而新世界得達於眾。凡於新世界中自擇者,書於新鑰。
+  MUST be a new key. The previous world defaulted to dark and this effect wrote
+  its value on mount, so everyone who ever loaded the old site has "dark"
+  persisted without having chosen it. With paper as the default, reading the old
+  key would leave every returning visitor looking at a preference nobody set.
+  An auto-written "dark" is indistinguishable from a deliberate one, so the
+  value cannot be used to tell them apart — versioning the key retires the
+  automatic ones and lets the new default reach people.
+*/
+const 題之鑰 = "passable:theme:v2";
 
 type 題 = "dark" | "light";
 

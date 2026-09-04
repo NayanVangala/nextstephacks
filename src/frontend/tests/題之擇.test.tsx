@@ -27,7 +27,7 @@ import { ThemeToggle } from "../src/components/ThemeToggle";
  * the non-default, which is why the stored value is asserted alongside it.
  */
 
-const 鑰 = "passable:theme";
+const 鑰 = "passable:theme:v2";
 
 beforeEach(() => {
   localStorage.clear();
@@ -61,6 +61,23 @@ describe("題之擇", () => {
     localStorage.setItem(鑰, "dark");
     render(<ThemeToggle />);
     expect(document.documentElement.dataset.theme).toBe("dark");
+  });
+
+  /*
+    舊鑰之值,一概不取。
+    前之世界以暗為常,而其效於初掛即書其值 —— 故凡曾至舊頁者,其機皆存一
+    「dark」而未嘗擇之。若新頁仍讀舊鑰,則此數人永不得見其新世界。
+    此驗所以防其復:若後人圖省事而復用舊鑰,此驗即敗。
+    The old key must stay inert. The previous world persisted "dark" on mount
+    for everyone who never chose it; honouring that value now would strand every
+    returning visitor on a preference nobody set. This test fails if anyone
+    reverts to the old key for convenience.
+  */
+  it("舊鑰之值不取 —— 其為自動所書,非人所擇", () => {
+    localStorage.setItem("passable:theme", "dark");
+    render(<ThemeToggle />);
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+    expect(screen.getByRole("button")).toHaveAccessibleName("Switch to dark theme");
   });
 
   it("所存者不可解,則從其常之晝", () => {
