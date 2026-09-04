@@ -154,6 +154,17 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         {/*
           幕止於其文之後。前此右亦覆一二之黑,而其網為此頁之所以立 ——
           幕之厚薄,當隨其文之所在,不當均覆其面。
+          窄屏則其幕自上而下,不自左而右。
+          橫幕者,為寬屏而設:其文在左,其網在右,故左厚而右薄。而窄屏之文
+          橫貫其面,無左右之分,故橫幕之薄處正落於其文之上 —— 量之,其文
+          之下猶見其網,幾不可讀。今窄屏改為縱幕:其上薄而其下厚,文所在者
+          皆在其厚處。
+          The 100deg scrim assumes the text sits in the left third with the
+          network to its right. At 390px the copy spans the full width, so the
+          gradient's thin end lands directly under it. Narrow viewports get a
+          vertical scrim instead: thin at the top where the network should read,
+          heavy from 38% down where every line of type actually sits.
+
           幕既為紙,非為墨 —— 世界既倒,此值亦當倒,不然則紙上覆一黑霧。
           The scrim is paper-toned now, not ink-toned: with the ground inverted,
           a 9,12,19 wash over a cream sheet reads as a bruise. Same purpose,
@@ -164,7 +175,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(100deg,rgba(242,237,225,0.92)_0%,rgba(242,237,225,0.78)_28%,rgba(242,237,225,0.38)_50%,rgba(242,237,225,0.05)_76%,rgba(242,237,225,0)_100%)] dark:bg-none"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(242,237,225,0.35)_0%,rgba(242,237,225,0.86)_38%,rgba(242,237,225,0.92)_100%)] sm:bg-[linear-gradient(100deg,rgba(242,237,225,0.92)_0%,rgba(242,237,225,0.78)_28%,rgba(242,237,225,0.38)_50%,rgba(242,237,225,0.05)_76%,rgba(242,237,225,0)_100%)] dark:bg-none"
         />
         <div className="grid-container relative">
           {/*
