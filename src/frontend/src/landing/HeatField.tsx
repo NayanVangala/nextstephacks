@@ -130,6 +130,45 @@ export function HeatField() {
         return v ? `${v}${v.length === 7 ? "58" : ""}` : "rgba(154,144,134,0.34)";
       })();
 
+      /*
+        ── 失準之巡 ──────────────────────────────────────────────────────
+        所推之段,其墨錯出一線:藍偏左,橙偏右 —— 即 riso 之版未合。
+        FIRST VIEWPORT 所許者正在此,而前此但施於二數之上,是為annotation,
+        非為其資之編碼。今施於其網,乃踐其諾。
+
+        量之於洛城:所驗者百之三點九。故所錯者非其少數,乃其全網 ——
+        而此正其所發現者:此城之人行道,幾無一段有明籤。
+        故其少數之清晰者反為所求 —— 目之所歸,即其所驗之處。
+
+        二路而已,非二千八百筆:凡所推者共一路,一藍一橙,各一 stroke。
+        故其費為二,不隨其段而增。
+        The contract promises inferred segments print out of register, and it
+        was only ever applied to two numerals — an annotation, not an encoding.
+        This puts it on the field.
+
+        Only 3.9% of this network is verified, so nearly all of it ghosts. That
+        inversion is the finding: the crisp segments are the rare ones, and the
+        eye now goes to what is actually known. Batched into two paths, so the
+        cost is two strokes rather than 2,800.
+      */
+      const 錯 = 1.5;
+      const [藍r, 藍g, 藍b] = 曝之rgb(0);
+      const [橙r, 橙g, 橙b] = 曝之rgb(1);
+      for (const [dx, 色] of [
+        [-錯, `rgba(${藍r},${藍g},${藍b},0.30)`],
+        [錯, `rgba(${橙r},${橙g},${橙b},0.30)`],
+      ] as const) {
+        ctx.strokeStyle = 色;
+        ctx.lineWidth = 1.1;
+        ctx.beginPath();
+        for (const [x1, y1, x2, y2, , 通, 推] of 網.edges) {
+          if (!推 || 通 === 0) continue;
+          ctx.moveTo(ox + x1 * s + dx, oy + y1 * s);
+          ctx.lineTo(ox + x2 * s + dx, oy + y2 * s);
+        }
+        ctx.stroke();
+      }
+
       for (const 巡 of [0, 1] as const) {
         for (const [x1, y1, x2, y2, su, 通] of 網.edges) {
           const 曝 = (su[i0] ?? 1) * (1 - k) + (su[i1] ?? 1) * k;

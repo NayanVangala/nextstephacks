@@ -13,8 +13,17 @@ import { useEffect, useState } from "react";
  * to take the content with it.
  */
 
-/** [x1, y1, x2, y2, 八時之曝, 輪椅可通乎] */
-export type 一段 = [number, number, number, number, number[], number];
+/**
+ * [x1, y1, x2, y2, 八時之曝, 輪椅可通乎, 其可通與否為所推乎]
+ *
+ * 第七位為信 —— 一為所推,零為所驗。取之於囊中每段之 confidence:
+ * 非 high 者皆為所推,即 OSM 無明籤而以其類補之者。
+ * 量之於洛城:所驗者百之三點九,餘皆所推。此非病,乃其所發現者。
+ * The seventh field is real: 1 where the pack's own per-edge confidence is not
+ * "high", meaning no explicit OSM accessibility tag existed. In Los Angeles
+ * only 3.9% is verified. That is the finding, not a data defect.
+ */
+export type 一段 = [number, number, number, number, number[], number, number];
 
 export interface 網 {
   hours: number[];
