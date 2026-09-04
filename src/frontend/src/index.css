@@ -825,10 +825,22 @@ h1, h2, h3 {
   Only rules and marks consume it, never text colour, so scrolling cannot move a
   contrast ratio anywhere on the page.
 */
+/*
+  landing 之界與紋,前此釘其淡值(230 234 240)—— 其時 landing 恆黑,故無害。
+  今其地為紙,若仍釘之,則其界為白畫於米白之上,幾不可見;
+  而紋者所以言其所不知,尤不可失。故二者皆從其墨。
+  These were pinned to light values because the landing used to be dark by
+  construction. On the paper pull that would draw white rules and a white hatch
+  on a cream sheet — and the hatch is the uncertainty mark, the one thing that
+  must never quietly disappear.
+*/
 .landing {
-  --sun: 230 234 240;
-  /* landing 恆黑,不隨其人之題 —— 故其紋自有其色,不用上之 --hatch。 */
-  --hatch: rgb(230 234 240 / 0.35);
+  --sun: 20 16 12;
+  --hatch: rgb(20 16 12 / 0.42);
+}
+:root[data-theme="dark"] .landing {
+  --sun: 242 237 225;
+  --hatch: rgb(242 237 225 / 0.35);
 }
 
 .sun-rule {

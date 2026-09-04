@@ -43,17 +43,6 @@ function Section({
 }
 
 /** 節之標:十六而輕。前此十二而重,故其標壓於其文;今則讓之。 */
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <Reveal>
-      <p className="landing-label mb-10 flex items-center gap-[20px] text-ink/50">
-        <span aria-hidden className="sun-mark inline-block h-px w-10" />
-        {children}
-      </p>
-    </Reveal>
-  );
-}
-
 function CountUpFigure({ n, 延 }: { n: string; 延: number }) {
   const 解 = 解數(n);
   const { ref, 值 } = useCountUp(解?.數 ?? 0, { 延: 延 * 1000 });
@@ -80,7 +69,15 @@ function Figure({
       */}
       <div aria-hidden className={缺 ? "纹-sun h-2" : "sun-bar h-px"} />
       {/* 其階本二極 —— 五點五為其「中」,正 index.css 所自戒者。 */}
-      <div className="数 landing-display h-2xl mt-5">
+      {/*
+        缺者,其數亦錯出一線 —— 紋在其上,錯在其數,一義而二道。
+        紋者賴其形,錯者賴其位;色盲者得其一,而不能辨紋於小屏者得其二。
+        The hatch above already marks this figure as a gap; the misregistration
+        on the numeral itself carries the same fact through a second channel.
+        One reader gets it from the texture, another from the offset — neither
+        depends on telling the three inks apart.
+      */}
+      <div className={`数 landing-display h-2xl mt-5 ${缺 ? "失準" : ""}`}>
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
       <div className="t-xs mt-4">{t}</div>
@@ -250,7 +247,6 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       </div>
 
       <Section id="what" label="What it is">
-        <SectionLabel>What it is</SectionLabel>
         <Reveal>
           <h2 className="landing-display h-lg max-w-4xl">
             A routing tool that treats heat and step-free access as the same
@@ -286,7 +282,11 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       </Section>
 
       <Section id="figures" label="Key figures">
-        <SectionLabel>Key figures</SectionLabel>
+        <Reveal>
+          <h2 className="landing-display h-lg mb-[56px] max-w-3xl">
+            Thirty-eight downtowns, measured one segment at a time.
+          </h2>
+        </Reveal>
         <RevealGroup className="grid gap-x-[36px] gap-y-[72px] sm:grid-cols-2 lg:grid-cols-4">
           {數.map((d, i) => (
             <Figure key={d.n} n={d.n} t={d.t} s={d.s} i={i} 缺={d.缺} />
@@ -307,7 +307,6 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       </Section>
 
       <Section id="does" label="What it does">
-        <SectionLabel>What it does</SectionLabel>
         <div className="sun-rule border-t">
           {事.map((s) => (
             <Reveal key={s.h}>
@@ -331,7 +330,11 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       </Section>
 
       <Section id="found" label="Findings">
-        <SectionLabel>What we found</SectionLabel>
+        <Reveal>
+          <h2 className="landing-display h-lg mb-[56px] max-w-3xl">
+            Most of what we found was about the data, not the sidewalk.
+          </h2>
+        </Reveal>
         {/*
           此四者為全頁最實之語 —— 皆所自量,非所引。而前此其形最泛:
           一段文而已。今各以一界橫畫其下,隨其入而行,如畫線於其所讀之句。

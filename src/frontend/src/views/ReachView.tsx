@@ -16,6 +16,7 @@ import { DestinationList } from "../components/DestinationList";
 import { PlacePicker } from "../components/PlacePicker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEnter } from "../motion/useEnter";
+import { PressRun } from "../components/PressRun";
 
 const AFTERNOON_BUCKET = 4; // hour_buckets[4] === 14:00
 
@@ -140,6 +141,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
           Everywhere within a distance or sun-exposure budget from one point —
           and what a heat emergency or transit outage takes out of it.
         </p>
+        <PressRun pack={pack} hourIdx={hourIdx} className="mt-3" />
       </header>
 
       <p

@@ -10,6 +10,7 @@ import { useEnter } from "../motion/useEnter";
 import { 停運之狀 } from "../data/停運";
 import { 成址 } from "../data/路之址";
 import { Reveal } from "../motion/reveal";
+import { PressRun } from "../components/PressRun";
 
 const 午後 = 4; // hour_buckets[4] === 14:00
 
@@ -68,6 +69,7 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
           Where this city fails its disabled residents, measured on{" "}
           {pack.edges.length.toLocaleString()} sidewalk segments.
         </p>
+        <PressRun pack={pack} hourIdx={hourIdx} className="mt-3 mb-6" />
       </header>
 
       <ProfilePicker flags={flags} onChange={setFlags} />

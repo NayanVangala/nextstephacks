@@ -22,6 +22,7 @@ import { 解址, 成址, 驗其節 } from "../data/路之址";
 import { 曝之色, 曝之文 } from "../routing/曝之色";
 import { 幾時之前 } from "../data/报之重";
 import { effectiveExposure } from "../routing/cost";
+import { PressRun } from "../components/PressRun";
 
 const 午後 = 4; // hour_buckets[4] === 14:00, 暑之極
 
@@ -246,6 +247,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
           Heat-safe, step-free walking routes over{" "}
           <span className="数">{pack.edges.length.toLocaleString()}</span> sidewalk segments.
         </p>
+        <PressRun pack={pack} hourIdx={hourIdx} className="mt-3" />
       </header>
 
       <p

@@ -59,13 +59,26 @@ function Section({
   );
 }
 
+/*
+  節之題,非節之眉。
+  此二十一者本作一 <p>,小而疏其字,懸於其節之首 —— 是眉也。而其下無題,
+  但有 h3 數枚:故其階自 h1 躍至 h3,而讀屏者歷其目錄,見一節而無其名。
+  眉之為病有二:一,眉與題並立則一義而二書;二,此無題可並,則其眉實為
+  其題而不得其位。故不可去,當升 —— 予其語應得之重與其階。
+
+  These were micro-labels sitting above sections whose only other headings were
+  h3s, so the outline skipped from h1 to h3 and a screen-reader user browsing by
+  heading found sections with no name. On a Read surface, wayfinding is the
+  requirement. The label was the heading all along; this gives it the level and
+  the weight it should have had.
+*/
 function SectionLabel({ children }: { children: string }) {
   return (
     <Reveal>
-      <p className="landing-label mb-10 flex items-center gap-[20px] text-ink/50">
-        <span aria-hidden className="sun-mark inline-block h-px w-10" />
+      <h2 className="landing-display h-sm mb-10 flex items-baseline gap-[20px]">
+        <span aria-hidden className="sun-mark inline-block h-px w-10 shrink-0 translate-y-[-0.3em]" />
         {children}
-      </p>
+      </h2>
     </Reveal>
   );
 }
@@ -151,15 +164,19 @@ function Swatch({ c, name, children }: { c: string; name: string; children: stri
 
 /* ── 頁之首尾 ──────────────────────────────────────────────────────── */
 
-function Hero({ 眉, 題, 引 }: { 眉: string; 題: string; 引: string }) {
+/*
+  頁首無眉 —— 其下即 h1,而 h1 之語已具其義且更實。
+  「How to use it」之上,其題為「FIVE STEPS, AND YOU ARE WALKING.」:
+  二者同指,而後者能言,前者但能標。標與能言者並立,則標為贅。
+  The page heroes carried a category label directly above an h1 that says the
+  same thing with more force. The heading can speak; the label can only point.
+*/
+function Hero({ 題, 引 }: { 題: string; 引: string }) {
   return (
     <section
       aria-label={題}
       className="grid-container pt-[calc(var(--layout-padding-top)+3rem)] pb-[72px]"
     >
-      <Reveal>
-        <p className="landing-label mb-8 text-ink/50">{眉}</p>
-      </Reveal>
       {/*
         題分其字而入,與 landing 之 hero 同其手 —— 二面既為一物,則其入之法
         不當異。SplitText 自聚其字為詞,故長題可斷行而不孤其字。
@@ -226,7 +243,6 @@ function HelpPage() {
   return (
     <>
       <Hero
-        眉="How to use it"
         題="FIVE STEPS, AND YOU ARE WALKING."
         引="There is nothing to install and nothing to sign up for. If you can use a map on your phone, you can use this. This page explains every screen, every color, and what to do when it tells you that you cannot get there."
       />
@@ -486,7 +502,6 @@ function QuestionsPage() {
   return (
     <>
       <Hero
-        眉="Questions"
         題="THE THINGS PEOPLE ACTUALLY ASK."
         引="Short answers, in plain words. Tap a question to open it."
       />
@@ -677,7 +692,6 @@ function AboutPage() {
   return (
     <>
       <Hero
-        眉="Who it's for"
         題="THE SHORTEST WAY IS NOT ALWAYS THE WAY YOU CAN TAKE."
         引="Passable is a walking-route tool for people for whom a flight of steps, a missing curb ramp or two hundred meters of bare sidewalk in August is not an inconvenience but a full stop."
       />
@@ -835,7 +849,6 @@ function LimitsPage() {
   return (
     <>
       <Hero
-        眉="What we don't know"
         題="THE GAPS ARE PART OF THE ANSWER."
         引="A tool that hides what it does not know is more dangerous than one that admits it, because you find out at the bottom of the steps. Here is everything this one is unsure about, in plain words."
       />
