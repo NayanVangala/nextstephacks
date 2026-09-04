@@ -30,6 +30,14 @@ import { useNet, 曝之rgb } from "./useNet";
  * 2d canvas,無 WebGL —— 與圖同理。此頁已因 WebGL 之賴而白過一次。
  */
 
+/*
+  此網所自出之日。landing 之網為一 json,無 manifest,故其日書於此,
+  與 build-city 之所生同時 —— 器中所書者(Pack built …)即此囊之日。
+  The landing net ships as a bare JSON with no manifest, so the build date it
+  was cut from is recorded here; it is the same pack date the tool renders.
+*/
+const 建之日 = "Aug 28, 2026";
+
 /** 蔭之界。與 曝之色 同 —— 所畫與所數不可異其語。 */
 const 蔭之界 = 0.34;
 /*
@@ -223,7 +231,15 @@ export function HeatField() {
       */
       const 刻 = 網.hours[Math.round(f)] ?? 14;
       const 比 = 通數 ? Math.round((蔭數 / 通數) * 100) : 0;
-      const 文 = `${String(刻).padStart(2, "0")}:00 — ${比}% of it in shade`;
+      /*
+        印之記三事:所模之刻、其蔭之比、囊之所建。
+        FIRST VIEWPORT 書其三,而此鏈但書其二 —— 器中已有其日,而 landing 缺之。
+        缺其日,則觀者不知其所見者何時之物,而印之記之所以為記者正在此。
+        The rail is specified as hour, share, and build date. It shipped the
+        first two; the tool already renders the build date, so the landing was
+        simply dropping the one fact that says how old this pull is.
+      */
+      const 文 = `${String(刻).padStart(2, "0")}:00 — ${比}% of it in shade · ${建之日}`;
       // 文變乃書之。每幀而書,則其排版之算徒費。
       if (讀.current && 文 !== 前之文) {
         前之文 = 文;
@@ -284,7 +300,7 @@ export function HeatField() {
       <canvas
         ref={cv}
         aria-hidden
-        className="pointer-events-none absolute inset-0 size-full"
+        className="hero-net pointer-events-none absolute inset-0 size-full"
       />
       {/*
         此數即此器之言。前此但一句靜文,曰「橫掃以移其日」——

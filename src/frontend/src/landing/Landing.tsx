@@ -148,7 +148,17 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       <section
         id="top"
         aria-label="Introduction"
-        className="relative flex min-h-svh flex-col justify-center overflow-hidden pt-[var(--layout-padding-top)]"
+        /*
+          其題居上,不居中。
+          FIRST VIEWPORT 所書:「hard to the top-left」。而 justify-center 使其
+          題浮於三百至五百七十之間 —— 是為招貼之居中,非為press sheet之落版。
+          版之落紙,自上而下,其首行貼其天頭。今 justify-start,而以 padding
+          留其天頭之地。
+          FIRST VIEWPORT says the masthead sits hard to the top-left; centring
+          floated it to y≈300–570 of 900, which reads as a centred poster rather
+          than a sheet coming off the press. A press sheet fills from the top.
+        */
+        className="relative flex min-h-svh flex-col justify-start overflow-hidden pt-[calc(var(--layout-padding-top)+4.5rem)]"
       >
         <HeatField />
         {/*
@@ -225,7 +235,18 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
                 className="t-xs group inline-flex items-center gap-2 border-b border-ink/30 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
               >
                 How it works
-                <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-y-1">↓</span>
+                {/* 自畫之箭 —— unicode 之箭,其形隨其族而變,且不受此樹之筆所制。 */}
+                <svg
+                  aria-hidden
+                  viewBox="0 0 16 16"
+                  className="size-4 transition-transform duration-150 ease-quint group-hover:translate-y-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="square"
+                >
+                  <path d="M8 2.5v11M3.5 9.5 8 14l4.5-4.5" />
+                </svg>
               </a>
             </div>
           </Reveal>

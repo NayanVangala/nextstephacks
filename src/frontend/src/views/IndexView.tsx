@@ -51,12 +51,27 @@ function IndexRow({ r, i }: { r: 區之度; i: number }) {
       initial={減 ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={減 ? { duration: 0 } : { duration: 0.3, delay: Math.min(i, 錯落之限) * 0.012 }}
+      /*
+        孤者之標,不以第四色,以其墨與其失準。
+        前此用 error-soft(玫瑰)—— 而 OWN-WORLD 所立者三墨而已,
+        此為第四色,且用以編其資之極,正在觀者所首讀之行。
+        今以墨之淡地標之,而其名與其率皆失準 —— 與此樹言其疑之法同源:
+        所斷者亦一種所不知(其地雖全為step-free,而無所通)。
+        The stranded row was flagged with a fourth hue outside the declared
+        three-ink ramp, encoding a data extreme on the row a planner reads
+        first. It now uses an ink wash plus the misregistration channel this
+        world already owns — which is apt, since a fully step-free block group
+        that connects to nothing is itself a kind of thing the data cannot
+        reassure you about.
+      */
       className={`border-b border-line transition-colors last:border-0 ${
-        孤 ? "bg-error-soft hover:bg-error-soft/75" : "bg-paper hover:bg-panel"
+        孤
+          ? "bg-ink/[0.09] hover:bg-ink/[0.14]"
+          : "bg-paper hover:bg-panel"
       }`}
     >
       <td className="数 py-2 pr-3 pl-3 text-xs text-muted-foreground">{i + 1}</td>
-      <td className="sticky left-0 z-10 bg-inherit py-2 pr-3 text-sm">{區名(r.geoid)}</td>
+      <td className={`sticky left-0 z-10 bg-inherit py-2 pr-3 text-sm ${孤 ? "失準" : ""}`}>{區名(r.geoid)}</td>
       <td className="数 py-2 pr-3 text-right text-sm font-semibold">
         <span className="连之格">
           <span>{百分(r.連之率)}</span>

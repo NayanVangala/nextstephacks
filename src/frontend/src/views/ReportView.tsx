@@ -258,7 +258,20 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
                 {x.edge.confidence !== "high" && (
                   <span className="text-muted-foreground">· {x.edge.confidence} confidence</span>
                 )}
-                <span className="ml-auto text-xs text-accent-ink">Show on map →</span>
+                <span className="ml-auto flex items-center gap-1.5 text-xs text-accent-ink">
+                  Show on map
+                  <svg
+                    aria-hidden
+                    viewBox="0 0 16 16"
+                    className="size-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="square"
+                  >
+                    <path d="M2.5 8h11M9.5 3.5 14 8l-4.5 4.5" />
+                  </svg>
+                </span>
               </a>
             </li>
           ))}

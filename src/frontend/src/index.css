@@ -1040,13 +1040,29 @@ html:has(.landing) body,
 
   前此十二而重,故其標如註;今十四而輕,又大寫而放其距,則為標而非註。
 */
+/*
+  其族從顯,不從等寬。
+  等寬者,為碼、為資、為所量而設 —— craft floor 明拒以等寬為「技術」之衣。
+  而此籤所載者,乃其名與其navigation:非碼,非資,非所量。
+  且 --font-mono 為 ui-monospace(系統之族)—— 是此頁之第三族,而未嘗擇之,
+  又正承其名(PASSABLE)。一世界一顯之族,其名尤不可假於他人之族。
+
+  今從 Archivo,而驅其寬軸(七十五)—— 窄則其距可放而不散,故猶為標。
+  印之記(PressRun)仍用等寬:彼為所量,正其所宜。
+  Mono is for code, data and measurement; the floor refuses it as a costume for
+  "technical". This class carries the wordmark and the nav — none of those. It
+  was also resolving to ui-monospace, a third and unchosen system face, under
+  the product's own name. Archivo with the width axis driven instead. The
+  press-run stamp keeps mono, because that genuinely is measurement.
+*/
 .landing-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
+  font-stretch: 75%;
   line-height: 1.2;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
 }
 
 /*
@@ -1702,7 +1718,26 @@ body:has(.landing) {
   between ground and data, not only between chrome and data.
 */
 :root:not([data-theme="dark"]) .街瓦 {
-  filter: saturate(0.26) brightness(1.06) contrast(0.94);
+  /*
+    其字亦當退。
+    奪其彩既行,而 OSM 之字(羅馬、斜、六等之灰)猶為器中最密之排版 ——
+    而其族不屬此世界,亦非此樹所能改:瓦者raster也,其字已烙於其中。
+    無鑰之瓦,無不帶字者;而此物之戒,凡runtime之源皆不可有鑰。
+    故不能去其字,惟能退之:再降其對,再提其明,則其字沒入其紙,
+    而其形(街之走向、街廓之界)猶存 —— 底版之所當為,正在於此。
+
+    此為所限之下之權宜,非其至者:若得一無字之瓦而無鑰,則當易之。
+    The desaturation landed, but OSM's own labels — roman and italic greys at
+    six sizes — remained the densest typography in the tool, in a face this
+    world never chose. They cannot be removed: the tiles are raster and the
+    lettering is baked in, and every keyless tile source ships labelled while
+    this product forbids keyed runtime sources. So they recede instead —
+    contrast down and brightness up until the type sinks into the paper while
+    street geometry survives, which is what a key plate is for.
+    A stated compromise, not the ideal: a keyless label-free raster would be
+    the better answer if one exists.
+  */
+  filter: saturate(0.2) brightness(1.16) contrast(0.72);
 }
 
 /*
@@ -1818,12 +1853,24 @@ body::after {
   z-index: 9998;
   pointer-events: none;
   opacity: var(--grain-opacity);
-  mix-blend-mode: screen;
+  /*
+    相乘為其常,相濾乃夜印之例 —— 前此正反,故其目終不可見。
+    此與 --muted-foreground 之病同源:其例書於 [data-theme="light"],
+    而晝印本不書其屬,故其例永不施,而其常(screen)行於紙上 ——
+    濾之於二四三之紙,無所增減,是以雖升其值至零點一四,猶不可見。
+    量之,其地之散猶零點六七。
+    SAME BUG CLASS as the --muted-foreground one already fixed: the override was
+    gated on [data-theme="light"], but the day pull writes no attribute, so the
+    base (screen) applied to paper — and screening noise over a 243-level cream
+    is a no-op. Raising the opacity could not land. Multiply is the base now.
+  */
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 140px 140px;
 }
-:root[data-theme="light"] body::after {
-  mix-blend-mode: multiply;
+:root[data-theme="dark"] body::after {
+  /* 夜印之墨浮於暗紙,故相濾 —— 相乘則沒。 */
+  mix-blend-mode: screen;
 }
 
 /*
@@ -1987,4 +2034,44 @@ a {
 .leaflet-control-layers input:focus-visible {
   outline: 3px solid var(--color-accent-ink);
   outline-offset: 2px;
+}
+
+
+/*
+  ── 所示之文(placeholder) ────────────────────────────────────────
+  量之:三點四二,不及四點五之限;且其色為無彩之灰(137,134,128)——
+  非此樹所書,乃瀏覽器之常。全 CSS 無一 placeholder 之規,故其色無主。
+  此物為低視者而設,而所示之文正是初來者所首讀 —— 不可任其無主。
+  Measured 3.42:1, below the floor, in an achromatic grey this project never
+  chose: no placeholder rule existed anywhere, so it inherited an unowned
+  browser default. Tinted from the ink and lifted above the floor.
+*/
+::placeholder {
+  color: var(--muted-foreground);
+  opacity: 1;
+}
+
+/*
+  ── 三墨相疊,乃生其第三色 ────────────────────────────────────────
+  THESIS 所許:「multiplying at overlaps」。而其網之筆皆不透,故交處但見其後者,
+  無所疊也 —— 是有 riso 之色理,而無 riso 之面。
+  今其網之層相乘:藍與橙交則深,如二版相壓。此為 riso 之所以為 riso。
+  The contract promises the inks multiply where they cross; every crossing was
+  compositing opaquely, so the page had Riso's colour logic without Riso's
+  surface. The network layer now multiplies: blue over orange darkens the way
+  two drums do on the same sheet.
+*/
+.leaflet-overlay-pane canvas,
+.hero-net {
+  mix-blend-mode: multiply;
+}
+:root[data-theme="dark"] .leaflet-overlay-pane canvas,
+:root[data-theme="dark"] .hero-net {
+  /* 夜印則相濾 —— 暗紙之上,相乘則其墨盡沒。 */
+  mix-blend-mode: screen;
+}
+
+/* 印之記為所量,故其數從等寬 —— 上下相較,其位必齊。 */
+.印之記 {
+  font-family: var(--font-mono);
 }
