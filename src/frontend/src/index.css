@@ -137,8 +137,26 @@
   */
   --misregister: 1.5px;
 
-  /* 網之目。印之紋,非飾 —— 平色之面,riso 無有也。 */
-  --grain-opacity: 0.055;
+  /*
+    顯之律。重與寬,一源而已 —— 二處各書之,則其勝負繫於行次。
+    The display register lives here so `.landing-display` and `.h-*` cannot
+    disagree; whichever rule the cascade happens to reach last, both read the
+    same value.
+  */
+  --display-weight: 700;
+  --display-stretch: 86%;
+
+  /*
+    網之目。印之紋,非飾 —— 平色之面,riso 無有也。
+    前此取零點零五五,量之於平地:其色自二三六至二三九,差三而已(σ=0.66)。
+    是其材已施而不及可見之限 —— 有其名而無其實,正所謂以籤代物。
+    今取零點一四,乃可見其粗。驗之必量其平地之散,不可但觀於 devtools。
+    Was 0.055, which measured a 3-of-255 spread (σ=0.66) on a line-free patch:
+    the material was declared and shipped below its own perceptual floor, which
+    is the compliance-token failure. Verify by re-measuring pixel variance on a
+    flat field, never by eye.
+  */
+  --grain-opacity: 0.14;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -161,7 +179,17 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /*
+    次文之色,從墨而出,不從灰 —— 且此為其常,非其例外。
+    前此改於 [data-theme="light"] 一塊而已,而其常本無其屬,故所實見者
+    猶是此行之灰。量之於紙:oklch(0.556)得四點〇,不及四點五;
+    且無彩之灰置於暖紙,如二紙相拼。今取墨之淡者,得六點一七。
+    MUST be fixed here, not only in the [data-theme="light"] block: paper is the
+    default and writes no attribute, so this base value is what almost everyone
+    actually sees. Measured 4.0:1 on the paper ground — below the floor — and
+    achromatic grey on a warm sheet reads as a different stock spliced in.
+  */
+  --muted-foreground: #5f5648;
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -473,9 +501,21 @@ body {
     700 at 86% width: heavy enough to hold the ink, condensed enough to pay for
     the weight, so line length does not grow and the 1080-vs-1037 overflow noted
     elsewhere does not return. Both axes driven, which is what this face is for.
+
+    ── 其值不書於此,書於其籤 ──────────────────────────────────────
+    .h-* 一族亦書其重,而在此七百行之後 —— 同其權而後至,故勝之。
+    是以此處所書之七百,於凡帶 .h-lg 者(landing 之題正是)一無所施。
+    量之:其重猶四百。二處各書其律,則其勝負繫於行次,非繫於意。
+    今立一籤為其源,二處共取之,則不復有先後之爭。
+    MUST stay a token. `.h-3xl,.h-2xl,.h-xl,.h-lg` declares its own font-weight
+    ~560 lines below this rule at equal specificity, so source order silently
+    won and every heading carrying .h-lg — which is the landing masthead —
+    shipped at 400 while this rule claimed 700. Two places each asserting the
+    display register makes the winner a function of line number. One token,
+    consumed by both.
   */
-  font-weight: 700;
-  font-stretch: 86%;
+  font-weight: var(--display-weight);
+  font-stretch: var(--display-stretch);
   line-height: 0.9;
   letter-spacing: -0.035em;
 }
@@ -1155,9 +1195,11 @@ summary {
 /* 題之四階,皆用顯之族。行高零點八六,距負零點零五 —— 皆其所量。 */
 .h-3xl, .h-2xl, .h-xl, .h-lg {
   font-family: var(--font-display);
-  font-weight: 400;
-  line-height: 0.86;
-  letter-spacing: -0.05em;
+  /* 顯之律,一源而已 —— 見 .landing-display 之註。前此此行書四百而勝之。 */
+  font-weight: var(--display-weight);
+  font-stretch: var(--display-stretch);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
 }
 .h-3xl { font-size: var(--font-size-h-3xl); }
 .h-2xl { font-size: var(--font-size-h-2xl); }
@@ -1500,8 +1542,16 @@ summary {
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
-    /* 淡題之次文須再深 —— 見上「淡題之次文」之註,其比於琥珀地者。 */
-    --muted-foreground: oklch(0.52 0 0);
+    /*
+      次文之色,從墨而出,不從灰。
+      量之於紙(#f2ede1):前此之 oklch(0.52 0 0) 得四點〇,不及四點五;
+      且其為無彩之灰,置於暖紙之上,如二紙相拼。今取墨之淡者,得六點一七。
+      craft floor 有明文:於有色之地,次文當自其色或其墨而出,永不用灰。
+      Measured 4.0:1 on the paper ground, below the 4.5 floor, and achromatic
+      grey on a warm sheet reads as a different paper stock spliced in. Tinted
+      from the ink instead: 6.17:1.
+    */
+    --muted-foreground: #5f5648;
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
@@ -1801,4 +1851,41 @@ table,
 a {
   text-underline-offset: 0.18em;
   text-decoration-thickness: from-font;
+}
+
+/*
+  ══ 切紙之塊 ═══════════════════════════════════════════════════════════
+  riso 之招貼,其塊皆切紙所成 —— 剪刀之緣,非圓角之匣。
+  OWN-WORLD 明拒丸形(「cut-paper blocks, not pills」),而全樹之要action
+  皆 rounded-full,且為二 hero 之中最顯者 —— 是所拒者正居其目。
+
+  切紙之緣不必鋸齒 —— 鋸齒者costume也。所取者三:
+    一、其角極小(二像素),如刃過紙,非如模所鑄。
+    二、其緣微不平 —— clip-path 四角各偏半像素,故其邊非機械之直。
+    三、按之則陷,不縮 —— 紙受압而下,不會變小。
+
+  A cut edge, not a serrated cartoon of one: 2px corners so the block reads as
+  cut rather than moulded, a sub-pixel irregularity on the path so the edge is
+  not machine-straight, and a press-down active state because paper depresses
+  rather than shrinking.
+*/
+.切纸 {
+  border-radius: 2px;
+  clip-path: polygon(
+    0.4% 0%, 99.7% 0.5%, 100% 99.4%, 0.3% 100%
+  );
+  transition:
+    transform 0.12s cubic-bezier(0.2, 0, 0, 1),
+    background-color 0.07s linear;
+}
+.切纸:active {
+  transform: translateY(1px);
+}
+
+/*
+  其墨之塊,懸則其墨微濃 —— 非其身之大小易也。
+  riso 之墨,壓愈重則色愈實;故懸之所應,當在其墨,不在其形。
+*/
+.切纸-墨:hover {
+  background-color: color-mix(in srgb, var(--color-ink) 88%, var(--color-fullsun));
 }
