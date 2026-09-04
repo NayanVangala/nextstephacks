@@ -153,9 +153,9 @@ export function SunDial() {
       */}
       <p className="landing-label mt-4 flex items-baseline justify-between gap-4 text-ink/80">
         <span>{String(時[位]).padStart(2, "0")}:00</span>
-        <span className="text-ink/55">{蔭比}% of this block in shade</span>
+        <span className="text-ink/70">{蔭比}% of this block in shade</span>
       </p>
-      <figcaption className="t-4xs mt-3 text-ink/50">
+      <figcaption className="t-4xs mt-3 text-ink/70">
         How exposure is modelled: building heights projected against the sun's
         position at each of the eight hours the dataset stores. This block is
         illustrative — the map uses real OpenStreetMap footprints and heights,

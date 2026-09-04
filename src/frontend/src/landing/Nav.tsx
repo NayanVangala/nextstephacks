@@ -103,7 +103,7 @@ export function Nav({
           <button
             type="button"
             onClick={onEnter}
-            className="landing-label rounded-full bg-ink px-5 py-2.5 font-medium text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-105 hover:opacity-90"
+            className="landing-label 切纸 切纸-墨 bg-ink px-5 py-2.5 font-medium text-canvas"
           >
             Open the tool
           </button>

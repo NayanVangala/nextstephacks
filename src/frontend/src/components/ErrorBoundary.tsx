@@ -42,7 +42,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, 之狀> {
         <button
           type="button"
           onClick={() => location.reload()}
-          className="mt-6 rounded-full bg-ink px-6 py-2.5 text-sm font-semibold text-paper"
+          className="mt-6 切纸 切纸-墨 bg-ink px-6 py-2.5 text-sm font-semibold text-paper"
         >
           Reload the page
         </button>

@@ -112,9 +112,9 @@ function QA({ q, children }: { q: string; children: React.ReactNode }) {
 function Step({ n, h, children }: { n: string; h: string; children: React.ReactNode }) {
   return (
     <RevealItem className="sun-rule grid gap-[20px] border-t py-[36px] md:grid-cols-[6rem_1fr_1.3fr]">
-      <span className="landing-label text-ink/45">{n}</span>
+      <span className="landing-label text-ink/70">{n}</span>
       <h3 className="h-xs">{h}</h3>
-      <div className="max-w-2xl text-ink/65">{children}</div>
+      <div className="max-w-2xl text-ink/75">{children}</div>
     </RevealItem>
   );
 }
@@ -141,7 +141,7 @@ function Figure({
       <div className="数 landing-display h-2xl mt-5">
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
-      <div className="mt-4 text-ink/60">{t}</div>
+      <div className="mt-4 text-ink/72">{t}</div>
     </RevealItem>
   );
 }
@@ -156,7 +156,7 @@ function Swatch({ c, name, children }: { c: string; name: string; children: stri
       />
       <div>
         <h3 className="h-xs">{name}</h3>
-        <p className="mt-2 max-w-md text-ink/65">{children}</p>
+        <p className="mt-2 max-w-md text-ink/75">{children}</p>
       </div>
     </RevealItem>
   );
@@ -207,7 +207,7 @@ function PageFooter({ 當, onEnter }: { 當: 說之頁; onEnter: () => void }) {
                 href={p.href}
                 className="sun-rule block border-t pt-5 transition-opacity duration-150 ease-quint hover:opacity-60"
               >
-                <span className="landing-label text-ink/45">Read next</span>
+                <span className="landing-label text-ink/70">Read next</span>
                 <span className="landing-display h-lg mt-4 block">{p.label}</span>
               </a>
             </RevealItem>
@@ -220,7 +220,7 @@ function PageFooter({ 當, onEnter }: { 當: 說之頁; onEnter: () => void }) {
             <button
               type="button"
               onClick={onEnter}
-              className="rounded-full bg-ink px-8 py-4 text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+              className="切纸 切纸-墨 bg-ink px-8 py-4 text-canvas"
             >
               Open the tool
             </button>
@@ -252,13 +252,13 @@ function HelpPage() {
         <RevealGroup className="grid gap-[36px] md:grid-cols-3">
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">It works in your web browser</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               On a phone, a tablet or a computer. There is no app to download.
             </p>
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">You need to be online</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               The map of your city has to be downloaded the first time you open
               it, and the temperature is checked live. It will not work with the
               signal off.
@@ -266,7 +266,7 @@ function HelpPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">You do not need an account</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               There is a “Sign in” button. You can ignore it. It only exists so
               that people who want their name attached to a problem they report
               can have it.
@@ -406,14 +406,14 @@ function HelpPage() {
           */}
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">ROUTE</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               From here to there, right now. The one to start with.
             </p>
             <NetGlyph 式="route" />
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">REACH</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               Everywhere you could get to from one point before you run out of
               sun budget — and whether a cooling center is inside it.
             </p>
@@ -421,7 +421,7 @@ function HelpPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">REPORT</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               Where this city fails, in numbers. Useful for showing somebody
               else.
             </p>
@@ -429,7 +429,7 @@ function HelpPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="landing-display h-lg">INDEX</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               Which neighborhoods are cut off from the rest of the city on
               foot.
             </p>
@@ -446,7 +446,7 @@ function HelpPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/75">
             <p>
               On the Reach screen you set a budget in sun-meters, and the tool
               shows you everywhere you could reach before spending it. A meter
@@ -473,7 +473,7 @@ function HelpPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/75">
             <p>
               Most maps will route you anyway and let you find the steps
               yourself. This one stops and tells you what is in the way — for
@@ -718,14 +718,14 @@ function AboutPage() {
         <RevealGroup className="grid gap-[36px] md:grid-cols-3">
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">People who use a wheelchair or walking aid</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               A route with three steps in it is not a slightly worse route. It
               is not a route. The tool treats it that way.
             </p>
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">People whose bodies react badly to heat</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               MS, POTS, a heart condition, medication that does not get on with
               the sun, or simply being older in a city that keeps getting
               hotter. Shade is not a comfort here, it is the constraint.
@@ -733,7 +733,7 @@ function AboutPage() {
           </RevealItem>
           <RevealItem className="sun-rule border-t pt-5">
             <h3 className="h-xs">People who are blind or have low vision</h3>
-            <p className="mt-4 text-ink/65">
+            <p className="mt-4 text-ink/75">
               A crossing with no signal and no tactile paving is a different
               proposition from one with both, and no ordinary map tells you
               which is which.
@@ -752,7 +752,7 @@ function AboutPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/75">
             <p>
               So the two things that matter most to a disabled pedestrian in a
               hot city pull against each other, and you are left to reconcile
@@ -787,7 +787,7 @@ function AboutPage() {
             <Reveal key={s.h}>
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
-                <p className="max-w-2xl text-ink/65">{s.p}</p>
+                <p className="max-w-2xl text-ink/75">{s.p}</p>
               </div>
             </Reveal>
           ))}
@@ -814,7 +814,7 @@ function AboutPage() {
           ].map(([h, p]) => (
             <RevealItem key={h} className="sun-rule border-t pt-5">
               <h3 className="h-xs">{h}</h3>
-              <p className="mt-4 text-ink/60">{p}</p>
+              <p className="mt-4 text-ink/72">{p}</p>
             </RevealItem>
           ))}
         </RevealGroup>
@@ -887,7 +887,7 @@ function LimitsPage() {
           <Figure i={3} n="36" t="neighborhoods that are fully step-free and still cut off" />
         </RevealGroup>
         <Reveal>
-          <p className="mt-[36px] flex items-center gap-[20px] text-ink/45">
+          <p className="mt-[36px] flex items-center gap-[20px] text-ink/70">
             <span aria-hidden className="纹-sun inline-block h-2 w-10 shrink-0" />
             Hatched means the data does not exist. The last figure is measured,
             which is why it is not.
@@ -923,7 +923,7 @@ function LimitsPage() {
             <Reveal key={s.h}>
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
-                <p className="max-w-2xl text-ink/65">{s.p}</p>
+                <p className="max-w-2xl text-ink/75">{s.p}</p>
               </div>
             </Reveal>
           ))}
@@ -939,7 +939,7 @@ function LimitsPage() {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/65">
+          <div className="mt-[36px] max-w-2xl space-y-4 text-ink/75">
             <p>
               Thirty-six neighborhoods across sixteen cities are 100% step-free
               and 0% connected. Every meter of sidewalk in them passes every test,
@@ -1040,7 +1040,7 @@ export function InfoPage({ 頁, onEnter }: { 頁: 說之頁; onEnter: () => void
       </main>
 
       <footer className="border-t border-ink/10 py-[36px]">
-        <div className="grid-container flex flex-wrap items-center justify-between gap-[20px] text-ink/45">
+        <div className="grid-container flex flex-wrap items-center justify-between gap-[20px] text-ink/70">
           <a href="#top" className="hover:text-ink">
             NextStep Hacks 2026 · Earth Forward
           </a>

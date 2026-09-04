@@ -384,7 +384,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
               <button
                 type="button"
                 onClick={onEnter}
-                className="t-xs rounded-full bg-ink px-10 py-4 text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                className="t-xs 切纸 切纸-墨 bg-ink px-10 py-4 text-canvas"
               >
                 Open the tool
               </button>

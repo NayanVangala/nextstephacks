@@ -81,7 +81,7 @@ function Figure({
         <CountUpFigure n={n} 延={i * 0.08 + 0.15} />
       </div>
       <div className="t-xs mt-4">{t}</div>
-      <div className="t-xs mt-1 text-ink/50">{sub}</div>
+      <div className="t-xs mt-1 text-ink/70">{sub}</div>
     </RevealItem>
   );
 }
@@ -204,7 +204,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
                 <button
                   type="button"
                   onClick={onEnter}
-                  className="t-xs rounded-full bg-ink px-8 py-4 text-canvas transition-[opacity,scale] duration-150 ease-quint hover:scale-[1.03] hover:opacity-90"
+                  className="t-xs 切纸 切纸-墨 bg-ink px-8 py-4 text-canvas"
                 >
                   Open the tool
                 </button>
@@ -254,7 +254,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           </h2>
         </Reveal>
         <Reveal 延={0.1}>
-          <p className="t-xs mt-[36px] max-w-2xl text-ink/60">
+          <p className="t-xs mt-[36px] max-w-2xl text-ink/72">
             Passable models every sidewalk segment in thirty-eight downtowns for whether
             you can physically use it and how much sun falls on it, hour by hour.
             It runs in your browser — no account, nowhere for us to store anything,
@@ -273,9 +273,21 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <RevealGroup className="mt-[72px] grid gap-[36px] md:grid-cols-3">
           {何以為之.map((s) => (
             <RevealItem key={s.n} className="sun-rule border-t pt-5">
-              <span className="landing-label text-ink/55">{s.n}</span>
-              <h3 className="t-xs mt-4">{s.h}</h3>
-              <p className="t-xs mt-2 text-ink/55">{s.p}</p>
+              {/*
+                其序入於題中,不復自為一行。
+                前此為一 span 懸於 h3 之上 —— 是眉也,craft floor 所斷禁者;
+                且其序與其眉同為一物,故一改而二病俱去。序自有其用(此三者
+                真有先後),故不去其序,但不使之自立為一行。
+                The number was a label span sitting directly above the h3 —
+                an eyebrow, which the floor bans outright. The sequence is real
+                (these three genuinely are steps), so the number stays; it just
+                stops being its own line above the heading.
+              */}
+              <h3 className="t-xs flex gap-3">
+                <span aria-hidden className="数 shrink-0 text-ink/55">{s.n}</span>
+                <span>{s.h}</span>
+              </h3>
+              <p className="t-xs mt-2 text-ink/70">{s.p}</p>
             </RevealItem>
           ))}
         </RevealGroup>
@@ -298,7 +310,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           carries the same sentence under its exposure strip.
         */}
         <Reveal>
-          <p className="t-xs mt-[36px] flex items-center gap-[20px] text-ink/45">
+          <p className="t-xs mt-[36px] flex items-center gap-[20px] text-ink/70">
             <span aria-hidden className="纹-sun inline-block h-2 w-10 shrink-0" />
             Hatched means the data does not exist. It is the one thing this tool
             will not quietly smooth over.
@@ -313,7 +325,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               <div className="sun-rule grid gap-[20px] border-b py-[36px] md:grid-cols-[1fr_1.3fr]">
                 <h3 className="landing-display h-lg">{s.h}</h3>
                 <div>
-                  <p className="t-xs text-ink/55">{s.p}</p>
+                  <p className="t-xs text-ink/70">{s.p}</p>
                   {/*
                     像在其文之下,不在其題之下 —— 題大而其側本當空,
                     此頁之疏正在於是。像既釋其文,則當附其文。
@@ -386,7 +398,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             ))}
           </ul>
         </nav>
-        <div className="grid-container t-xs mt-[36px] flex flex-wrap items-center justify-between gap-[20px] text-ink/45">
+        <div className="grid-container t-xs mt-[36px] flex flex-wrap items-center justify-between gap-[20px] text-ink/70">
           <span>NextStep Hacks 2026 · Earth Forward</span>
           <span>Thirty-eight US downtowns</span>
           <span>Not medical guidance</span>

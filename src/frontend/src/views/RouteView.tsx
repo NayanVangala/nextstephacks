@@ -470,7 +470,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                     type="button"
                     onClick={() => set报之段(step.edge.id)}
                     aria-pressed={报之段 === step.edge.id}
-                    className={`min-h-11 shrink-0 rounded-full border px-3.5 py-1 text-xs transition-colors ${
+                    className={`min-h-11 shrink-0 切纸 border px-3.5 py-1 text-xs transition-colors ${
                       报之段 === step.edge.id
                         ? "border-accent-ink bg-accent-wash font-semibold text-accent-ink"
                         : "border-line text-muted-foreground hover:border-accent-ink/40 hover:bg-accent-wash hover:text-accent-ink"
@@ -520,7 +520,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                           type="button"
                           disabled={!就緒}
                           onClick={() => 表態(step.edge.id, "confirmed", step.edge.is_steps ? "other" : "sidewalk_blocked")}
-                          className="min-h-11 rounded-full border border-line px-3.5 text-xs transition-colors hover:border-accent-ink hover:text-accent-ink disabled:opacity-50"
+                          className="min-h-11 切纸 border border-line px-3.5 text-xs transition-colors hover:border-accent-ink hover:text-accent-ink disabled:opacity-50"
                         >
                           Still there
                         </button>
@@ -528,7 +528,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
                           type="button"
                           disabled={!就緒}
                           onClick={() => 表態(step.edge.id, "disputed", step.edge.is_steps ? "other" : "sidewalk_blocked")}
-                          className="min-h-11 rounded-full border border-line px-3.5 text-xs transition-colors hover:border-accent-ink hover:text-accent-ink disabled:opacity-50"
+                          className="min-h-11 切纸 border border-line px-3.5 text-xs transition-colors hover:border-accent-ink hover:text-accent-ink disabled:opacity-50"
                         >
                           Fixed now
                         </button>
