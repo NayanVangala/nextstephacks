@@ -112,8 +112,18 @@ function QA({ q, children }: { q: string; children: React.ReactNode }) {
 function Step({ n, h, children }: { n: string; h: string; children: React.ReactNode }) {
   return (
     <RevealItem className="sun-rule grid gap-[20px] border-t py-[36px] md:grid-cols-[6rem_1fr_1.3fr]">
-      <span className="landing-label text-ink/70">{n}</span>
-      <h3 className="h-xs">{h}</h3>
+      {/*
+        窄屏則此格為一列,而其數遂懸於其題之上 —— 眉也。
+        寬屏為三列,其數在其側,則非眉。故但於窄屏入之於題,寬屏仍分其列。
+        Below md this grid collapses to one column and the number lands above
+        the heading, which is the banned kicker. Wide, it sits beside the
+        heading and is fine, so it only folds in when the columns stack.
+      */}
+      <span className="landing-label hidden text-ink/70 md:block">{n}</span>
+      <h3 className="h-xs flex gap-3">
+        <span aria-hidden className="数 shrink-0 text-ink/55 md:hidden">{n}</span>
+        <span>{h}</span>
+      </h3>
       <div className="max-w-2xl text-ink/75">{children}</div>
     </RevealItem>
   );
@@ -207,8 +217,13 @@ function PageFooter({ 當, onEnter }: { 當: 說之頁; onEnter: () => void }) {
                 href={p.href}
                 className="sun-rule block border-t pt-5 transition-opacity duration-150 ease-quint hover:opacity-60"
               >
-                <span className="landing-label text-ink/70">Read next</span>
-                <span className="landing-display h-lg mt-4 block">{p.label}</span>
+                {/*
+                  「Read next」一籤去之。其節之題已曰「Keep reading」,而此籤
+                  懸於一顯之題上 —— 眉也,且與其節之題同義而再言之。
+                  Deleted: the section's own heading already says "Keep reading",
+                  so this was a kicker restating it above every card.
+                */}
+                <span className="landing-display h-lg block">{p.label}</span>
               </a>
             </RevealItem>
           ))}

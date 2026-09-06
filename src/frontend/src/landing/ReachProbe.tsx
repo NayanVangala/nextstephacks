@@ -448,7 +448,9 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
               className="t-xs group inline-flex items-center gap-2 border-b border-ink/30 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
             >
               Read the source
-              <span aria-hidden className="transition-transform duration-150 ease-quint group-hover:translate-x-1">→</span>
+              <svg aria-hidden viewBox="0 0 16 16" className="size-3.5 transition-transform duration-150 ease-quint group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square">
+                <path d="M2.5 8h11M9.5 3.5 14 8l-4.5 4.5" />
+              </svg>
             </a>
           </div>
         </Reveal>

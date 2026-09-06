@@ -396,7 +396,14 @@ export function MapCanvas({
         aria-label={`Map of ${pack.manifest.name}. The same route is available as a text itinerary below.`}
         className="absolute inset-0"
       />
-      <div className="pointer-events-none absolute bottom-2 left-2 z-[500] rounded-md bg-paper/90 px-2 py-1.5 shadow-sm backdrop-blur-sm">
+      <div /*
+        玻璃與影去之。二者皆屏之物:blur 者鏡也,影者光也 —— 印無此二事。
+        今為一實紙之塊,不透 —— 其可讀不賴其模糊之底,乃賴其實地。
+        Glass and shadow removed: a blur is a lens and a shadow is a light
+        source, and this world has neither. A solid opaque paper block instead —
+        legibility from real ground rather than from smearing what is behind it.
+      */
+      className="pointer-events-none absolute bottom-2 left-2 z-[500] bg-paper px-2.5 py-1.5">
         <ExposureKey />
       </div>
     </div>

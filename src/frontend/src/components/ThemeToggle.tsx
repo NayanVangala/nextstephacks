@@ -84,7 +84,25 @@ export function ThemeToggle() {
       className="切纸 flex size-11 items-center justify-center border border-line text-ink/70 transition-colors hover:border-ink hover:text-ink"
     >
       <span aria-hidden className="text-sm leading-none">
-        {題 === "dark" ? "☀" : "☾"}
+        {/*
+          自畫之器,不以字代之。
+          ☀ 與 ☾ 者,字也 —— 其形隨其族而變,其重不受此樹之筆所制,
+          且於未有其字之機為一空框。craft floor 明拒以 unicode 充其器。
+          Drawn, not typed. ☀/☾ are glyphs: their shape follows whichever font
+          resolves, their weight is outside this project's control, and on a
+          machine without them they render as tofu. The floor refuses Unicode
+          standing in for an icon system.
+        */}
+        {題 === "dark" ? (
+          <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square">
+            <circle cx="10" cy="10" r="3.6" />
+            <path d="M10 1.6v2.4M10 16v2.4M18.4 10H16M4 10H1.6M15.9 4.1l-1.7 1.7M5.8 14.2l-1.7 1.7M15.9 15.9l-1.7-1.7M5.8 5.8 4.1 4.1" />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square">
+            <path d="M16.5 12.4A7.2 7.2 0 0 1 7.6 3.5a7.2 7.2 0 1 0 8.9 8.9Z" />
+          </svg>
+        )}
       </span>
     </button>
   );
