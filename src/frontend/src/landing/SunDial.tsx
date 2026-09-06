@@ -88,7 +88,7 @@ export function SunDial() {
         aria-hidden
         onPointerMove={掃}
         onPointerLeave={() => set手(false)}
-        className="sun-rule w-full rounded-lg border bg-ink/[0.02]"
+        className="w-full bg-panel"
       >
         {/*
           日之射。皆平行 —— 日遠而其光不散,此其所以然。

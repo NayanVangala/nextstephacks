@@ -257,7 +257,18 @@ export function NetGlyph({ 式: m }: { 式: 式 }) {
 
   return (
     <div ref={盒} className="mt-8 max-w-[420px]">
-      <div className="sun-rule aspect-[4/3] w-full overflow-hidden rounded-lg border">
+      {/*
+        其匣為一實地之塊,非一髮之框。
+        前此為 rounded-lg + border:一空框,中浮一小圖 —— 於全頁之中最弱,
+        如未成之位。印無空框:印之panel,乃一平色之塊,其圖印於其上。
+        故去其框、去其角,予其地。圖與地既相依,則其塊自足,不待一線圍之。
+        A hairline-outlined box with a small drawing floating inside was the
+        weakest thing on the page — it reads as a placeholder. Print has no
+        outlined frames: a panel is a flat block of tint with the image printed
+        onto it. The border and radius go, the ground arrives, and the panel
+        stops needing a line drawn around it to exist.
+      */}
+      <div className="aspect-[4/3] w-full overflow-hidden bg-panel">
         <canvas ref={cv} aria-hidden className="size-full" />
       </div>
       {/*

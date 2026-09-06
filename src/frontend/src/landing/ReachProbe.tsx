@@ -4,6 +4,7 @@ import { useNet, 建圖, 大域, 近節, 曝之rgb, type 網圖 } from "./useNet
 import { Reveal } from "../motion/reveal";
 import { SplitText } from "./SplitText";
 import { Magnetic } from "./Magnetic";
+import { RisoPlate } from "./RisoPlate";
 
 /**
  * 末節之器。鼠所在為其始,所及者明,而其數隨之而變。
@@ -70,6 +71,20 @@ function 洪(圖: 網圖, 始: number, 曝: (i: number) => number): 所及 {
     數: 段.size,
     蔭之比: 段.size ? Math.round((蔭 / 段.size) * 100) : 0,
   };
+}
+
+/** 暑之版:自左上而來 —— 此節之論自暑而發。 */
+function 暑之場(x: number, y: number): number {
+  const d = (1 - x) * 0.62 + (1 - y) * 0.5;
+  const t = (d - 0.42) / 0.46;
+  return Math.max(0, Math.min(1, t)) ** 1.2;
+}
+
+/** 蔭之版:自右下而來 —— 其論所歸。二版不相掩。 */
+function 蔭之場(x: number, y: number): number {
+  const d = (x - 0.55) * 0.85 + (y - 0.5) * 0.85;
+  const t = d / 0.44;
+  return Math.max(0, Math.min(1, t)) ** 1.35;
 }
 
 export function ReachProbe({ onEnter }: { onEnter: () => void }) {
@@ -187,7 +202,8 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         deserves to be drawn as a thing, not as noise.
       */
       ctx.globalCompositeOperation = "source-over";
-      ctx.strokeStyle = "rgba(120, 150, 215, 0.42)";
+      ctx.strokeStyle = (getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-blocked").trim() || "#9a9086") + "66";
       ctx.lineWidth = 1.3;
       ctx.beginPath();
       for (const [x1, y1, x2, y2] of 網.edges) {
@@ -245,24 +261,38 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         if (p) {
           const cx = ox + p[0] * s;
           const cy = oy + p[1] * s;
-          const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 96);
-          g.addColorStop(0, "rgba(34, 211, 197, 0.34)");
-          g.addColorStop(0.45, "rgba(34, 211, 197, 0.09)");
-          g.addColorStop(1, "rgba(34, 211, 197, 0)");
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(cx, cy, 96, 0, Math.PI * 2);
-          ctx.fill();
-
+          /*
+            ── 其始為一規之記 ────────────────────────────────────────
+            前此為一團青碧之光(徑九十六之漸暈)。二病:
+            一、青碧者人之所操之色,而此為所量之始,非所操;
+            二、暈者屏之物 —— 印無漸暈,其緣必實。
+            今為規之記(registration mark):十字加一環,印之所實有 ——
+            版與版相合,即以此為準。此頁所言者正在「版之未合」(失準),
+            故其始以規之記標之,義與其世界相合,非借一形而已。
+            Was a 96px teal radial glow: teal is this world's interaction colour
+            and this is a measured origin, and a soft glow is a screen object
+            with no edge. It is a registration mark now — crosshair and ring,
+            the thing a press actually prints to align one plate against the
+            next. This page's whole subject is plates failing to align, so the
+            mark belongs to the argument rather than being borrowed shape.
+          */
+          const 墨 = getComputedStyle(document.documentElement)
+            .getPropertyValue("--color-ink").trim() || "#14100c";
           ctx.globalCompositeOperation = "source-over";
+          ctx.strokeStyle = 墨;
+          ctx.lineWidth = 1.4;
           ctx.beginPath();
-          ctx.arc(cx, cy, 4.5, 0, Math.PI * 2);
-          ctx.fillStyle = "#eafffb";
-          ctx.fill();
+          ctx.arc(cx, cy, 11, 0, Math.PI * 2);
+          ctx.stroke();
           ctx.beginPath();
-          ctx.arc(cx, cy, 12, 0, Math.PI * 2);
-          ctx.strokeStyle = "rgba(34, 211, 197, 0.75)";
-          ctx.lineWidth = 1.2;
+          ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+          ctx.stroke();
+          // 十字出其環之外,如印之規 —— 其臂長於其環,乃可對之。
+          ctx.beginPath();
+          ctx.moveTo(cx - 18, cy);
+          ctx.lineTo(cx + 18, cy);
+          ctx.moveTo(cx, cy - 18);
+          ctx.lineTo(cx, cy + 18);
           ctx.stroke();
         }
       }
@@ -311,14 +341,33 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         starts (heat) and cool where it lands (shade), which are the two poles
         this whole section is about.
       */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_12%_8%,rgba(255,95,77,0.30)_0%,transparent_72%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_72%_60%_at_90%_92%,rgba(34,211,197,0.26)_0%,transparent_74%)]"
-      />
+      {/*
+        二暈去,代以二版。
+        暈者屏之物:一團光,其濃自中而漸,其界不可指。印無此物 ——
+        印之淡,乃疏其點,而其形有緣。故此節之二極(暑與蔭)亦當為二版,
+        與 hero 同其法,則全頁為一出,不為二法相接。
+        Two radial washes replaced by two plates. A radial gradient is a screen
+        object — light with no locatable edge. This section's two poles (heat
+        where the argument starts, shade where it lands) now carry the same
+        halftone language as the hero, so the page reads as one pull rather than
+        two techniques stitched together.
+      */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RisoPlate
+          className="inset-0 size-full"
+          色="var(--color-fullsun)"
+          角={Math.PI / 4}
+          最大={0.44}
+          形={暑之場}
+        />
+        <RisoPlate
+          className="inset-0 size-full"
+          色="var(--color-shade)"
+          角={Math.PI / 3}
+          最大={0.4}
+          形={蔭之場}
+        />
+      </div>
       <canvas
         ref={cv}
         aria-hidden
@@ -341,10 +390,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
         visible seams. The hero already uses the right idiom — a lateral
         gradient that clears completely on one side.
       */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(9,12,19,0.93)_0%,rgba(9,12,19,0.80)_30%,rgba(9,12,19,0.34)_58%,transparent_80%)]"
-      />
+      {/* 幕去。其文各立於紙之塊 —— 見 hero 同處之註。 */}
       {/*
         從其格。全頁諸節皆左起於其格(四十八),獨此一節居中而自為一律 ——
         故其末一屏,全頁之構自止。今從之。
@@ -368,10 +414,18 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
             aria-live="polite"
             className="mt-[36px] max-w-xl"
           >
-            <div className="landing-display h-2xl text-accent-ink tabular-nums [text-shadow:0_0_32px_rgba(34,211,197,0.45)]">
+            {/*
+              其數從墨,不從綠,亦無其暈。
+              綠者,人之所操之色 —— 而此為所量之數,非所操。暈者屏之物,印無之。
+              二者皆前一世界之遺:其時地暗,故數須自明;今地為紙,墨自足。
+              Ink, not green, and no glow. Green is this world's interaction
+              colour and this is a measured value; the glow was there because
+              the ground used to be dark and the figure had to light itself.
+            */}
+            <div className="landing-display h-2xl bg-canvas px-4 py-2 text-ink tabular-nums">
               {及.數}
             </div>
-            <p className="t-xs mt-2 text-ink/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
+            <p className="t-xs mt-2 max-w-xl bg-canvas px-4 py-3 text-ink">
               of {總.toLocaleString()} segments still reachable under a heat
               budget — {及.蔭之比}% of them in shade at 14:00
             </p>
@@ -399,7 +453,7 @@ export function ReachProbe({ onEnter }: { onEnter: () => void }) {
           </div>
         </Reveal>
 
-        <p className="t-4xs mt-[20px] max-w-md text-ink/70 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
+        <p className="t-4xs mt-[20px] max-w-md bg-canvas px-4 py-2.5 text-ink/75">
           {手
             ? "Every lit segment is one you could still get to and back from"
             : "Move your cursor over the network — or tap it — to move the starting point"}
