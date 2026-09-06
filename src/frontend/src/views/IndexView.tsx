@@ -174,7 +174,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
     return (
       <main className="py-6" ref={面}>
         <h1 className="h-lg">Index</h1>
-        <p role="note" className="mt-4 rounded-lg border border-line bg-panel p-4 text-sm">
+        <p role="note" className="mt-4 bg-panel p-4 text-sm">
           <span className="font-semibold">Not computed for this city.</span>{" "}
           The block-group index needs Census boundary and income data, and that
           fetch did not succeed when this city pack was built. This is missing
@@ -206,9 +206,16 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
       {孤島.length > 0 && (
         <section
           aria-label="Stranded block groups"
-          className="mt-4 rounded-lg border border-error/40 bg-error-soft p-4"
+          /*
+            其告亦不用第四色。與其表之孤行同故 —— OWN-WORLD 所立者三墨,
+            玫瑰為其外。今以墨之地標之,而其題失準:所斷者,亦所不知之一種。
+            Same reason the stranded table row stopped using rose: it is a
+            fourth hue outside the declared ramp. Ink ground, and the heading
+            carries the misregistration this world already uses for doubt.
+          */
+          className="mt-4 bg-ink/[0.09] p-4"
         >
-          <h2 className="题-accent h-xs">
+          <h2 className="题-accent h-xs 失準">
             {孤島.length === 1 ? "One block group is" : `${孤島.length} block groups are`}{" "}
             fully step-free and almost entirely cut off
           </h2>
@@ -300,7 +307,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
           role="region"
           aria-label="Block groups ranked by connectivity"
           tabIndex={0}
-          className="mt-2 max-h-[70vh] overflow-auto rounded-lg border border-line bg-paper"
+          className="mt-2 max-h-[70vh] overflow-auto bg-paper"
         >
           <table className="w-full min-w-[34rem] border-collapse">
             <caption className="sr-only">

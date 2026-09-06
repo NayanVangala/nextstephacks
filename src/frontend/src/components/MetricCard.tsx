@@ -76,7 +76,14 @@ export function MetricCard({
       animate={{ opacity: 1, y: 0 }}
       transition={減 ? { duration: 0 } : { duration: 時中, ease: 曲巨, delay: 序 * 0.06 }}
     >
-    <Card className="gap-0 px-4 py-3.5 ring-1 ring-line transition-[box-shadow] duration-200 ease-quint hover:ring-accent-ink/50">
+    {/*
+      其匣為實地之塊,非一髮之環。與 landing 諸匣同律 —— 印無空框。
+      懸則其地稍深,不易其環:紙受壓則色實,環之明滅非印之事。
+      Same rule the landing panels got: print has no outlined frames, so the
+      ring goes and the ground arrives. Hover deepens the tint rather than
+      lighting a ring, because ink darkens under pressure and rings do not.
+    */}
+    <Card className="gap-0 border-0 bg-panel px-4 py-3.5 shadow-none transition-colors hover:bg-ink/[0.06]">
       {/* 籤為刻,故等寬;而其註為語,故仍其常 —— 註者句也,非刻也。 */}
       {/*
         籤之高必齊。四卡之籤,長短不一(十九字至三十八字),故其一行其一二行,

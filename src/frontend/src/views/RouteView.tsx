@@ -253,7 +253,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       <p
         role="status"
         aria-live="polite"
-        className="mt-4 rounded-lg border border-line bg-panel px-4 py-3 text-sm"
+        className="mt-4 bg-panel px-4 py-3 text-sm"
       >
         {status}
       </p>
@@ -326,7 +326,7 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
         happen to be adjacent. They are one instrument: one container, divided
         by a hairline rather than by a gap.
       */}
-      <div className="mt-4 overflow-hidden rounded-xl border border-line bg-paper md:grid md:grid-cols-[minmax(260px,1fr)_2fr] md:divide-x md:divide-line">
+      <div className="mt-4 overflow-hidden bg-paper md:grid md:grid-cols-[minmax(260px,1fr)_2fr] md:divide-x md:divide-line">
         {/*
           諸器共一地。前此各浮於頁,而其中獨 profile 有框,故如散置而非一列。
           The controls previously floated loose on the page background with only

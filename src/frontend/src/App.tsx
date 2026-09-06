@@ -11,6 +11,18 @@ import { 解址 } from "./data/路之址";
 import { SignIn } from "./auth/SignIn";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { useEnter } from "./motion/useEnter";
+import { RisoPlate } from "./landing/RisoPlate";
+
+/*
+  器首之版。自上而下而盡,自左而右而薄 —— 其濃處在其題之側,不在其資之上。
+  A masthead band: densest beside the page title, gone by the bottom of the
+  strip and thinning to the right, so it never reaches the map or the table.
+*/
+function 帶之場(x: number, y: number): number {
+  const 落 = Math.max(0, 1 - y * 1.15);
+  const 橫 = Math.max(0, 1 - x * 0.85);
+  return (落 * 橫) ** 1.4;
+}
 
 type 之view = "route" | "reach" | "report" | "index";
 
@@ -238,8 +250,42 @@ export default function App() {
         the CTA visibly shrank the content from 1344px to 976px, which reads as
         arriving at a different product. One grid across both surfaces.
       */}
-      {/* 地之暈。見 index.css 之「器之地」—— 其色即曝之二端,故非無謂之飾。 */}
-      <div aria-hidden className="器之暈" />
+      {/*
+        ── 器之版 ────────────────────────────────────────────────────────
+        landing 有其版,而器無之 —— 二半之隔,其末在此。
+
+        然器者 Operate 也,其職在事,不在言。故其版不可覆其圖、其表:
+        資之上加一網目,則所量者與所飾者相混,而此樹之首戒正在一色一義。
+        是以此版止於其首之帶(高二十四rem),自上而下而盡,其濃亦薄於
+        landing 之半 —— 過其帶,則其下皆紙,表與圖各得其淨。
+
+        The landing has plates and the tool had none; that was the last seam
+        between the two halves. But this is an Operate surface: the plate may
+        never sit under the map or a table, because a halftone over data mixes
+        what is measured with what is decorative, and one-colour-one-meaning is
+        this project's first rule. So it occupies the masthead band only,
+        fading out by 24rem at roughly half the landing's density. Below that
+        the sheet is bare and the data has it to itself.
+      */}
+      <div
+        aria-hidden
+        /*
+          必在其文之後。前此無 z,故其網目落於「Index」之題與其副之上 ——
+          正犯上文所自立之戒(版不可覆其資)。-z-10 使之退於其後。
+          MUST sit behind. Without a stacking order the dot screen landed on top
+          of the page title and its subtitle — the precise violation the comment
+          above forbids. It belongs under the content, not over it.
+        */
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[24rem] overflow-hidden"
+      >
+        <RisoPlate
+          className="inset-0 size-full"
+          色="var(--color-fullsun)"
+          角={Math.PI / 4}
+          最大={0.3}
+          形={帶之場}
+        />
+      </div>
 
       <div className="grid-container">
         {/* 帶既黏於上,則跳之的須讓其高,不然其題隱於帶下。 */}

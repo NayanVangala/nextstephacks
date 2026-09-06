@@ -147,7 +147,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
       <p
         role="status"
         aria-live="polite"
-        className="mt-4 rounded-lg border border-line bg-panel px-4 py-3 text-sm"
+        className="mt-4 bg-panel px-4 py-3 text-sm"
       >
         {status}
       </p>
@@ -163,7 +163,7 @@ export function ReachView({ cityId = "la" }: { cityId?: string }) {
         happen to be adjacent. They are one instrument: one container, divided
         by a hairline rather than by a gap.
       */}
-      <div className="mt-4 overflow-hidden rounded-xl border border-line bg-paper md:grid md:grid-cols-[minmax(280px,1fr)_2fr] md:divide-x md:divide-line">
+      <div className="mt-4 overflow-hidden bg-paper md:grid md:grid-cols-[minmax(280px,1fr)_2fr] md:divide-x md:divide-line">
         <div ref={器} className="p-4">
           {/* 指圖之途,自 PlacePicker 移出,故此面亦當自言之。見 RouteView 同處。 */}
           <p className="mb-3 text-xs text-muted-foreground">
