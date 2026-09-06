@@ -49,3 +49,41 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # ── Vercel。與 Pages 並列,不相待 ────────────────────────────────────
+  # needs: build —— 故其驗不過則不部署。二站同出一源,而其 base 各異:
+  # Pages 在 /<repo>/ 之下,故其 build 授之以 VITE_BASE;Vercel 在其根,
+  # 故不授之,其常即斜線。此處不自 build,乃令 Vercel 自建之 ——
+  # vercel.json 已載其令,而其建於彼,則 VITE_BASE 自從其常,二者不相犯。
+  #
+  # Runs alongside Pages, gated on the same test job. The two hosts need
+  # different base paths: Pages builds with VITE_BASE=/<repo>/, Vercel serves at
+  # the root and takes the default. Vercel builds it remotely from vercel.json
+  # rather than uploading a prebuilt dist, so neither host's base can leak into
+  # the other's bundle.
+  vercel:
+    needs: build
+    runs-on: ubuntu-latest
+    # 無鑰則不試 —— fork 之 PR 無其密,不當以敗告之。
+    if: ${{ github.event_name != 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # projectId 與 orgId 非密也,乃其識耳 —— 無其鑰則不可用,
+      # 故書於此而不入 secrets。所當密者一,即 VERCEL_TOKEN。
+      # These two are identifiers, not credentials: useless without the token,
+      # so they live in the file and only the token is a secret.
+      - name: Deploy to Vercel
+        env:
+          VERCEL_ORG_ID: team_IvVy7ZLmQdcNpMBNtaet4zBt
+          VERCEL_PROJECT_ID: prj_OiWbCakf08NbDUlpCUwogxk10cIu
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN is not set — skipping Vercel deploy."
+            echo "Add it at Settings > Secrets and variables > Actions."
+            exit 0
+          fi
+          npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN"
