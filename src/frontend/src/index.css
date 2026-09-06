@@ -166,14 +166,29 @@
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
 
+/*
+  ── shadcn 之基,亦當從其紙 ──────────────────────────────────────────
+  此塊為其本 :root。紙既為其常而常不書其屬,則此塊即眾所實見者 ——
+  而其 --background 猶 oklch(1 0 0),純白也。shadcn 之 base 以之畫 body,
+  故 body 之地為白而非紙,遂覆其負 z 之版,一像素不出。
+
+  此為第三次犯同一病:--muted-foreground 一也,--background 二也,
+  皆改其 [data-theme="light"] 之塊而遺其本。所易者其主客,而其本未改,
+  則凡不書其屬者所見,皆前一世界之值。
+  THIRD instance of the same bug: paper is the default and writes no attribute,
+  so THIS block is what nearly everyone actually sees, yet it still held the
+  pre-Riso shadcn defaults. --background resolving to pure white meant shadcn's
+  base layer painted body white, which covered the negative-z-index plate
+  entirely. Fixed at the base, not only in the [data-theme="light"] override.
+*/
 :root {
   color-scheme: light;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --background: #f2ede1;
+  --foreground: #14100c;
+  --card: #faf7ef;
+  --card-foreground: #14100c;
+  --popover: #faf7ef;
+  --popover-foreground: #14100c;
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -193,9 +208,9 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #cabfa6;
+  --input: #cabfa6;
+  --ring: #00794a;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -212,11 +227,25 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/*
+  地畫於 html,不畫於 body。
+  二者並畫其地,則 body 之不透之地,後於其負 z 之子而畫 —— 故器之版
+  (App.tsx,-z-10)為其所覆,一像素不出。量之:帶内帶外,其色全同。
+  是以前所謂「其版微而可見」者,妄也:所見者吾之所期,非屏之所有。
+  MUST NOT paint on body as well as html. Both were opaque, and in the root
+  stacking context body's own background paints after negative-z-index
+  descendants, so the tool's masthead plate was covered entirely — measured
+  identical pixels inside and outside the band. Every earlier claim that the
+  plate was "subtle but present" was me seeing what I expected.
+*/
+html {
+  background: var(--color-canvas);
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--color-canvas);
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.5;
@@ -747,38 +776,23 @@ html:has(.landing) body {
 }
 
 /* impeccable-disable-next-line side-tab -- heading rule mark, not a card edge */
-.题-accent::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.2em;
-  bottom: 0.2em;
-  width: 3px;
-  border-radius: 2px;
-  /* 標者結構也,非人之所操 —— 故從墨,不從綠。見 .连之条 之註。 */
-  background: var(--color-ink);
-  /*
-    其標自上而下畫,如落筆。
-    landing 之界隨其入而行(見 RevealRule),而器中之標直現 —— 二面之手不一。
-    用 CSS 而不用 motion 之節點:此標於 Index、Report 二面凡數十處,
-    各裹一 motion 元件則其費不值,而 scale-y 行於 compositor,不觸 layout。
-    The landing draws its rules on entry; the tool's accent marks simply
-    appeared. Done in CSS rather than a motion node per heading because these
-    number in the dozens across Report and Index, and scaleY is compositor-only.
-  */
-  transform-origin: top;
-  /*
-    無 fill —— 其始之狀當由其動自書,不可預書於樣。
-    書 both 者,動未發則其標留於 scaleY(0),即不可見:凡動不發之時
-    (無動之瀏覽器、為外物所禁、隱於背景之頁),此標遂永隱。
-    無 fill 則其常為 scaleY(1),動發乃自零而長,動不發則其標自在。
-    此與 useEnter 之戒同 —— 見其註:「其隱之始必出於其動,不出於其樣」。
-    NO fill-mode: with `both` the mark rests at scaleY(0) until the animation
-    runs, so anywhere animation never starts it is permanently invisible. The
-    natural state must be the visible one — the same rule useEnter documents.
-  */
-  animation: 標之落 var(--duration-slow, 0.42s) var(--ease-quint);
+/*
+  題之標既去。
+  三像素之墨界懸於每題之左 —— craft floor 之 Refuse 明拒之(逾一像素之
+  左界,施於匣、於條、於告者)。一頁十餘,而此為器中唯一之飾,
+  故其一物遂為全器之貌 —— 且其形如引語之記,非如節之首。
+  代之者:題出其 measure 之外,懸於左緣,而以一短界承之 —— 說之頁已用此法。
+  所別者其位,非其飾:界者版之線,非題之妝。
+  Deleted: a 3px ink bar left of every h2 is on the Refuse list, there are ~11
+  per page, it was the tool's only recurring device so it became the whole
+  visual idea, and it reads as a blockquote rather than a section opener. The
+  replacement is positional — the heading hangs outside the measure — which is
+  the device the Help page already uses.
+*/
+.题-accent {
+  position: relative;
 }
+
 
 @keyframes 標之落 {
   from { transform: scaleY(0); }
@@ -1210,7 +1224,16 @@ summary {
   --font-size-h-3xl: clamp(3rem, 13vw, 8.5rem);
   --font-size-h-2xl: clamp(2.5rem, 7.5vw, 5.5rem);
   --font-size-h-xl: clamp(2.25rem, 6.5vw, 5rem);
-  --font-size-h-lg: clamp(1.75rem, 3.6vw, 2.5rem);
+  /*
+    器之題,前此止於二點五 rem —— 正與其最大之數同其大(MetricCard 之
+    text-[2.5rem])。是以一頁之中,其題與其數等重,而無所謂輕重。
+    顯之族雖驅其二軸,而其字太小,人不能見其所驅。今放之。
+    Was capped at 2.5rem — exactly the size of the largest figure on the page,
+    so the page title and the measurement carried identical weight and the page
+    had no hierarchy at all. The width and weight axes were being driven at a
+    size where nobody could see them being driven.
+  */
+  --font-size-h-lg: clamp(2.25rem, 5.2vw, 4rem);
   --font-size-h-md: clamp(1.75rem, 3.2vw, 2.5rem);
   --font-size-h-sm: clamp(1.5rem, 2.6vw, 2rem);
   --font-size-h-xs: 1.5rem;

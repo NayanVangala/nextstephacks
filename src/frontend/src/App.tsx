@@ -19,9 +19,21 @@ import { RisoPlate } from "./landing/RisoPlate";
   strip and thinning to the right, so it never reaches the map or the table.
 */
 function 帶之場(x: number, y: number): number {
-  const 落 = Math.max(0, 1 - y * 1.15);
-  const 橫 = Math.max(0, 1 - x * 0.85);
-  return (落 * 橫) ** 1.4;
+  /*
+    版居其右,不居其左 —— 其文皆左起,而右四成為空。
+    前此濃在其左,故其點落於題、於副、於印之記之下:文與網目相爭,
+    正犯 Operate 之戒(版不可覆其資)。今反之,則版填其空,而文自居淨紙。
+    審者謂此頁右四成為虛,而虛者讀之如未成 —— 一改而二病俱去。
+
+    Was densest on the left, which put dots under the title, the subtitle and
+    the press-run line — text competing with halftone, the exact Operate
+    violation. Flipped: the plate now fills the empty right ~40% the reviewer
+    called dead space, and every line of type sits on clean paper. One change
+    answers both findings.
+  */
+  const 右 = Math.max(0, (x - 0.52) / 0.48);
+  const 落 = Math.max(0, 1 - y * 1.05);
+  return (右 * 落) ** 1.15;
 }
 
 type 之view = "route" | "reach" | "report" | "index";
@@ -267,6 +279,16 @@ export default function App() {
         fading out by 24rem at roughly half the landing's density. Below that
         the sheet is bare and the data has it to itself.
       */}
+      {/*
+        版與文共一 relative 之身,而其序:版先,文後,文帶其 z。
+        前此版為 -z-10,而負 z 之子,其畫在「塊之地」之前 —— 故凡有地之塊
+        皆覆之。今不用負 z:版 z-0 而文 z-10,其序明白,不繫於畫序之細則。
+        MUST NOT rely on negative z here. Negative-z children paint BEFORE
+        in-flow block backgrounds, so every panel with a ground covered the
+        plate. Explicit order instead: plate z-0, content z-10, inside one
+        positioned parent.
+      */}
+      <div className="relative">
       <div
         aria-hidden
         /*
@@ -276,18 +298,18 @@ export default function App() {
           of the page title and its subtitle — the precise violation the comment
           above forbids. It belongs under the content, not over it.
         */
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[24rem] overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[24rem] overflow-hidden"
       >
         <RisoPlate
           className="inset-0 size-full"
           色="var(--color-fullsun)"
           角={Math.PI / 4}
-          最大={0.3}
+          最大={0.34}
           形={帶之場}
         />
       </div>
 
-      <div className="grid-container">
+      <div className="grid-container relative z-10">
         {/* 帶既黏於上,則跳之的須讓其高,不然其題隱於帶下。 */}
         <div id="主" ref={面} tabIndex={-1} className="scroll-mt-28">
           {view === "route" && <RouteView key={city} cityId={city} />}
@@ -295,6 +317,7 @@ export default function App() {
           {view === "report" && <ReportView key={city} cityId={city} />}
           {view === "index" && <IndexView key={city} cityId={city} />}
         </div>
+      </div>
       </div>
     </>
   );

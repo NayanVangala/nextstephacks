@@ -82,8 +82,16 @@ export function PressRun({
         </span>
       )}
 
+      {/*
+        其日靠右,而器之版正濃於其右 —— 故其字坐於網目之上。
+        與 landing 諸文同法:立一紙之塊,則其可讀不賴其版之疏密。
+        The build date is right-aligned and the masthead plate is densest on the
+        right, so it landed on the dot screen. Same answer the landing uses: a
+        paper block, so legibility does not depend on where the plate happens to
+        thin out.
+      */}
       {建之日 && (
-        <span className="ms-auto">
+        <span className="ms-auto bg-canvas ps-3">
           Pack built <span className="数">{建之日}</span>
         </span>
       )}
