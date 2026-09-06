@@ -167,7 +167,7 @@ export function HeatField() {
         [錯, `rgba(${橙r},${橙g},${橙b},0.30)`],
       ] as const) {
         ctx.strokeStyle = 色;
-        ctx.lineWidth = 1.1;
+        ctx.lineWidth = 2.4;
         ctx.beginPath();
         for (const [x1, y1, x2, y2, , 通, 推] of 網.edges) {
           if (!推 || 通 === 0) continue;
@@ -184,7 +184,7 @@ export function HeatField() {
             // 不可通者灰而細 —— 其不可行,不當奪目。其色亦從其籤。
             if (巡 === 0) continue;
             ctx.strokeStyle = 阻之色;
-            ctx.lineWidth = 0.9;
+            ctx.lineWidth = 1.8;
           } else {
             if (巡 === 1) {
               通數++;
@@ -207,11 +207,21 @@ export function HeatField() {
                 to "this crosses the line".
               */
               if (曝 < 帶之界) continue;
-              ctx.strokeStyle = `rgba(${r},${g},${b},0.20)`;
-              ctx.lineWidth = 6.5;
+              ctx.strokeStyle = `rgba(${r},${g},${b},0.22)`;
+              ctx.lineWidth = 8;
             } else {
-              ctx.strokeStyle = `rgba(${r},${g},${b},${0.72 + 曝 * 0.28})`;
-              ctx.lineWidth = 1.5 + 曝 * 1.9;
+              /*
+                墨當厚。
+                前此一點五至三點四 —— 是線,非墨。riso 之版,其墨平而厚,
+                故其網當為一片之實,不為一叢之髮。加其寬則諸段相接,
+                街廓自成其面,而其面正三墨之所在。
+                Was 1.5–3.4px: line weight, not ink weight. A Riso plate lays
+                flat mass, so the strokes are widened until adjacent segments
+                close into blocks and the city reads as filled areas of ink
+                rather than a thicket of hairlines.
+              */
+              ctx.strokeStyle = `rgba(${r},${g},${b},${0.82 + 曝 * 0.18})`;
+              ctx.lineWidth = 2.2 + 曝 * 2.0;
             }
           }
           ctx.beginPath();
@@ -323,7 +333,7 @@ export function HeatField() {
       <p
         ref={讀}
         aria-hidden
-        className="数 pointer-events-none absolute bottom-6 left-5 z-10 text-sm text-ink/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.95)] sm:bottom-8 lg:left-auto lg:right-8 lg:text-base"
+        className="数 pointer-events-none absolute bottom-6 left-5 z-10 text-sm text-ink/75 [text-shadow:0_1px_10px_rgba(0,0,0,0.95)] sm:bottom-8 lg:left-auto lg:right-8 lg:text-base bg-canvas px-3 py-1.5"
       >
         12:00 — modelling shade…
       </p>

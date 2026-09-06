@@ -14,6 +14,7 @@ import { Magnetic } from "./Magnetic";
 import { SunDial } from "./SunDial";
 import { NetGlyph, type 式 } from "./NetGlyph";
 import { CITIES } from "../data/cities";
+import { RisoPlate } from "./RisoPlate";
 
 /**
  * 其度皆量於所法者,非所擬者。see index.css 之「landing 之度」。
@@ -126,6 +127,46 @@ const 所發現 = [
   "We joined median household income to the 1,288 neighborhoods and got a figure back for 1,101 of them. Only eighteen cities have income estimates precise enough to test against shade, and across those eighteen the sign will not hold still: +0.51 in Miami, −0.34 in Boston, +0.03 in Los Angeles. A downtown extract cannot answer this question, and every city page says so.",
 ];
 
+/*
+  三版之濃場。皆為純函數,立於其件之外 —— 立於其内則每繪為一新身,
+  而 RisoPlate 之 effect 憑其身,遂每繪重畫其網,一秒數十次。
+  MUST live outside the component: these are dependencies of RisoPlate's effect,
+  and re-creating them each render would redraw the entire dot screen on every
+  frame.
+*/
+
+/*
+  ── 版者,形也,非壁紙 ──────────────────────────────────────────────
+  前此三場皆覆其全面,故其網目為一幕之紋,非為一版之墨 —— 是以「加一紋於
+  其上」,非「印一版於其紙」。riso 之版,其墨止於其形之内,其外則紙,
+  而紙之白正其構圖之一半。
+
+  今橙為一斜帶,自左下至右上,其外全空;藍為一角,居右下;二者不相掩,
+  故無三版相乘而成墨之患。日之盤既去 —— 其與橙相疊,適成一黑漬。
+  The fields each covered the entire canvas, which makes the screen a texture
+  laid over everything rather than a plate printed onto part of the sheet. In
+  Riso the ink stops at the shape's edge and the bare paper does half the
+  composition. Orange is now a single diagonal band and blue a corner; they do
+  not overlap, so nothing multiplies down to black. The sun disc is gone: over
+  the orange it read as a stain, not a sun.
+*/
+
+/** 橙之帶。一斜之實,其緣以網目散之。帶外則紙。 */
+function 橙之場(x: number, y: number): number {
+  // 斜帶之軸。其值零為帶心,正負為其緣。
+  const 軸 = (x * 0.55 + y * 0.62) - 0.52;
+  const 半 = 0.3;
+  const t = 1 - Math.abs(軸) / 半;
+  return Math.max(0, Math.min(1, t)) ** 0.85;
+}
+
+/** 藍之角,居右下。與橙之帶不相掩。 */
+function 藍之場(x: number, y: number): number {
+  const d = (x - 0.62) * 0.9 + (y - 0.6) * 0.9;
+  const t = d / 0.42;
+  return Math.max(0, Math.min(1, t)) ** 1.3;
+}
+
 export function Landing({ onEnter }: { onEnter: () => void }) {
   // 捲即時 —— 全頁之界與記,隨其所至而行於曝之階。
   const 頁 = useRef<HTMLDivElement>(null);
@@ -183,10 +224,45 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           black across the whole hero. It exists to keep the headline legible,
           not to dim the thing the headline is about.
         */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(242,237,225,0.35)_0%,rgba(242,237,225,0.86)_38%,rgba(242,237,225,0.92)_100%)] sm:bg-[linear-gradient(100deg,rgba(242,237,225,0.92)_0%,rgba(242,237,225,0.78)_28%,rgba(242,237,225,0.38)_50%,rgba(242,237,225,0.05)_76%,rgba(242,237,225,0)_100%)] dark:bg-none"
-        />
+        {/*
+          ── 三版 ──────────────────────────────────────────────────────
+          前此此處為一幕(平色之漸),所以救其文於其網之上 —— 其法可用,
+          而其面非印:漸者屏之物,印無漸也。印之淡,乃疏其點。
+
+          今代以三版,如一 riso 之出:
+            一、橙之版,自右上而下,其緣以網目散之 —— 濃處為實面,淡處見紙。
+            二、藍之版,自左下而上,其角異於橙(六十度)—— 二版同角則生莫列。
+            三、日之盤,亦網目,壓於二版之上。
+          三者皆相乘,故其疊處自深,如三版同壓一紙。
+
+          文之可讀,不復賴其幕,乃賴其版:橙版之濃處正在其文之後,
+          而其濃足以承其墨。是以其法與其面合為一事,不必二者相妥協。
+
+          Three plates instead of a gradient scrim. A gradient is a screen
+          artifact — print has no gradients, only dots that open up. Each plate
+          carries its own halftone falloff at a different screen angle (same
+          angle on two plates produces moiré), and all three multiply, so the
+          overlaps darken the way three drums do on one sheet. The headline's
+          legibility now comes from the orange plate's density sitting behind
+          it, which means the surface and the readability are the same decision
+          rather than two that fight.
+        */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <RisoPlate
+            className="inset-0 size-full"
+            色="var(--color-fullsun)"
+            角={Math.PI / 4}
+            最大={0.46}
+            形={橙之場}
+          />
+          <RisoPlate
+            className="inset-0 size-full"
+            色="var(--color-shade)"
+            角={Math.PI / 3}
+            最大={0.42}
+            形={藍之場}
+          />
+        </div>
         <div className="grid-container relative">
           {/*
             量之於一四二五:次行需一〇八〇,而其地一〇三七,短四三 ——
@@ -197,10 +273,24 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             mid-word break hid that. Capping the size and easing the indent
             leaves ~65px of slack.
           */}
+          {/*
+            次行反白,壓於一墨之塊 —— 此為印之最實者。
+            前此二行皆墨書於紙,是排版也;而 riso 之招貼,其題必有一行為
+            實墨之塊而反其字,故其面有輕重,不為一色之文。
+            塊亦微斜(零點六度),如版之未正 —— 全正者機之物,非手之物。
+            The second line is knocked out of a solid ink block. Two lines of
+            ink-on-paper is typesetting; a poster needs one mass of flat ink with
+            the type reversed out of it, which is what gives the page weight
+            rather than an even field of text. The block sits 0.6° off square:
+            a perfectly aligned plate reads as machine output, not as something
+            pulled by hand.
+          */}
           <SplitText as="h1" text="HEAT HAS"
             className="landing-display h-3xl block" />
-          <SplitText as="div" text="A GEOMETRY." 延={240}
-            className="landing-display h-3xl block sm:pl-[6vw]" />
+          <div className="mt-1 inline-block -rotate-[0.6deg] bg-ink px-[0.35em] py-[0.06em] sm:ml-[6vw]">
+            <SplitText as="div" text="A GEOMETRY." 延={240}
+              className="landing-display h-3xl block text-canvas" />
+          </div>
 
           <Reveal 延={0.5}>
             {/*
@@ -212,7 +302,18 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               imagery cannot be judged by a single contrast number; it has to
               survive its worst pixel, which is what the shadow guarantees.
             */}
-            <p className="t-xs mt-[36px] max-w-2xl text-ink/85 [text-shadow:0_1px_12px_rgba(9,12,19,0.95)]">
+            {/*
+              文立於一紙之塊上,不賴其影。
+              前此去其幕而未代之,故此段直坐於網目之上,幾不可讀 ——
+              於低視者,此為病,非為醜。塊者,印之常法:反白之題既為實墨,
+              則其文之地為實紙,二者相對而成其構圖。
+              The paragraph sat directly on the dot screen with nothing behind
+              it after the scrim was removed — illegible, and for a low-vision
+              audience that is a defect rather than a matter of taste. A solid
+              paper panel is the printer's own answer and the counterpart to the
+              knocked-out headline above it.
+            */}
+            <p className="t-xs mt-[36px] max-w-2xl bg-canvas px-4 py-3 text-ink">
               Heat-safe, step-free walking routes for disabled pedestrians. Built
               on real sidewalk data, projected building shadows, and an explicit
               account of what the data does not know.
@@ -232,7 +333,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
               </Magnetic>
               <a
                 href="#what"
-                className="t-xs group inline-flex items-center gap-2 border-b border-ink/30 pb-1 transition-colors duration-150 ease-quint hover:border-ink"
+                className="t-xs group inline-flex items-center gap-2 bg-canvas px-3 py-2 text-ink transition-colors duration-150 ease-quint hover:bg-panel"
               >
                 How it works
                 {/* 自畫之箭 —— unicode 之箭,其形隨其族而變,且不受此樹之筆所制。 */}
