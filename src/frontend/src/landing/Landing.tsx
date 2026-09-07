@@ -15,6 +15,7 @@ import { SunDial } from "./SunDial";
 import { NetGlyph, type 式 } from "./NetGlyph";
 import { CITIES } from "../data/cities";
 import { RisoPlate } from "./RisoPlate";
+import { SiteFooterMeta } from "./SiteFooterMeta";
 
 /**
  * 其度皆量於所法者,非所擬者。see index.css 之「landing 之度」。
@@ -536,6 +537,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
           <span>Thirty-eight US downtowns</span>
           <span>Not medical guidance</span>
         </div>
+        <SiteFooterMeta />
       </footer>
     </div>
   );

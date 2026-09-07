@@ -15,13 +15,20 @@ describe("解說之頁", () => {
     expect(解說之頁("#/limits")).toBe("limits");
   });
 
+  // 法之二頁可指而不在 nav。可指者必可解 —— footer 之鏈賴此。
+  it("識法之二頁 —— 不在 nav,而其路自通", () => {
+    expect(解說之頁("#/privacy")).toBe("privacy");
+    expect(解說之頁("#/terms")).toBe("terms");
+  });
+
   it("容其後之錨與其問", () => {
     expect(解說之頁("#/help#colours")).toBe("help");
     expect(解說之頁("#/limits?x=1")).toBe("limits");
   });
 
   it("不識者皆 null —— 落於 landing,不落於空頁", () => {
-    for (const h of ["", "#", "#top", "#/app", "#/app?c=la", "#/helpful", "#/HELP", "#help", "#/"]) {
+    for (const h of ["", "#", "#top", "#/app", "#/app?c=la", "#/helpful", "#/HELP", "#help", "#/",
+                     "#/privacypolicy", "#/term", "#/PRIVACY"]) {
       expect(解說之頁(h)).toBeNull();
     }
   });

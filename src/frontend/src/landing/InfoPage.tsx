@@ -9,6 +9,7 @@ import { SunDial } from "./SunDial";
 import { DifferenceCursor } from "./DifferenceCursor";
 import { useCountUp, 解數 } from "./useCountUp";
 import { useSmoothScroll } from "./useSmoothScroll";
+import { SiteFooterMeta } from "./SiteFooterMeta";
 
 /**
  * 說之頁。
@@ -24,16 +25,31 @@ import { useSmoothScroll } from "./useSmoothScroll";
  * 無 router —— 址之 hash 即其路,同 App 之所為。四頁一檔,故其文可並讀而不相違。
  */
 
-export const 說之頁 = ["help", "questions", "about", "limits"] as const;
+/** 說之四頁。此四在 nav,亦在「Keep reading」之列。 */
+const 說之要 = ["help", "questions", "about", "limits"] as const;
+
+/**
+ * 法之二頁。可指,而不入 nav。
+ *
+ * Nav.tsx 已言五鏈於七六八之屏不可容(量之,逾其地);今若六則益甚。
+ * 且法之頁非讀者所尋,乃所查者 —— 其位在footer,不在其首。
+ * Deliberately routable but not in the nav: Nav.tsx already records that five
+ * links overflow at 768px, and six would be worse. Legal pages are looked up,
+ * not browsed, so the footer is the right place for them.
+ */
+const 說之法 = ["privacy", "terms"] as const;
+
+export const 說之頁 = [...說之要, ...說之法] as const;
 export type 說之頁 = (typeof 說之頁)[number];
 
 /** 自 hash 得其頁。非說之頁者回 null —— 未知之路一律歸於 landing。 */
 export function 解說之頁(hash: string = location.hash): 說之頁 | null {
-  const m = /^#\/(help|questions|about|limits)\b/.exec(hash);
+  const m = /^#\/(help|questions|about|limits|privacy|terms)\b/.exec(hash);
   return m ? (m[1] as 說之頁) : null;
 }
 
-const 頁之目: { id: 說之頁; label: string; href: string }[] = 說之頁.map((id) => ({
+/** nav 與「Keep reading」之目。法之二頁不與焉。 */
+const 頁之目: { id: 說之頁; label: string; href: string }[] = 說之要.map((id) => ({
   id,
   href: `#/${id}`,
   label: {
@@ -1022,11 +1038,291 @@ function LimitsPage() {
 
 /* ── 頁 ────────────────────────────────────────────────────────────── */
 
+
+/* ── 法之二頁 ──────────────────────────────────────────────────────── */
+
+/**
+ * 私之頁。
+ *
+ * 所書者皆自碼而出,非自意而出 —— 其外之址六,其存於器者三,其問於器者一。
+ * 凡不能指其行者,不書之。
+ * Every claim here was read off the code, not off intentions. If a sentence
+ * could not be traced to a specific call, it is not in this page.
+ */
+function PrivacyPage() {
+  return (
+    <>
+      <Hero
+        題="WHAT THIS SITE KNOWS ABOUT YOU."
+        引="Short version: no account, no profile, and nothing about you is stored on a server unless you choose to sign in. The long version is below, and it names every request this page makes."
+      />
+
+      <Section label="What stays on your device">
+        <SectionLabel>What stays on your device</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              Routing runs in your browser. The sidewalk data for a city is
+              downloaded and searched on your own device, so the route you ask
+              for is never sent anywhere. Three things are saved locally, and
+              clearing your browser data removes all of them:
+            </p>
+            <ul className="mt-[36px] space-y-4 text-ink/70">
+              <li>Whether you chose the light or dark theme.</li>
+              <li>Whether you accepted or declined analytics cookies.</li>
+              <li>
+                Any kerb reports you file while signed out. They stay in local
+                storage on this device and are not uploaded.
+              </li>
+            </ul>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="What leaves your device">
+        <SectionLabel>What leaves your device</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              Using the map means asking other people&rsquo;s servers for things,
+              and each of them can see your IP address. This is the complete
+              list:
+            </p>
+            <ul className="mt-[36px] space-y-4 text-ink/70">
+              <li>
+                <strong className="text-ink">openstreetmap.org</strong> and{" "}
+                <strong className="text-ink">arcgisonline.com</strong> — map
+                tiles, requested as you pan and zoom.
+              </li>
+              <li>
+                <strong className="text-ink">nominatim.openstreetmap.org</strong>{" "}
+                — place search. What you type into the search box is sent to
+                OpenStreetMap so it can be matched to a location.
+              </li>
+              <li>
+                <strong className="text-ink">api.weather.gov</strong> — active
+                National Weather Service heat alerts for the city you are
+                viewing.
+              </li>
+              <li>
+                <strong className="text-ink">api.open-meteo.com</strong> —
+                current temperature for that city.
+              </li>
+            </ul>
+            <p className="mt-[36px] text-ink/70">
+              If you press the button to use your current location, your browser
+              asks your permission first, and the coordinates are used only to
+              place a pin. They are not stored and not transmitted.
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="Analytics and cookies">
+        <SectionLabel>Analytics and cookies</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              This site uses Google Analytics to count visits. It sets cookies
+              in your browser, and it is loaded{" "}
+              <strong className="text-ink">only after you accept</strong>. If you
+              decline, or ignore the banner entirely, the script is never
+              requested and no analytics cookie is set. Nothing about the tool
+              behaves differently either way — routing, maps, reports and the
+              explanation pages are identical.
+            </p>
+            <p className="mt-[36px] text-ink/70">
+              When it is loaded, it records the pages you visit, roughly where
+              you are in the world, and what kind of device and browser you are
+              using. Your IP address is truncated before it is stored. To change
+              your mind, clear this site&rsquo;s data in your browser settings
+              and the choice will be offered again.
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="Reports and signing in">
+        <SectionLabel>Reports and signing in</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              Reporting a broken kerb cut or a blocked crossing is anonymous by
+              default and always will be. A report attaches to a sidewalk
+              segment, not to you. There is no account requirement, no location
+              history, and no device identifier attached to a report.
+            </p>
+            <p className="mt-[36px] text-ink/70">
+              Signing in is optional and exists for one reason: an attributed
+              report can be confirmed by someone else, which is the only way an
+              unverified report ever becomes a verified one. If you do sign in,
+              the only thing stored is the account identifier your provider
+              gives us. There is no profile, no display name, and no avatar, and
+              other readers see only &ldquo;attributed&rdquo; or
+              &ldquo;anonymous&rdquo; — never who.
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="Contact">
+        <SectionLabel>Questions about this</SectionLabel>
+        <Reveal>
+          <p className="max-w-3xl text-ink/70">
+            The whole thing is open source. If something here does not match what
+            the code does, that is a bug worth reporting —{" "}
+            <a
+              href="https://github.com/NayanVangala/nextstephacks"
+              className="border-b border-ink/25 pb-0.5 transition-colors hover:border-ink"
+              target="_blank"
+              rel="noreferrer"
+            >
+              read it or open an issue
+            </a>
+            .
+          </p>
+        </Reveal>
+      </Section>
+    </>
+  );
+}
+
+/**
+ * 約之頁。
+ *
+ * 其首必為「非醫之言」—— 此非法之飾,乃其實。人以此決其行之可生與否,
+ * 故其限當在其首,不在其末。
+ * The medical disclaimer leads rather than trails. People use this to decide
+ * whether a trip is survivable; the limits belong where they are read.
+ */
+function TermsPage() {
+  return (
+    <>
+      <Hero
+        題="WHAT THIS IS, AND WHAT IT ISN'T."
+        引="Passable is a wayfinding aid built on incomplete public data. It is free, it is open source, and it comes with no guarantee that any route it draws is actually passable today."
+      />
+
+      <Section label="Not medical guidance">
+        <SectionLabel>Not medical guidance</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              This tool models sun exposure and step-free access. It does not
+              know your condition, your medication, your tolerance, or the
+              weather where you are standing. Nothing it shows you is medical
+              advice, and it is not a substitute for your own clinical guidance
+              about heat.
+            </p>
+            <p className="mt-[36px] text-ink/70">
+              A route drawn as shaded may still be dangerous for you. Follow
+              your own advice about heat, and treat every number here as one
+              input among several.
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="The data is incomplete">
+        <SectionLabel>The data is incomplete, everywhere</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              Accessibility attributes come from OpenStreetMap, which is
+              volunteered and patchy in every city. Shade is computed from
+              building footprints, not measured — trees, awnings, bus shelters
+              and scaffolding are not in the model at all. Coverage is downtown
+              cores, not whole metros. Conditions change: a kerb cut that was
+              there last month can be under construction today.
+            </p>
+            <p className="mt-[36px] text-ink/70">
+              Where the tool marks something as unknown, it means it. An
+              unmarked segment is not a promise, and a drawn route is not an
+              inspection.
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="No warranty">
+        <SectionLabel>No warranty</SectionLabel>
+        <Reveal>
+          <p className="max-w-3xl text-ink/70">
+            This software is provided as is, without warranty of any kind,
+            express or implied. Use it at your own risk. To the fullest extent
+            permitted by law, the authors accept no liability for any loss,
+            injury or damage arising from its use or from reliance on anything
+            it displays.
+          </p>
+        </Reveal>
+      </Section>
+
+      <Section label="Reports">
+        <SectionLabel>What you may report</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              Reports exist to record what only locals know: a construction
+              detour, a blocked kerb cut, a broken lift. Please report
+              conditions, not people. Do not submit personal information about
+              yourself or anyone else, and do not submit abuse, advertising or
+              anything unlawful.
+            </p>
+            <p className="mt-[36px] text-ink/70">
+              A report cannot be edited after it is filed. That is deliberate: if
+              text could be swapped after someone confirmed it, the confirmation
+              would be vouching for something nobody read. Reports fade in weight
+              over about ninety days, so stale ones stop steering routes.
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+
+      <Section label="Data and licence">
+        <SectionLabel>Data and licence</SectionLabel>
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="text-ink/70">
+              Sidewalk geometry and accessibility tags come from{" "}
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                className="border-b border-ink/25 pb-0.5 transition-colors hover:border-ink"
+                target="_blank"
+                rel="noreferrer"
+              >
+                OpenStreetMap contributors
+              </a>{" "}
+              under the Open Database Licence. Heat alerts come from the National
+              Weather Service, temperature from Open-Meteo, and neighbourhood
+              boundaries and income from the US Census Bureau.
+            </p>
+            <p className="mt-[36px] text-ink/70">
+              The code is open source. Read it, fork it, check whether it does
+              what these pages say it does —{" "}
+              <a
+                href="https://github.com/NayanVangala/nextstephacks"
+                className="border-b border-ink/25 pb-0.5 transition-colors hover:border-ink"
+                target="_blank"
+                rel="noreferrer"
+              >
+                github.com/NayanVangala/nextstephacks
+              </a>
+              .
+            </p>
+          </div>
+        </Reveal>
+      </Section>
+    </>
+  );
+}
+
 const 頁之身: Record<說之頁, () => React.ReactElement> = {
   help: HelpPage,
   questions: QuestionsPage,
   about: AboutPage,
   limits: LimitsPage,
+  privacy: PrivacyPage,
+  terms: TermsPage,
 };
 
 export function InfoPage({ 頁, onEnter }: { 頁: 說之頁; onEnter: () => void }) {
@@ -1062,6 +1358,7 @@ export function InfoPage({ 頁, onEnter }: { 頁: 說之頁; onEnter: () => void
           <span>Thirty-eight US downtowns</span>
           <span>Not medical guidance</span>
         </div>
+        <SiteFooterMeta />
       </footer>
     </div>
   );
