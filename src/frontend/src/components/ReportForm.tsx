@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { 报 } from "../data/本地庫";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,12 +34,50 @@ export function ReportForm({
   const [kind, setKind] = useState<报["kind"]>("curb_cut_broken");
   const [note, setNote] = useState("");
   const [果, set果] = useState<"none" | "ok" | "fail">("none");
+  const [送中, set送中] = useState(false);
+  /*
+    蜜之器與其時。
+    蜜者:人不見、鍵不及、讀屏不宣之一格。人不能填之,填之者機也。
+    aria-hidden 與 tabIndex=-1 不可省 —— 省之則此器自為一陷,正害其所欲護者。
+    時者:載後二秒之內而submit者,非人之速。
+
+    The honeypot MUST be aria-hidden and removed from the tab order. A hidden
+    field that a screen reader announces, or that Tab lands on, is a trap for
+    exactly the users this tool exists for — it would block a blind user's
+    report while stopping no serious bot.
+
+    此二者所御者淺 —— 此非一 HTML POST,乃 React 之狀,故常見之表單機本不能及。
+    真所當御者在 Supabase 之端:凡機皆可直叩其 API 而不經此頁。其御當在
+    Postgres —— rate limit 與 RLS,見 supabase/migrations。此處所能者,止於此。
+    Scope, stated honestly: this is not a plain HTML POST but React state, so
+    generic form-spam bots cannot reach it anyway. The real exposure is the
+    Supabase endpoint, which any script can call directly without loading this
+    page. That has to be rate-limited in Postgres (see supabase/migrations);
+    nothing on the client can substitute for it.
+  */
+  const 蜜 = useRef("");
+  // 惰之初 —— useRef(Date.now()) 者,每畫皆呼之,雖其果止用其首。
+  // Lazy initialiser: useRef(Date.now()) evaluates on every render even though
+  // only the first value is ever kept.
+  const [載之時] = useState(() => Date.now());
 
   return (
     <form
       className="rounded-lg border border-line p-4"
       onSubmit={async (ev) => {
         ev.preventDefault();
+        // 再叩者棄之。await 之間其鈕猶可叩,故一報得存其二。
+        // Guards a real double-file: the button stays live across the await.
+        if (送中) return;
+        // 機之跡:蜜有其文,或載未二秒而已submit。默然作成 —— 告之則其機得以自校。
+        // Silently reported as success: telling a bot which check caught it is
+        // how it learns to pass the next one.
+        if (蜜.current || Date.now() - 載之時 < 2000) {
+          set果("ok");
+          setNote("");
+          return;
+        }
+        set送中(true);
         // 必待其果而後言之 —— 不得先稱已存而後乃知其敗。
         const 成 = await onSubmit({
           id: crypto.randomUUID(),
@@ -50,6 +88,7 @@ export function ReportForm({
           status: "unverified",
           created_at: new Date().toISOString(),
         });
+        set送中(false);
         set果(成 ? "ok" : "fail");
         if (成) setNote("");
       }}
@@ -85,9 +124,26 @@ export function ReportForm({
         className="w-full rounded-md border border-line bg-paper px-2 py-1.5 text-sm"
       />
 
+      {/*
+        蜜之格。目不可見,鍵不可及,讀屏不宣 —— 三者缺一則為陷。
+        Hidden three ways over: off-screen, out of the tab order, and hidden
+        from the accessibility tree. Any one of those missing makes it a trap.
+      */}
+      <div aria-hidden className="sr-only">
+        <label htmlFor="报-website">Website</label>
+        <input
+          id="报-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          onChange={(e) => (蜜.current = e.target.value)}
+        />
+      </div>
+
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <Button type="submit" disabled={!就緒}>
-          Submit report
+        <Button type="submit" disabled={!就緒 || 送中}>
+          {送中 ? "Saving…" : "Submit report"}
         </Button>
         {果 === "ok" && (
           <span role="status" className="text-sm font-semibold text-route">
@@ -110,8 +166,14 @@ export function ReportForm({
 
       <p className="mt-2 text-xs text-muted-foreground">
         Reporting is anonymous by default and always will be — no account
-        required, no location history, no device identifier, and a report attaches
-        to a sidewalk segment rather than to you. Signing in is optional: it
+        required, no location history, and nothing identifying attached to the
+        report itself, which is filed against a sidewalk segment rather than
+        against you. (This site does use analytics cookies if you accepted them;
+        see the{" "}
+        <a href="#/privacy" className="underline underline-offset-2">
+          privacy policy
+        </a>
+        .) Signing in is optional: it
         attributes your reports so someone else can confirm them, which is the
         only way an unverified report ever becomes a verified one. Submitted
         reports show as unverified until that happens.
