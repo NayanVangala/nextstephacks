@@ -63,7 +63,13 @@ The second claim is what makes the first trustworthy.
 
 ## Operating Context
 
-- Runs entirely in the browser. No server, no API key, no account, no database.
+- Routing runs entirely in the browser. No server, no API key, no account, no
+  database is required to compute a route.
+- Google Analytics is loaded from googletagmanager.com, and **only** after the
+  visitor accepts the cookie banner. Declining or ignoring it means the script
+  is never requested. This is the one exception to "no CDN assets" and to
+  offline operation, and it is gated on consent precisely so that the tool
+  itself never depends on it.
 - Deploys as static files to GitHub Pages; must keep working when forked.
 - City packs (nodes, edges, per-edge accessibility attributes, an 8-bucket
   sun-exposure array, destinations, block-group index) are precomputed offline
@@ -86,7 +92,9 @@ Hard technical constraints:
 
 - **No WebGL.** Leaflet on a 2D canvas. A vector map that renders blank without
   WebGL2 is not an accessibility tool.
-- **No CDN assets.** Fonts are bundled; the app must work offline.
+- **No CDN assets on any path the tool needs.** Fonts are bundled and the app
+  must work offline. The consented analytics script is the sole exception and
+  nothing depends on it loading.
 - **`edgeCost >= edge.length_m`, always.** The A* heuristic is raw haversine
   metres and is admissible only while every cost term is additive on top of
   physical length. Violating this does not crash, does not fail a test, and

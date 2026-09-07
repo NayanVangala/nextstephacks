@@ -33,6 +33,10 @@ jobs:
         working-directory: src/frontend
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
+          # 闕之則 banner 不見,量不載。故未設此密者,其站一如其舊。
+          # Unset means no banner and no analytics: a deploy without this
+          # secret behaves exactly as the site did before analytics existed.
+          VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
       # Pages 為 SPA 而無 router,然 404 亦以 index 應之,免直入子路而失
       - run: cp dist/index.html dist/404.html
         working-directory: src/frontend
@@ -117,6 +121,8 @@ jobs:
       # VITE_BASE 不授 —— 其常為斜線,此站在根故也。
       - run: npm run build
         working-directory: src/frontend
+        env:
+          VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
