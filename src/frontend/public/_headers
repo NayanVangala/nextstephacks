@@ -1,0 +1,13 @@
+# Cloudflare Pages 讀此於其出之根。與 vercel.json 之 headers 同意 ——
+# 囊者按其名而不易,故可永記。無此則每返之客再取十六兆之囊。
+#
+# City packs and hashed assets are content-addressed and never mutate in place,
+# so they are safe to cache forever. Without this, a returning visitor
+# re-downloads a 16 MB pack on every visit.
+#
+# 他站無害:GitHub Pages 不識之,Vercel 從其 vercel.json,此文百餘字而已。
+/city-packs/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
