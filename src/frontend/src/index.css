@@ -251,6 +251,25 @@ body {
   line-height: 1.5;
 }
 
+/*
+  橫捲之禁。
+
+  此頁有故意逾其幅者 —— marquee 之帶、滿幅之網、出血之題 —— 其逾也有意,
+  而其果為橫捲之條:於手機,一指之偏即全頁左右而動,讀者失其行。
+
+  clip 而非 hidden。二者所見略同,而 hidden 立一捲之器,則其內 sticky 者皆廢;
+  此站之首帶與器之 chrome 皆 sticky(見 .chrome、z-[1200]),故用 hidden 則
+  其帶不復粘,而其病無聲 —— 但於捲時乃見。clip 不立捲器,故 sticky 如故。
+
+  MUST be clip, not hidden. They look identical until you scroll: `hidden`
+  creates a scroll container, which silently kills every `position: sticky`
+  inside it — and both the landing masthead and the app chrome are sticky.
+  `clip` suppresses the axis without creating that container.
+*/
+body {
+  overflow-x: clip;
+}
+
 #root {
   width: 100%;
   margin: 0;
