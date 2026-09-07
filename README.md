@@ -92,8 +92,8 @@ no database. City packs ship in `src/frontend/public/city-packs/`.
 
 ```
 OpenStreetMap ─┐
-Building       ├─► Python pipeline ─► city pack (JSON) ─► browser ─► A*
-  footprints  ─┤     (offline)          2.5-16 MB            (client-side)
+Building       ├─► Python pipeline ─► city pack (.json.gz) ─► browser ─► A*
+  footprints  ─┤     (offline)         0.2-1.0 MB           (client-side)
 GTFS feeds    ─┤
 Census / ACS  ─┘
 ```

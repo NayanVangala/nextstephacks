@@ -148,7 +148,7 @@ def main():
         pack["index_unavailable_reason"] = f"{type(錯).__name__}: {錯}"
         print(f"警:指數未成 — {錯}")
 
-    out = ROOT / f"src/frontend/public/city-packs/{args.city}.json"
+    out = ROOT / f"src/frontend/public/city-packs/{args.city}.json.gz"
     write_pack(pack, str(out))
     print(f"wrote {out} — {len(nodes)} nodes, {len(pack['edges'])} edges")
 

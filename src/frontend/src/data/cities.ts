@@ -1,4 +1,4 @@
-/** 所備之城。囊在 public/city-packs/<id>.json。 */
+/** 所備之城。囊在 public/city-packs/<id>.json.gz,壓以 gzip。 */
 export interface 城 {
   id: string;
   label: string;

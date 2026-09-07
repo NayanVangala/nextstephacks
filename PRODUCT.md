@@ -67,7 +67,8 @@ The second claim is what makes the first trustworthy.
 - Deploys as static files to GitHub Pages; must keep working when forked.
 - City packs (nodes, edges, per-edge accessibility attributes, an 8-bucket
   sun-exposure array, destinations, block-group index) are precomputed offline
-  by a Python pipeline and shipped as JSON, 2.5–16 MB each.
+  by a Python pipeline and shipped as gzipped JSON, 0.2–1.0 MB each
+  (2.5–16 MB uncompressed).
 - A* runs client-side over the sidewalk graph.
 - Live sources are keyless and raise a floor, never a ceiling: an NWS heat
   warning can only make the tool more cautious, never clear a route it would

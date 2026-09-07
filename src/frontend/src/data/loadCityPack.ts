@@ -55,16 +55,54 @@ export async function loadCityPack(
   return p;
 }
 
+/**
+ * 解其壓而析之。
+ *
+ * 囊存於盤為 gzip,而其至此或已解 —— 諸站之待 .gz 者不一:或標之以
+ * Content-Encoding: gzip,則道上自解之(vite preview 即如是);或但以八位
+ * 之流付之。故不可以其名斷之,當以其首二字斷之 —— 1f 8b 者,gzip 之印。
+ *
+ * Host-dependent, and the filename cannot tell us which happened. Some servers
+ * label .json.gz with Content-Encoding: gzip, so fetch transparently inflates
+ * it and hands us plain JSON (Vite's preview server does exactly this). Others
+ * serve the raw octets untouched. Sniffing the gzip magic number is correct
+ * under both; trusting the extension is reliably correct under neither.
+ *
+ * 全取而後斷。本須全析之為一文,故不流無所損。
+ * Buffering instead of streaming costs nothing here — the whole pack must be
+ * parsed as a single JSON document either way.
+ */
+async function 解而析(res: Response): Promise<unknown> {
+  const buf = new Uint8Array(await res.arrayBuffer());
+
+  // 道上已解者,直析之。此非退路,乃受其所惠 —— 站自解之,則其解在原生之
+  // 碼,無需再勞於 JS。
+  // Not a fallback but a free ride: when the host inflates for us, the work
+  // happened in native code and there is nothing left to do.
+  if (buf[0] !== 0x1f || buf[1] !== 0x8b) {
+    return JSON.parse(new TextDecoder().decode(buf));
+  }
+
+  if (typeof DecompressionStream === "undefined") {
+    throw new Error(
+      "This browser cannot decompress the map data. " +
+        "Passable needs Safari 16.4+, Chrome 103+, or Firefox 113+.",
+    );
+  }
+  const 流 = new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));
+  return new Response(流).json();
+}
+
 async function fetchAndValidate(id: string, fetchFn: FetchFn): Promise<CityPack> {
   // BASE_URL 之故:站或在 /nextstephacks/ 之下,絕對之路則四百。
   const 基 = import.meta.env.BASE_URL ?? "/";
-  const res = await fetchFn(`${基}city-packs/${id}.json`);
-  // 必先驗其應。四百者其身為 HTML,直付 json() 則其誤言「Unexpected token '<'」,
+  const res = await fetchFn(`${基}city-packs/${id}.json.gz`);
+  // 必先驗其應,而後解。四百者其身為 HTML,直付 gunzip 則其誤言「壞流」,
   // 而其實為無此囊 —— 誤之文當言其所以然。
-  // MUST check before parsing: a 404 body is HTML, and feeding it to json()
-  // reports a syntax error instead of a missing pack.
+  // MUST check before decompressing: a 404 body is HTML, and feeding that to
+  // the gunzip stream reports a corrupt-stream error instead of a missing pack.
   if (!res.ok) throw new Error(`city pack ${id}: HTTP ${res.status}`);
-  const data = await res.json();
+  const data = await 解而析(res);
   if (!validate(data)) {
     throw new Error(`invalid city pack: ${ajv.errorsText(validate.errors)}`);
   }

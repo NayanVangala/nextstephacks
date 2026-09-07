@@ -1,7 +1,9 @@
+import gzip
 import json
 from pathlib import Path
 import jsonschema
-from pipeline.emit.citypack import assemble_pack
+import pytest
+from pipeline.emit.citypack import assemble_pack, write_pack
 
 SCHEMA = json.loads(
     (Path(__file__).parents[2] / "src/shared/schema/city-pack.schema.json").read_text()
@@ -110,3 +112,37 @@ def test_公交之站不作憩息之所():
            "source": "GTFS", "wheelchair_boarding": "yes"}]
     pack = assemble_pack(_manifest(), nodes, raw, suns, destinations=站)
     assert pack["edges"][0]["near_rest_stop"] is False
+
+
+# ── 書囊者 ────────────────────────────────────────────────────────────
+# 囊以 gzip 書之,而 gzip.open 不問其名 —— 誤付生文之路,則所書者壓,而
+# 其名曰生,前端取之而析之則敗,其誤不指其所以然。故防之於此。
+
+
+def _囊():
+    nodes, raw = _inputs()
+    suns = [{"altitude_deg": 30, "azimuth_deg": 90}] * 3
+    pack = assemble_pack(_manifest(), nodes, raw, suns)
+    pack["manifest"]["generated_at"] = "2026-08-23T00:00:00Z"
+    return pack
+
+
+def test_書囊者壓之而可回讀(tmp_path):
+    pack = _囊()
+    out = tmp_path / "t.json.gz"
+    write_pack(pack, str(out))
+    with gzip.open(out, "rt", encoding="utf-8") as f:
+        assert json.load(f) == pack
+
+
+def test_書囊者所出誠為gzip(tmp_path):
+    """首二字當為 1f 8b —— 前端以此印斷其解與不解。"""
+    out = tmp_path / "t.json.gz"
+    write_pack(_囊(), str(out))
+    assert out.read_bytes()[:2] == b"\x1f\x8b"
+
+
+def test_書囊者拒生文之路(tmp_path):
+    """誤付 .json 者當即敗。默然而過,則所部署者十五倍於其當然而無人知。"""
+    with pytest.raises(AssertionError):
+        write_pack(_囊(), str(tmp_path / "t.json"))

@@ -1,5 +1,6 @@
 """合節、邊、日曝為一城之囊,驗之於 schema,而後書。"""
 
+import gzip
 import json
 from pathlib import Path
 
@@ -70,7 +71,18 @@ def assemble_pack(manifest, nodes, raw_edges, sun_positions, buildings=None,
 
 
 def write_pack(pack, out_path):
-    """Validate BEFORE writing — a malformed pack must never reach the frontend."""
+    """Validate BEFORE writing — a malformed pack must never reach the frontend.
+
+    囊以 gzip 書之。三十八城之生文二百五十兆,壓之則十六 —— 庫與所部署者
+    皆輕十五倍,而其在道上本已壓,故無所增於其行。前端以 DecompressionStream
+    解之,不假外物。
+
+    The caller MUST supply a .json.gz path. gzip.open writes gzip whatever the
+    filename says, so a .json path here yields a gzip file the frontend fetches
+    as JSON — failing with a parse error that names nothing useful.
+    """
+    assert str(out_path).endswith(".json.gz"), f"囊之路當終於 .json.gz:{out_path}"
     jsonschema.validate(pack, _SCHEMA)
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
-    Path(out_path).write_text(json.dumps(pack, separators=(",", ":")))
+    with gzip.open(out_path, "wt", encoding="utf-8", compresslevel=9) as f:
+        json.dump(pack, f, separators=(",", ":"))

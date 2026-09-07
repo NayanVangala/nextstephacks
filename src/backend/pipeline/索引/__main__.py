@@ -7,6 +7,7 @@ chromadb 不與 pipeline 之常路同行 —— 其重且非造囊所必需,故�
 """
 
 import argparse
+import gzip
 import json
 from pathlib import Path
 
@@ -30,9 +31,10 @@ def main():
             print(f"[{x['元'].get('類', '?')}] {x['文']}")
         return
 
-    囊 = json.loads(
-        (ROOT / f"src/frontend/public/city-packs/{args.city}.json").read_text()
-    )
+    # 囊壓以 gzip,故不可直讀其文。
+    with gzip.open(ROOT / f"src/frontend/public/city-packs/{args.city}.json.gz", "rt",
+                   encoding="utf-8") as f:
+        囊 = json.load(f)
     n = 建索引(囊.get("destinations", []), [], 存於)
     print(f"索引 {n} 條於 {存於}")
 
