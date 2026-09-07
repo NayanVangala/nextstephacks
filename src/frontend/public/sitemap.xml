@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  一址而已。此站以 hash 為路(#/help、#/app 之屬),而索者不分其片 ——
+  列之則自欺,不列則實。
+  One URL, deliberately. This site routes on the fragment (#/help, #/app, …),
+  and search engines do not treat fragments as separate pages. Listing them
+  would pad the file without adding a single indexable address.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://nayanvangala.github.io/nextstephacks/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

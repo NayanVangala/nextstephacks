@@ -1,0 +1,5 @@
+# Passable —— 全站可索。無私之路,無需禁者。
+User-agent: *
+Allow: /
+
+Sitemap: https://nayanvangala.github.io/nextstephacks/sitemap.xml
