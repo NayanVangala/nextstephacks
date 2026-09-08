@@ -66,8 +66,15 @@ export function PressRun({
         the figure itself prints out of register, so the severity survives for a
         reader who cannot tell the three inks apart.
       */}
+      {/*
+        此條於一〇二四折行,而其末「at an assumed height」正入版之濃處,
+        且無地。故與其日同法,立一紙之塊。量之:一〇二四,裸而入濃者唯此一。
+        Wraps at 1024 and its tail lands on the dense half of the plate with no
+        background behind it — the one remaining bare intrusion at that width.
+        Same paper block the build date already uses.
+      */}
       {推之率 != null && (
-        <span>
+        <span className="bg-canvas">
           Shade computed from{" "}
           <span className="数 font-semibold text-foreground">
             {總.toLocaleString()}

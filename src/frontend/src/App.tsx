@@ -298,7 +298,26 @@ export default function App() {
           of the page title and its subtitle — the precise violation the comment
           above forbids. It belongs under the content, not over it.
         */
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[24rem] overflow-hidden"
+        /*
+          小屏不出其版。
+
+          帶之場 之濃在其右四成,其所恃者「文皆左起,而右四成為空」——
+          此於寬屏誠然,於窄屏則否:文既折,遂滿其幅,而其字正坐於網目之上。
+          量之於三七五與七六八,其字之無地而入濃處者十有五,
+          其首即「Heat-safe, step-free walking routes over 16,304 sidewalk
+          segments.」—— 正犯上文所自立之戒。
+
+          窄屏無空可容此版,故不出之,與 Nav 之五鏈同理(其註亦曰「量之,逾其地」)。
+
+          The density field assumes the right ~40% is empty, which holds at
+          1024px and up and fails below it: once the masthead prose wraps it
+          fills the full width and sits directly on the dot screen. Measured 15
+          bare text runs intruding at 375 and 768, including the page's own
+          subtitle. There is no empty column to put the plate in at those
+          widths, so it is not drawn — the same measured call Nav.tsx makes
+          about its link list.
+        */
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 hidden h-[24rem] overflow-hidden lg:block"
       >
         <RisoPlate
           className="inset-0 size-full"
