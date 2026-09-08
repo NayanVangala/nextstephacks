@@ -206,3 +206,101 @@ describe("其行之實", () => {
     expect(r.rows, "Mallory deleted Alice's report").toHaveLength(1);
   });
 });
+
+
+describe("限速 —— 其防在庫,不在頁", () => {
+  /*
+    页之防(蜜之器、载后二秒)所御者浅:其後之 API 众所可叩,一 script
+    不载此页而直插者,前防皆不及。故此測所验者,乃其真所在之限。
+    The client-side honeypot cannot be tested here because it is not what
+    protects anything: the REST endpoint accepts inserts from scripts that
+    never load the page. This tests the bound that actually holds.
+  */
+
+  /** 每測自用一段,免相染。 */
+  let 段 = 9000;
+  const 新段 = () => ++段;
+
+  it("一段一時之內,匿名者不過五报", async () => {
+    const e = 新段();
+    await 為(null);
+    for (let i = 0; i < 5; i++) {
+      expect(
+        await 試("anon", `insert into 报事(city_id,edge_id,kind) values ('la',${e},'other')`),
+      ).toBe(true);
+    }
+    // 第六者當拒。
+    expect(
+      await 試("anon", `insert into 报事(city_id,edge_id,kind) values ('la',${e},'other')`),
+    ).toBe(false);
+  });
+
+  it("其限系於一段,非於一城 —— 他段仍可报", async () => {
+    const a = 新段();
+    const b = 新段();
+    await 為(null);
+    for (let i = 0; i < 5; i++) {
+      await 試("anon", `insert into 报事(city_id,edge_id,kind) values ('la',${a},'other')`);
+    }
+    expect(
+      await 試("anon", `insert into 报事(city_id,edge_id,kind) values ('la',${a},'other')`),
+    ).toBe(false);
+    expect(
+      await 試("anon", `insert into 报事(city_id,edge_id,kind) values ('la',${b},'other')`),
+    ).toBe(true);
+  });
+
+  it("登入者亦受段之限 —— 不可以登入而破之", async () => {
+    const e = 新段();
+    await 為(ALICE);
+    for (let i = 0; i < 5; i++) {
+      await 試("authenticated",
+        `insert into 报事(city_id,edge_id,kind,reporter_id) values ('la',${e},'other','${ALICE}')`);
+    }
+    expect(
+      await 試("authenticated",
+        `insert into 报事(city_id,edge_id,kind,reporter_id) values ('la',${e},'other','${ALICE}')`),
+    ).toBe(false);
+  });
+
+  it("屬人之限:一人一時不過二十,雖遍歷諸段亦然", async () => {
+    // 別立一人。ALICE 與 MALLORY 於前測已有其报,則其數不自零起。
+    // A dedicated account: ALICE and MALLORY already carry reports from earlier
+    // tests in this file, so their hourly count does not start at zero.
+    const 新人 = "33333333-3333-3333-3333-333333333333";
+    await db.exec(`insert into auth.users(id) values ('${新人}') on conflict do nothing`);
+    await 為(新人);
+    // 二十报,每报一段 —— 段之限不與焉,所驗者人之限。
+    for (let i = 0; i < 20; i++) {
+      const ok = await 試("authenticated",
+        `insert into 报事(city_id,edge_id,kind,reporter_id) values ('la',${新段()},'other','${新人}')`);
+      expect(ok).toBe(true);
+    }
+    expect(
+      await 試("authenticated",
+        `insert into 报事(city_id,edge_id,kind,reporter_id) values ('la',${新段()},'other','${新人}')`),
+    ).toBe(false);
+  });
+
+  it("其函之 search_path 已釘 —— 未釘者,SECURITY DEFINER 即升權之階", async () => {
+    const r = await db.query<{ proname: string; proconfig: string[] | null }>(
+      `select proname, proconfig from pg_proc
+       where proname in ('报事_段之近数','报事_人之近数')`,
+    );
+    expect(r.rows).toHaveLength(2);
+    for (const f of r.rows) {
+      expect(f.proconfig?.some((c) => c.startsWith("search_path="))).toBe(true);
+    }
+  });
+
+  it("凡 INSERT 之政皆載其限 —— 一政不載,則諸政俱虛(政以「或」合)", async () => {
+    const r = await db.query<{ policyname: string; with_check: string }>(
+      `select policyname, with_check from pg_policies
+       where tablename='报事' and cmd='INSERT'`,
+    );
+    expect(r.rows.length).toBeGreaterThan(0);
+    for (const p of r.rows) {
+      expect(p.with_check).toContain("段之近数");
+    }
+  });
+});
