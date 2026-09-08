@@ -28,3 +28,22 @@ createRoot(document.getElementById('root')!).render(
     <CookieConsent />
   </StrictMode>,
 )
+
+/*
+  離網之工。其註於載後,不於載中 —— 首載之時網已忙,再增一求則其畫愈遲。
+  Registered after load, not during: the first paint is already competing for
+  bandwidth and the worker buys nothing on a first visit.
+
+  dev 之時不註 —— sw 之記與 vite 之熱替相犯,其改不見於屏而人不知其故。
+  Never in dev: the worker's cache fights hot-module reload, and the symptom is
+  edits that silently do not appear.
+*/
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  addEventListener("load", () => {
+    navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
+      .catch(() => {
+        // 註之不成,則其站一如其舊。離網之用失之而已,不害其行。
+      });
+  });
+}
