@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { 算遲行之利, 路之曝米 } from "../src/routing/cost";
-import { 阻之故 } from "../src/routing/阻";
+import { 阻之故, 路之權衡 } from "../src/routing/阻";
 import type { CityPack, Edge, ProfileFlags } from "../src/types";
 
 const 無身: ProfileFlags = {
@@ -135,5 +135,90 @@ describe("算遲行之利 —— 日沒之時不與焉", () => {
   it("日中之外皆夜者,則無所舉", () => {
     const edges = [e(1, 1, 2, { sun_exposure: [0, 0, 0, 0, 1, 0, 0, 0] })];
     expect(算遲行之利(edges, 4, 8)).toBeNull();
+  });
+});
+
+
+/**
+ * 繞路之囊。二至四有階而直,二至三至四無階而迂。
+ *
+ *      2 ──階── 4        眾人:一二四,三百米
+ *    ╱        ╱
+ *   1        3           輪椅:一二三四,四百五十米 —— 繞百五十米
+ *            ╱
+ *      2 ────
+ *
+ * 其長皆百五十,而其geometry所跨者不逾百二十 —— 啟發式為 haversine,
+ * 必不逾其值,不然則 A* 不復可容而其路非最短,且無聲。
+ * Every length_m exceeds its own haversine span on purpose: the heuristic is
+ * raw haversine metres and is admissible only while cost >= physical length.
+ */
+function 造繞之囊(): CityPack {
+  return {
+    manifest: { hour_buckets: [6, 8, 10, 12, 14, 16, 18, 20], bbox: [0, 0, 1, 1] },
+    nodes: [
+      { id: 1, lon: 0, lat: 0 },
+      { id: 2, lon: 0.001, lat: 0 },
+      { id: 3, lon: 0.0015, lat: 0.0005 },
+      { id: 4, lon: 0.002, lat: 0 },
+    ],
+    edges: [
+      e(1, 1, 2, { length_m: 150, geometry: [[0, 0], [0.001, 0]] }),
+      e(2, 2, 4, {
+        length_m: 150, geometry: [[0.001, 0], [0.002, 0]],
+        is_steps: true, step_count: 9,
+        traversable: {
+          wheelchair: false, blind_low_vision: true, heat_sensitive: true, none: true,
+        },
+      }),
+      e(3, 2, 3, { length_m: 150, geometry: [[0.001, 0], [0.0015, 0.0005]] }),
+      e(4, 3, 4, { length_m: 150, geometry: [[0.0015, 0.0005], [0.002, 0]] }),
+    ],
+    destinations: [],
+  } as unknown as CityPack;
+}
+
+describe("路之權衡", () => {
+  it("身無所限者,無所謂繞 —— 己之路即眾人之路", () => {
+    expect(路之權衡(造繞之囊(), 無身, 1, 4, 4, 30, 300)).toBeNull();
+  });
+
+  it("繞者,名其米與其所避", () => {
+    const 囊 = 造繞之囊();
+    // 輪椅之路:一二三四,四百五十。
+    const r = 路之權衡(囊, 輪椅, 1, 4, 4, 30, 450);
+    expect(r).not.toBeNull();
+    expect(r!.同路).toBe(false);
+    // 眾人之路三百,己之路四百五十。
+    expect(r!.繞之米).toBeCloseTo(150, 0);
+    expect(r!.避).toHaveLength(1);
+    expect(r!.避[0].類).toBe("steps");
+    expect(r!.避[0].數).toBe(1);
+    expect(r!.避[0].階數).toBe(9);
+  });
+
+  it("無阻者為同路 —— 其言為一果,非一闕", () => {
+    const 囊 = 造繞之囊();
+    // 去其階,則直路輪椅亦可行,眾人之路即己之路。
+    囊.edges[1].is_steps = false;
+    囊.edges[1].traversable = {
+      wheelchair: true, blind_low_vision: true, heat_sensitive: true, none: true,
+    };
+    const r = 路之權衡(囊, 輪椅, 1, 4, 4, 30, 300);
+    expect(r!.同路).toBe(true);
+    expect(r!.繞之米).toBe(0);
+    expect(r!.避).toEqual([]);
+  });
+
+  it("眾人亦不可至者回 null —— 其言歸於阻之故,不歸於此", () => {
+    const 囊 = 造繞之囊();
+    // 盡去至四之路,則四孤。
+    囊.edges = [囊.edges[0],囊.edges[2]];
+    expect(路之權衡(囊, 輪椅, 1, 4, 4, 30, 450)).toBeNull();
+  });
+
+  it("繞之米不為負 —— 眾人之路必不長於己之路,微負者浮點之故", () => {
+    const r = 路之權衡(造繞之囊(), 輪椅, 1, 4, 4, 30, 100);
+    expect(r!.繞之米).toBe(0);
   });
 });

@@ -17,7 +17,8 @@ import { useReports } from "../hooks/useReports";
 import { Button } from "@/components/ui/button";
 import { useEnter } from "../motion/useEnter";
 import { 算遲行之利 } from "../routing/cost";
-import { 阻之故, 阻之文, type 阻之報 } from "../routing/阻";
+import { 阻之故, 阻之文, 路之權衡, type 阻之報 } from "../routing/阻";
+import { ViewNotes } from "../components/ViewNotes";
 import { 解址, 成址, 驗其節 } from "../data/路之址";
 import { 曝之色, 曝之文 } from "../routing/曝之色";
 import { 幾時之前 } from "../data/报之重";
@@ -183,6 +184,22 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
       : null),
     [result, hourIdx, pack],
   );
+
+  /*
+    此路何以繞。同 遲之利,憑 result;然其算須再尋一路,故獨為一 memo ——
+    非因其貴(圖既記,則一尋而已),乃因其憑異:遲之利 憑 hourIdx 而變,
+    此則否。合之則移一滑桿而再尋其路,徒費。
+    Separate memo from 遲之利 despite the shared inputs: 遲之利 depends on
+    hourIdx and this does not, so merging them would re-run an A* search on
+    every tick of the time slider for an answer that cannot change.
+  */
+  const 權衡 = useMemo(() => {
+    if (!pack || !result || origin == null || dest == null) return null;
+    return 路之權衡(pack, flags, origin, dest, hourIdx, temp.tempC, result.totalLength_m);
+    // hourIdx 與 temp 入其算而不入其憑 —— 其所影響者眾人之路之形,非其有無,
+    // 而所報者長之差與所避之類,二者於時皆穩。
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pack, result, origin, dest, flags]);
 
   /*
     路之四數。其長與其曝,文中已載,然埋於句中 —— 數之大者當先見,而後其文釋之。
@@ -431,6 +448,55 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             </p>
           )}
 
+          {/*
+            此路何以繞。置於曝之後、程之前 —— 曝之二塊自為一事(其光),
+            此為別一事(其擇),而程則其詳。
+            The cost of caution, stated where the route's summary ends and its
+            step list begins. 阻.ts already names the barrier when NO route
+            exists; this names it when one does, so the trade-off never renders
+            as free.
+          */}
+          {權衡 && !權衡.同路 && (權衡.繞之米 >= 1 || 權衡.避.length > 0) && (
+            <p className="mt-2 rounded-lg border border-line bg-panel px-3 py-2 text-sm">
+              {權衡.繞之米 >= 1 ? (
+                <>
+                  <span className="数 font-semibold">
+                    {Math.round(權衡.繞之米)}
+                  </span>{" "}
+                  m longer than a route that ignores accessibility
+                </>
+              ) : (
+                <>Same length as a route that ignores accessibility</>
+              )}
+              {權衡.避.length > 0 && (
+                <>
+                  {" "}
+                  — avoids{" "}
+                  {權衡.避.map((x, i) => (
+                    <span key={x.類}>
+                      {i > 0 && (i === 權衡.避.length - 1 ? " and " : ", ")}
+                      <span className="数 font-semibold">{x.數}</span>{" "}
+                      {阻之文[x.類]}
+                      {/* 階之數,籤有之則言之 —— 「三階」與「三處階」異。 */}
+                      {x.類 === "steps" && x.階數 != null && (
+                        <> (<span className="数">{x.階數}</span> steps)</>
+                      )}
+                    </span>
+                  ))}
+                </>
+              )}
+              .
+            </p>
+          )}
+
+          {/* 同路者亦當言之 —— 「無所繞」是一果,非一闕。 */}
+          {權衡?.同路 && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              This is also the shortest route here — avoiding steps and kerbs
+              cost you nothing.
+            </p>
+          )}
+
           <h2 className="题-accent mt-6 h-xs">Directions</h2>
           <p className="text-sm text-muted-foreground">
             <span className="数">{Math.round(result.totalLength_m)}</span> m over{" "}
@@ -570,7 +636,17 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
 
       <ReportList 报列={报列} 同步中={同步中} 供給有無={供給有無} />
 
-      <footer className="mt-10 border-t border-line pt-4 text-xs text-muted-foreground">
+      {/*
+        「非醫之言」不入其摺 —— 其一行而已,而所繫者人之身。
+        法之長者摺之,此不摺。
+        The medical line stays visible: it is one sentence and it is the one
+        sentence with a body attached to it. Only the methodology folds.
+      */}
+      <p className="mt-10 border-t border-line pt-4 text-xs text-muted-foreground">
+        Not medical guidance — follow your own clinical advice about heat.
+      </p>
+
+      <ViewNotes>
         <p>
           Sun exposure is computed by projecting building shadows from{" "}
           <span className="数">
@@ -596,13 +672,12 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
             );
           })() : null}
         </p>
-        <p className="mt-2">
+        <p>
           Accessibility attributes come from OpenStreetMap and are incomplete — hatched
           segments above were not explicitly tagged, and an untagged segment is not a
-          verified-passable one. This tool is not medical guidance; follow your own
-          clinical advice about heat.
+          verified-passable one.
         </p>
-      </footer>
+      </ViewNotes>
     </main>
   );
 }
