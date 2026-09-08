@@ -47,7 +47,7 @@ So the design rule here is: **unknown must never render as known.**
 
 ---
 
-## The four views
+## The five views
 
 | View | The question it answers |
 |---|---|
@@ -55,6 +55,7 @@ So the design rule here is: **unknown must never render as known.**
 | **Reach** | What can I get to — and in a heat emergency, can I get out? |
 | **Report** | Where does this city fail its disabled residents? |
 | **Index** | Which neighbourhoods are cut off? |
+| **All cities** | How do the 38 downtowns compare — and how much of that is survey coverage? |
 
 **Route** does A* over the sidewalk graph with cost weighted by sun exposure,
 grade, kerb height, surface, and crossing signalisation, filtered by profile.
@@ -69,6 +70,16 @@ which destinations have backup generation.
 **Report** measures the network: traversable share, shaded share, how many
 connected points are cut off for a given profile, how many destinations have no
 step-free approach at all.
+
+**All cities** puts the same measurements side by side across all 38 downtowns,
+computed offline from the shipped packs because 251 MB of JSON will not fit in a
+browser tab. It leads with its own limitation, because the ranking is dangerous
+without it: cities with almost nothing tagged score *perfectly*. Las Vegas reads
+100% traversable and 0% severed on 0.00% of its network explicitly tagged — not
+a finding about Las Vegas, a finding about its survey coverage. Across all 38,
+tagged share and measured severance correlate at **+0.56** (Spearman), so the
+18 cities under a 1% tagging floor are listed below the ranked ones rather than
+inside the ranking.
 
 **Index** joins the sidewalk network to Census block groups and ACS income
 data. It measures the correlation between neighbourhood income and sidewalk

@@ -141,3 +141,51 @@ export interface RouteResult {
    */
   polyline: [number, number][];
 }
+
+/* ── 國之表 ────────────────────────────────────────────────────────────
+  三十八城,同一尺而相較。其算在 pipeline/國,不在此 ——
+  三十八囊生文二百五十一兆,一頁不能盡載之。
+  Computed offline by pipeline/國 and shipped as one small file: the 38 packs
+  are 251 MB of JSON uncompressed and a page cannot hold them.
+*/
+
+/** 一身之度。四身皆有之,none 者為其比之所本。 */
+export interface 身之度 {
+  traversable_rate: number;
+  shade_rate: number;
+  severed_nodes: number;
+  severed_rate: number;
+}
+
+export interface 國之城 {
+  id: string;
+  name: string;
+  segments: number;
+  length_m: number;
+  nodes: number;
+  destinations: number;
+  connected_nodes: number;
+  buildings_total: number;
+  buildings_assumed_height: number;
+  /** 無樓則為 null,非零 —— 「皆有其高」與「無樓可論」不可混。 */
+  assumed_height_rate: number | null;
+  confidence: Record<"high" | "medium" | "low", { count: number; length_m: number }>;
+  /** 明籤之米比。其足信否,亦算於 pipeline —— 其界不可二書。 */
+  tagged_rate: number;
+  well_surveyed: boolean;
+  profiles: Record<"none" | "wheelchair" | "blind_low_vision" | "heat_sensitive", 身之度>;
+}
+
+export interface 國之表 {
+  generated_at: string;
+  hour_bucket_index: number;
+  shade_threshold: number;
+  tagged_threshold: number;
+  /** 籤之多寡與斷之率之秩相關。量之而書之,不臆之。 */
+  survey_correlation: {
+    n: number;
+    tagged_vs_severed: number | null;
+    below_threshold: number;
+  };
+  cities: 國之城[];
+}

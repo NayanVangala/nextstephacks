@@ -84,9 +84,15 @@ The second claim is what makes the first trustworthy.
 
 ## Capabilities and Constraints
 
-Four views: Route (safest path now), Reach (what is inside a distance or
+Five views: Route (safest path now), Reach (what is inside a distance or
 exposure budget, and what a hazard scenario removes), City audit (where this
-city fails its disabled residents), Index (block groups ranked by connectivity).
+city fails its disabled residents), Index (block groups ranked by connectivity),
+All cities (the same measurements across all 38 downtowns, generated offline).
+
+The national table is the one view whose headline finding is about the data
+rather than the cities: tagged share and measured severance correlate at +0.56,
+so it ranks survey coverage as much as accessibility and says so above the
+table, not under it.
 
 Hard technical constraints:
 
@@ -127,6 +133,10 @@ Real, verifiable, and safe to cite:
 - Los Angeles GTFS omits `wheelchair_boarding` entirely across every stop.
 - The income-to-accessibility correlation is measured every build and reported
   as measured, including when it is weak or collapses on the credible subset.
+- Across the 38 downtowns, tagged share and measured severance correlate at
+  +0.56 (Spearman, n=38). 18 of the 38 have under 1% of network length
+  explicitly tagged; Las Vegas, Green Bay and Orlando are effectively zero and
+  score 100% traversable as a result.
 
 Absences future work must not fabricate: no testimonials, no user counts, no
 partnerships, no press, no pricing, no accuracy benchmark against a competitor.

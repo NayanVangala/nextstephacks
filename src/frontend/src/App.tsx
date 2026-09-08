@@ -4,6 +4,7 @@ import { RouteView } from "./views/RouteView";
 import { ReachView } from "./views/ReachView";
 import { ReportView } from "./views/ReportView";
 import { IndexView } from "./views/IndexView";
+import { NationalView } from "./views/NationalView";
 import { Landing } from "./landing/Landing";
 import { InfoPage, 解說之頁, type 說之頁 } from "./landing/InfoPage";
 import { CITIES, 預設之城 } from "./data/cities";
@@ -36,20 +37,29 @@ function 帶之場(x: number, y: number): number {
   return (右 * 落) ** 1.15;
 }
 
-type 之view = "route" | "reach" | "report" | "index";
+type 之view = "route" | "reach" | "report" | "index" | "national";
 
 const 之tabs: { id: 之view; label: string; blurb: string }[] = [
   { id: "route", label: "Route", blurb: "What is my safest path right now?" },
   { id: "reach", label: "Reach", blurb: "What can I get to, and can I get out?" },
   { id: "report", label: "City audit", blurb: "Where does this city fail?" },
   { id: "index", label: "Index", blurb: "Which neighbourhoods are cut off?" },
+  /*
+    國之表為第五。其異於前四者:前四皆一城之器(其入為 cityId),
+    此則跨其城 —— 故其上之城之選,於此不主其所視,但存其所將往。
+    按其一城之名,則易其城而入其審,是其選之所以不廢。
+    The only cross-city tab. The city selector above does not drive it; picking
+    a city row switches the selector and moves to that city's audit, which is
+    what makes the selector still coherent while this tab is open.
+  */
+  { id: "national", label: "All cities", blurb: "How do the 38 downtowns compare?" },
 ];
 
 export default function App() {
   // 址所載之城與 view 先於其預設 —— 分享之鏈必落於其所指之處。
   const 初 = 解址();
   const [view, setView] = useState<之view>(
-    (["route", "reach", "report", "index"] as const).includes(初.view as never)
+    (["route", "reach", "report", "index", "national"] as const).includes(初.view as never)
       ? (初.view as 之view)
       : "route",
   );
@@ -335,6 +345,15 @@ export default function App() {
           {view === "reach" && <ReachView key={city} cityId={city} />}
           {view === "report" && <ReportView key={city} cityId={city} />}
           {view === "index" && <IndexView key={city} cityId={city} />}
+          {view === "national" && (
+            <NationalView
+              onPickCity={(id) => {
+                setCity(id);
+                setView("report");
+                scrollTo({ top: 0 });
+              }}
+            />
+          )}
         </div>
       </div>
       </div>
