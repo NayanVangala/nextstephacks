@@ -45,17 +45,22 @@ def _段之中(edge):
     return Point((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
 
 
-def _最大之分支(edges):
-    """可通之段中,最大連通分支之節。
+def _最大之分支(edges, 身=None):
+    """可通之段中,最大連通分支之節。身闕則以輪椅論。
 
-    Plain BFS over the wheelchair-traversable subgraph. Deliberately NOT a port
-    of the frontend's reach(): that one carries a heat budget and a cost model
-    that would have to be kept in step across two languages. Connectivity has no
-    tunable behaviour, so duplicating it here cannot silently diverge.
+    Plain BFS over the traversable subgraph for one profile. Deliberately NOT a
+    port of the frontend's reach(): that one carries a heat budget and a cost
+    model that would have to be kept in step across two languages. Connectivity
+    has no tunable behaviour, so duplicating it here cannot silently diverge.
+
+    身 之設,為國之表而加 —— 其表須四身,而此本但輪椅。其默不改,故舊呼者不動。
+    The profile parameter was added for the national table, which needs all four.
+    The default is unchanged so every existing caller keeps its behaviour.
     """
+    身 = 身 or _輪椅之身
     鄰 = {}
     for e in edges:
-        if not e["traversable"][_輪椅之身]:
+        if not e["traversable"][身]:
             continue
         鄰.setdefault(e["from"], []).append(e["to"])
         鄰.setdefault(e["to"], []).append(e["from"])

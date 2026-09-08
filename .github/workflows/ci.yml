@@ -9,6 +9,16 @@ jobs:
         with: { python-version: "3.11" }
       - run: pip install -e "src/backend[dev]"
       - run: pytest tests/backend -v
+      # 國之表自諸囊而出。囊改而表不改,則其表默然而陳 ——
+      # 「All cities」與「City audit」遂二數而無一處自言其異。
+      # national.json is derived from the committed packs. If a pack changes and
+      # the table is not regenerated it goes silently stale, and the national tab
+      # and the city audit disagree about the same city with nothing on screen
+      # to say so. Regenerate and fail if it differs from what is committed.
+      - name: national.json 與其囊相符
+        working-directory: src/backend
+        run: python -m pipeline.國
+      - run: git diff --exit-code -- src/frontend/public/national.json
   frontend:
     runs-on: ubuntu-latest
     steps:
