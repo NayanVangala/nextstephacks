@@ -2117,3 +2117,125 @@ a {
 .印之記 {
   font-family: var(--font-mono);
 }
+
+/* ── 印 ────────────────────────────────────────────────────────────────
+
+  一路既得,或欲持之於手 —— 照護者一紙,或無電之時。
+  A route someone can carry: a caregiver's copy, or a phone that will not last
+  the walk. The step list is already the accessible form of the route, so
+  printing is mostly a matter of removing everything that is not it.
+
+  三墨與其網目皆不印。紙上無此三色,而網目印之則為一片灰,其下之字不可讀;
+  且此三色本為資之編碼,印而失其准,則所見者妄。
+  The three spot inks and the halftone do not print: a domestic printer cannot
+  hold them, and grain over text is unreadable. More to the point the inks
+  ENCODE exposure — printed off-register they would assert a measurement the
+  page cannot actually make. Every step already carries its exposure in words.
+*/
+@media print {
+  /* 紙為白,墨為黑。暖紙與夜印皆不入其印。 */
+  :root,
+  :root[data-theme="dark"] {
+    --color-canvas: #fff;
+    --color-paper: #fff;
+    --color-panel: #fff;
+    --color-ink: #000;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* 版、網目、影,皆去之。 */
+  body::after,
+  .hero-net,
+  canvas,
+  .riso-plate,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  /* 器之chrome、越之鏈、餅之問、諸鈕 —— 紙上皆無所用。 */
+  .chrome,
+  .越,
+  [role="region"][aria-label="Cookie choice"],
+  button,
+  select,
+  input,
+  textarea,
+  form {
+    display: none !important;
+  }
+
+  /* 粘者不粘 —— 印則每頁重出其帶。 */
+  .chrome,
+  [class*="sticky"] {
+    position: static !important;
+  }
+
+  /*
+    段之列不可斷於其中。一段之文分於二紙者,讀之如二段。
+    break-inside on each step: a segment split across a page break reads as two
+    different segments, which on a wayfinding sheet is a real error.
+  */
+  li {
+    break-inside: avoid;
+    border-bottom: 1px solid #999 !important;
+  }
+
+  h2 {
+    break-after: avoid;
+  }
+
+  /*
+    紋者印為虛線之底 —— 其義為「此段之籤闕」,紙上不可失。
+    The hatch means "this segment's data is missing" and MUST survive to paper;
+    it is the one piece of visual encoding that is not decorative.
+  */
+  .纹-low,
+  .纹-medium {
+    background: none !important;
+    border-left: 3px dashed #666 !important;
+    padding-left: 8px !important;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+}
+
+/* ── 註之摺 ────────────────────────────────────────────────────────────
+  details 之三角各瀏覽器不一,且不從此站之墨,故去之而自畫其記。
+  The UA disclosure triangle differs per browser and does not take the site's
+  ink, so it is removed and replaced by a mark that does.
+*/
+.註之摺 > summary::-webkit-details-marker {
+  display: none;
+}
+.註之摺[open] > summary .註之記 {
+  /* 既開,則其記為減。旋轉之則其字形變 —— 直易其文,不可為之,故以此代之。 */
+  visibility: hidden;
+  position: relative;
+}
+.註之摺[open] > summary .註之記::after {
+  content: "–";
+  visibility: visible;
+  position: absolute;
+  inset: 0;
+}
+
+/*
+  印則盡開。紙無可擊者 —— 摺而印之,則其法永不見於紙。
+  Paper has nothing to click: a collapsed disclosure would simply never appear.
+*/
+@media print {
+  .註之摺 > summary {
+    display: none !important;
+  }
+  .註之摺 > div {
+    display: block !important;
+  }
+}

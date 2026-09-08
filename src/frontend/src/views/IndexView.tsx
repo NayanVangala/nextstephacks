@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ViewNotes } from "../components/ViewNotes";
 import { motion, useReducedMotion } from "motion/react";
 import type { CityPack, 區之度 } from "../types";
 import { loadCityPack } from "../data/loadCityPack";
@@ -334,7 +335,7 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
         </div>
       </section>
 
-      <footer className="mt-8 border-t border-line pt-4 text-xs text-muted-foreground">
+      <ViewNotes>
         <p>
           Boundaries from the Census Bureau TIGERweb service. Income is
           B19013_001E, median household income, from the{" "}
@@ -351,13 +352,13 @@ export function IndexView({ cityId = "la" }: { cityId?: string }) {
             </>
           )}
         </p>
-        <p className="mt-2">
+        <p>
           Connectivity is computed for a wheelchair profile against the largest
           step-free component of the sidewalk network. Shade is modelled from
           projected building shadows, not measured. This is a study of published
           data quality as much as of the cities themselves.
         </p>
-      </footer>
+      </ViewNotes>
     </main>
   );
 }
