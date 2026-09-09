@@ -31,13 +31,20 @@ export function SiteFooterMeta() {
         Source
       </a>
       {/*
-        聯繫之法在此。真址、真號未定,故不書 —— 偽之號置於一無障礙之站,
-        害過於無。得其實而後補之,一行而已。
-        Contact goes here. Deliberately absent rather than filled with a
-        placeholder: a fake number or address on an accessibility tool is worse
-        than none, since someone may actually dial it. One line to add once the
-        real details are settled.
+        聯繫之法。無號 —— 此器不賴聲之通,而公之於眾之號但招其擾。
+
+        其址直書之,不遮不繞。以 JS 綴之以避採者,則無 JS 者不得見,
+        而讀屏所讀者為一串碎文 —— 此為無障礙之器,不可以避廣告之計
+        易其可及。招擾者,公其址之常費也,非可以碎其文而免。
+        Written plainly, not obfuscated. The usual JS/entity tricks to dodge
+        scrapers break for anyone without JS and make screen readers announce
+        fragments. On an accessibility tool that trade is not available: spam is
+        the ordinary cost of a public address, and mangling the markup does not
+        actually avoid it.
       */}
+      <a href="mailto:nayan.vangala13@gmail.com" className="hover:text-ink">
+        Contact
+      </a>
     </div>
   );
 }
