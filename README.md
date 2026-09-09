@@ -181,6 +181,10 @@ with nothing behind it is worse than no sign-in button.
 To enable shared reports, see **[docs/auth-setup.md](docs/auth-setup.md)** and
 copy `src/frontend/.env.local.example` to `.env.local`.
 
+Every token, key and ID the project can use — where to get each one, what it
+turns on, and what happens without it — is in
+**[docs/deploy-secrets.md](docs/deploy-secrets.md)**. All of them are optional.
+
 ---
 
 ## Tests
