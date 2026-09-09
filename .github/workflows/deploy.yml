@@ -90,7 +90,29 @@ jobs:
             echo "Add it at Settings > Secrets and variables > Actions."
             exit 0
           fi
-          npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN"
+          # 其址自 stdout 而出,其餘皆 stderr —— 故可徑取之。
+          URL=$(npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN")
+          echo "deployed: $URL"
+
+          # 其址不合式則止 —— 以一非址者為 alias,則其產之域指於無物。
+          case "$URL" in
+            https://*.vercel.app) ;;
+            *) echo "unexpected deploy output, not aliasing: $URL"; exit 1 ;;
+          esac
+
+          # passable-la 須自書之。
+          #
+          # vercel --prod 但自維其所隸之產域(nextstephacks.vercel.app 之屬);
+          # passable-la 乃手立之 alias,不在其列,故 --prod 不之顧 ——
+          # 前此其址滯於二日之前而其job猶報其成,正坐此。
+          # 而 devpost 所投者正此址(docs/devpost-submission.md),故不可滯。
+          #
+          # MUST be explicit. `vercel --prod` only re-points domains assigned to
+          # the project; passable-la.vercel.app is a hand-created alias outside
+          # that set, so --prod silently leaves it on the previous deployment.
+          # That is exactly how it went two days stale while this job still
+          # reported success — and it is the URL submitted to Devpost.
+          npx --yes vercel@latest alias set "$URL" passable-la.vercel.app --token="$VERCEL_TOKEN"
 
   # ── Cloudflare Pages。與 Pages、Vercel 並列,三站不相待 ──────────────
   # needs: build —— 與 vercel 同,其驗不過則不部署。
