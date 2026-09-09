@@ -1,12 +1,26 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { RouteView } from "./views/RouteView";
-import { ReachView } from "./views/ReachView";
-import { ReportView } from "./views/ReportView";
-import { IndexView } from "./views/IndexView";
-import { NationalView } from "./views/NationalView";
 import { Landing } from "./landing/Landing";
-import { InfoPage, 解說之頁, type 說之頁 } from "./landing/InfoPage";
+import { 解說之頁, type 說之頁 } from "./landing/說之路";
+
+/*
+  惰載之二:器與說之頁。landing 不與焉。
+
+  量之於其囊(sourcemap 歸其出之量於其源):leaflet 一四五兆、ajv 與 fast-uri
+  一一七兆、sql.js 三九兆、五器四四兆 —— 三百餘兆,皆landing所不用者,
+  而前此盡載於其首。一人但讀其landing者,不當荷之。
+
+  landing 不惰 —— 其為眾人所入之門,惰之則其首畫更待一往返。
+  Measured with a sourcemap byte-attribution: leaflet 145 kB, ajv+fast-uri
+  117 kB, sql.js 39 kB, the views themselves 44 kB — over 300 kB the landing
+  page never touches, all of it in the initial bundle. Landing itself stays
+  eager: it is the common entry point, and making it lazy would put a round
+  trip in front of the first paint for most visitors.
+*/
+const AppViews = lazy(() => import("./views/AppViews"));
+const InfoPage = lazy(() =>
+  import("./landing/InfoPage").then((m) => ({ default: m.InfoPage })),
+);
 import { CITIES, 預設之城 } from "./data/cities";
 import { 解址 } from "./data/路之址";
 import { SignIn } from "./auth/SignIn";
@@ -133,7 +147,13 @@ export default function App() {
   };
 
   // 說之頁先於 app —— 器之中亦可指之,而不當因其 hash 之殘而落於器。
-  if (說頁 && !入app) return <InfoPage 頁={說頁} onEnter={入} />;
+  if (說頁 && !入app) {
+    return (
+      <Suspense fallback={<p className="grid-container py-24 text-ink/70">Loading…</p>}>
+        <InfoPage 頁={說頁} onEnter={入} />
+      </Suspense>
+    );
+  }
 
   if (!入app) {
     return (
@@ -341,19 +361,25 @@ export default function App() {
       <div className="grid-container relative z-10">
         {/* 帶既黏於上,則跳之的須讓其高,不然其題隱於帶下。 */}
         <div id="主" ref={面} tabIndex={-1} className="scroll-mt-28">
-          {view === "route" && <RouteView key={city} cityId={city} />}
-          {view === "reach" && <ReachView key={city} cityId={city} />}
-          {view === "report" && <ReportView key={city} cityId={city} />}
-          {view === "index" && <IndexView key={city} cityId={city} />}
-          {view === "national" && (
-            <NationalView
+          {/*
+            其待之文與 RouteView 之「Loading city data…」同其位與其色,
+            故其chunk既至,其字易而其版不動。
+            Same position and tone as the views' own loading line, so when the
+            chunk lands the text changes without the layout jumping.
+          */}
+          <Suspense
+            fallback={<p className="py-6 text-muted-foreground">Loading…</p>}
+          >
+            <AppViews
+              view={view}
+              city={city}
               onPickCity={(id) => {
                 setCity(id);
                 setView("report");
                 scrollTo({ top: 0 });
               }}
             />
-          )}
+          </Suspense>
         </div>
       </div>
       </div>

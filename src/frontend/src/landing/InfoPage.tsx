@@ -9,6 +9,8 @@ import { SunDial } from "./SunDial";
 import { DifferenceCursor } from "./DifferenceCursor";
 import { useCountUp, 解數 } from "./useCountUp";
 import { useSmoothScroll } from "./useSmoothScroll";
+// 其路之定別居一檔,俾此檔可惰載 —— 見 說之路.ts。
+import { 說之要, type 說之頁 } from "./說之路";
 import { SiteFooterMeta } from "./SiteFooterMeta";
 
 /**
@@ -24,29 +26,6 @@ import { SiteFooterMeta } from "./SiteFooterMeta";
  *
  * 無 router —— 址之 hash 即其路,同 App 之所為。四頁一檔,故其文可並讀而不相違。
  */
-
-/** 說之四頁。此四在 nav,亦在「Keep reading」之列。 */
-const 說之要 = ["help", "questions", "about", "limits"] as const;
-
-/**
- * 法之二頁。可指,而不入 nav。
- *
- * Nav.tsx 已言五鏈於七六八之屏不可容(量之,逾其地);今若六則益甚。
- * 且法之頁非讀者所尋,乃所查者 —— 其位在footer,不在其首。
- * Deliberately routable but not in the nav: Nav.tsx already records that five
- * links overflow at 768px, and six would be worse. Legal pages are looked up,
- * not browsed, so the footer is the right place for them.
- */
-const 說之法 = ["privacy", "terms"] as const;
-
-export const 說之頁 = [...說之要, ...說之法] as const;
-export type 說之頁 = (typeof 說之頁)[number];
-
-/** 自 hash 得其頁。非說之頁者回 null —— 未知之路一律歸於 landing。 */
-export function 解說之頁(hash: string = location.hash): 說之頁 | null {
-  const m = /^#\/(help|questions|about|limits|privacy|terms)\b/.exec(hash);
-  return m ? (m[1] as 說之頁) : null;
-}
 
 /** nav 與「Keep reading」之目。法之二頁不與焉。 */
 const 頁之目: { id: 說之頁; label: string; href: string }[] = 說之要.map((id) => ({

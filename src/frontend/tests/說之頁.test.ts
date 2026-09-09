@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { 解說之頁 } from "../src/landing/InfoPage";
+import { 解說之頁 } from "../src/landing/說之路";
 
 /**
  * 址之解。
