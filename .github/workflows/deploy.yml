@@ -90,8 +90,18 @@ jobs:
             echo "Add it at Settings > Secrets and variables > Actions."
             exit 0
           fi
-          # 其址自 stdout 而出,其餘皆 stderr —— 故可徑取之。
-          URL=$(npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN")
+          # 其 stdout 為 JSON,非一址 —— 其址在 .deployment.url。
+          #
+          # 前此書之為「URL=$(vercel deploy …)」,以其 stdout 為其址而已。
+          # 誤也:此 CLI(59.x)之 stdout 為一 JSON 之物,故所得者其末一行,
+          # 即「}」。驗之於實,乃見 —— 其 alias 遂敗於「Failed to find ID or URL }」。
+          #
+          # stdout is a JSON object, NOT a bare URL. The previous form took the
+          # whole of stdout as the URL, which yields "}" — the last line of the
+          # JSON — and the alias step then fails with
+          # "Failed to find ID or URL }". Verified against the real CLI.
+          npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN" > deploy.json
+          URL=$(jq -er '.deployment.url' deploy.json)
           echo "deployed: $URL"
 
           # 其址不合式則止 —— 以一非址者為 alias,則其產之域指於無物。
