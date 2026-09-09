@@ -30,3 +30,7 @@ shots/
 
 # impeccable 之工:審之影、決之囊。非所交付者。
 .impeccable/
+.vercel
+
+# wrangler 之工作區。部署之際自立,可再造,不入庫。
+.wrangler/
