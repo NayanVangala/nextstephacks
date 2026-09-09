@@ -21,7 +21,6 @@ README 舉三十八城,而器但示其一;其「五十八成之樓無其高」�
 
 import gzip
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 
 from pipeline.指數.算 import _最大之分支, _斯氏之相關
@@ -127,11 +126,29 @@ def 算諸城(囊之處):
     """歷其處之諸囊而表之。其序從其名,俾其出可復。"""
     囊之處 = Path(囊之處)
     出 = []
+    囊之日 = []
     for p in sorted(囊之處.glob("*.json.gz")):
         with gzip.open(p, "rt", encoding="utf-8") as f:
-            出.append(算一城(json.load(f)))
+            囊 = json.load(f)
+        出.append(算一城(囊))
+        日 = 囊["manifest"].get("generated_at")
+        if 日:
+            囊之日.append(日)
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        # 其日從其囊之最新者,不從其算之時。
+        #
+        # 二故。其一,實也:此表之新不逾其囊之新。囊建於八月而以今日書之,
+        # 是以陳為新,正此器所拒之事。
+        # 其二,可復也:從其鐘則每算而其文異,而 CI 之驗(再造而較之)必敗於
+        # 一無所改之時。既從其囊,則同囊必得同文。
+        #
+        # Taken from the newest pack, never the wall clock. Two reasons, and the
+        # first is the real one: this table is no fresher than its inputs, and
+        # stamping today's date on packs built in August asserts a currency that
+        # does not exist. The second is that a clock makes the output
+        # nondeterministic, so CI's regenerate-and-diff check would fail on every
+        # run with nothing actually changed.
+        "generated_at": max(囊之日) if 囊之日 else None,
         "hour_bucket_index": 午後之序,
         "shade_threshold": 蔭之界,
         "tagged_threshold": 明籤之界,

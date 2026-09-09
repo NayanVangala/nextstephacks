@@ -296,11 +296,16 @@ export function NationalView({ onPickCity }: { onPickCity: (id: string) => void 
         </p>
         <p>
           Coverage is downtown cores, not whole metros, and the extracts differ
-          in size — a bounding box is not a city. Table generated{" "}
+          in size — a bounding box is not a city. Computed from packs built{" "}
           {new Date(表.generated_at).toLocaleDateString("en-US", {
             year: "numeric", month: "short", day: "numeric",
           })}
-          .
+          {/*
+            其日從其囊,不從其算 —— 此表之新不逾其囊之新,故所書者囊之日。
+            The date is the newest pack's, not the run's: this table cannot be
+            fresher than the data under it, so it reports that instead.
+          */}
+          , which is as current as this table can be.
         </p>
       </ViewNotes>
     </main>
