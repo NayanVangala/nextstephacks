@@ -115,7 +115,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # 二十二,不從他job之二十 —— wrangler 明拒二十:
+          #   「Wrangler requires at least Node.js v22.0.0. You are using v20.20.2.」
+          # 他job猶二十者,其行無礙,故不並改之 —— 所改者止於其所必需。
+          # Deliberately diverges from the other jobs' Node 20: current wrangler
+          # hard-refuses anything below 22. The other jobs are untouched because
+          # they pass on 20 and bumping them would be an unrelated change.
+          node-version: "22"
       - run: npm ci
         working-directory: src/frontend
       # VITE_BASE 不授 —— 其常為斜線,此站在根故也。
