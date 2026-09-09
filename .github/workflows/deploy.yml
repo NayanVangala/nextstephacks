@@ -37,6 +37,22 @@ jobs:
           # Unset means no banner and no analytics: a deploy without this
           # secret behaves exactly as the site did before analytics existed.
           VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
+          # 供給之憑。闕之則其站行於局部之报事之式 —— 得供給() 見其空而回 null,
+          # 报事存於瀏覽器,而登入之鈕不render。此為所許之式,非其降。
+          # 故此二者無需其守:空即其退路,而其退路已在碼中。
+          #
+          # Both may be absent: 得供給() returns null on an empty value, reports
+          # fall back to browser-local storage, and the sign-in button is not
+          # rendered at all. That is a supported mode, not a degraded one, so no
+          # guard is needed here — the fallback already lives in the client.
+          #
+          # 其鑰本為公 —— RLS 御其資,而此鑰designed to ship in a browser bundle。
+          # 置於 secrets 者,不欲其硬書於碼耳,非以其為密。
+          # The anon/publishable key is public by design; RLS is what protects the
+          # data. It lives in secrets to keep it out of the source, not because
+          # exposure would matter.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       # Pages 為 SPA 而無 router,然 404 亦以 index 應之,免直入子路而失
       - run: cp dist/index.html dist/404.html
         working-directory: src/frontend
@@ -161,6 +177,22 @@ jobs:
         working-directory: src/frontend
         env:
           VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
+          # 供給之憑。闕之則其站行於局部之报事之式 —— 得供給() 見其空而回 null,
+          # 报事存於瀏覽器,而登入之鈕不render。此為所許之式,非其降。
+          # 故此二者無需其守:空即其退路,而其退路已在碼中。
+          #
+          # Both may be absent: 得供給() returns null on an empty value, reports
+          # fall back to browser-local storage, and the sign-in button is not
+          # rendered at all. That is a supported mode, not a degraded one, so no
+          # guard is needed here — the fallback already lives in the client.
+          #
+          # 其鑰本為公 —— RLS 御其資,而此鑰designed to ship in a browser bundle。
+          # 置於 secrets 者,不欲其硬書於碼耳,非以其為密。
+          # The anon/publishable key is public by design; RLS is what protects the
+          # data. It lives in secrets to keep it out of the source, not because
+          # exposure would matter.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

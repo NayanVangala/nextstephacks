@@ -74,24 +74,43 @@ npx wrangler pages secret put VITE_GA_ID       # Cloudflare
 
 ---
 
-## Shared reports and sign-in (not currently wired)
+## Shared reports and sign-in
 
 ### `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 
-From your Supabase project → **Settings → API**. See
-[auth-setup.md](auth-setup.md) for the full setup including migrations.
-
-The anon key is designed to be public — row-level security is what protects the
-data — but it still does not belong hardcoded in the repository.
-
-**These are not read by any workflow.** Locally you copy
-`src/frontend/.env.local.example` to `.env.local` and fill them in, and shared
-reports work. On the deployed sites they are absent, so every deployment runs in
+Turns on shared reports and optional sign-in. Without them the app runs in
 local-only report mode: reports save to browser storage and no sign-in button
-renders. That is a supported mode, and a sign-in button with nothing behind it
-would be worse — but if you want shared reports live, the two variables have to
-be added to each host's build environment, and `VITE_SUPABASE_*` added to the
-`build` and `cloudflare` jobs in `.github/workflows/deploy.yml`.
+renders at all. That is a supported mode — a sign-in button with nothing behind
+it is worse than none.
+
+**Setup**, about 25 minutes, full detail in [auth-setup.md](auth-setup.md):
+
+1. Create a project at <https://supabase.com/dashboard>.
+2. Copy the **Project URL** and the **anon public** key from
+   Project Settings → API. Newer projects issue a `sb_publishable_...` key
+   instead; either works, the variable name is just a name.
+3. Apply the migrations — there are five, and the fourth removes a permissive
+   policy that defeated the strict ones, so do not skip ahead:
+   ```bash
+   npx supabase link --project-ref YOUR_PROJECT_REF
+   npx supabase db push
+   ```
+4. Set them for each host:
+   ```bash
+   gh secret set VITE_SUPABASE_URL          # Pages + Cloudflare
+   gh secret set VITE_SUPABASE_ANON_KEY
+   npx vercel env add VITE_SUPABASE_URL production
+   npx vercel env add VITE_SUPABASE_ANON_KEY production
+   ```
+
+The anon/publishable key is designed to be public — row-level security is what
+protects the data — so it lives in secrets to keep it out of the source, not
+because exposure would matter. Never put the `service_role` key anywhere near
+this repo; that one bypasses RLS entirely.
+
+The `build` and `cloudflare` jobs read both from repository secrets. Vercel
+builds remotely and cannot see them, which is why it needs its own project
+environment.
 
 ---
 
