@@ -48,16 +48,23 @@ by sun exposure, grade, kerb height, surface and crossing signalisation, filtere
 by disability profile. It runs entirely in your browser — no account, no API key,
 no server.
 
-Four views, two audiences, one graph:
+Five views, two audiences, one graph:
 
 - **Route** — the safest path right now, plus a written itinerary. It will also
-  tell you that walking the same path at 18:00 instead of 14:00 cuts your sun
-  exposure by 60%.
+  tell you that walking the same path at 18:00 instead of 14:00 typically cuts
+  your sun exposure by about 60% — median 58% across 30 sampled downtown LA
+  routes, ranging 25% to 100%, because how much shade a later hour buys depends
+  entirely on which way your street runs.
 - **Reach** — flood outward under a distance *or* sun-exposure budget. Toggle a
   heat emergency and watch the reachable set collapse.
 - **City audit** — where this city fails its disabled residents, measured.
 - **Index** — every census block group ranked worst-connected first, joined to
   ACS income.
+- **All cities** — all 38 downtowns on one scale. It leads with its own
+  limitation: tagged share and measured severance correlate at +0.56 (Spearman,
+  n=38), so the table ranks survey coverage as much as accessibility. Las Vegas
+  scores 100% traversable on 0.00% of its network tagged. The 18 cities under a
+  1% tagging floor sit below the ranking rather than inside it.
 
 The individual and the city planner read the same truth from the same graph.
 
