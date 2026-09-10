@@ -71,6 +71,13 @@
             "string",
             "null"
           ]
+        },
+        "sun_altitude_deg": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Solar altitude in degrees for each hour_buckets entry on the modelled day. Negative means the sun is below the horizon. OPTIONAL: packs built before this field existed omit it, and the frontend falls back to inferring night from zero exposure."
         }
       }
     },

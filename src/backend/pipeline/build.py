@@ -8,7 +8,6 @@ the frontend indexes sun_exposure by bucket position.
 import argparse
 import datetime
 import json
-import zoneinfo
 from pathlib import Path
 
 from pipeline.extract.overpass import fetch, load_elements
@@ -17,15 +16,12 @@ from pipeline.extract import destinations as dest
 from pipeline.extract import 公交
 from pipeline.extract import 停運
 from pipeline.graph.build import build_graph
-from pipeline.shade.sun import sun_position
+from pipeline.shade.sun import 諸日之位
 from pipeline.emit.citypack import assemble_pack, write_pack
 from pipeline.指數 import 區 as 指數之區, 算 as 指數之算
 
 # parents: [0]=pipeline [1]=backend [2]=src [3]=repo root
 ROOT = Path(__file__).parents[3]
-
-_SUMMER_DAY_OF_YEAR = 200  # 取夏日之中者,以擬洛城暑候
-
 
 def main():
     ap = argparse.ArgumentParser()
@@ -39,17 +35,8 @@ def main():
 
     lon = (manifest["bbox"][0] + manifest["bbox"][2]) / 2
     lat = (manifest["bbox"][1] + manifest["bbox"][3]) / 2
-    # 鐘之時非日之時。城有偏於其子午線者,又有行夏令者,故必以其區之偏正之。
-    # ORDER MATTERS: the offset must be taken for the same day the sun is being
-    # modelled, not for today — otherwise a build run in winter would model a
-    # summer day with a winter DST offset.
-    tz = zoneinfo.ZoneInfo(manifest.get("timezone", "America/Los_Angeles"))
-    _擬之日 = (datetime.date(2026, 1, 1)
-               + datetime.timedelta(days=_SUMMER_DAY_OF_YEAR - 1))
-    utc_off = (datetime.datetime.combine(_擬之日, datetime.time(12), tzinfo=tz)
-               .utcoffset().total_seconds() / 3600.0)
-    suns = [sun_position(lat, lon, _SUMMER_DAY_OF_YEAR, h, utc_off)
-            for h in manifest["hour_buckets"]]
+    # 其算移於 shade/sun.py 之 諸日之位 —— 補囊者亦取之,二者不可歧。
+    suns, utc_off = 諸日之位(manifest)
     print(f"日之位:{manifest['timezone']} UTC{utc_off:+.0f},"
           f"鐘 {manifest['hour_buckets'][4]}:00 = 日之 "
           f"{(manifest['hour_buckets'][4] - utc_off + lon / 15):.2f} 時")

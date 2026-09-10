@@ -48,3 +48,34 @@ def sun_position(lat, lon, day_of_year, hour, utc_offset_h=None):
     )
     azimuth = (math.degrees(az) + 180.0) % 360.0
     return {"altitude_deg": math.degrees(alt), "azimuth_deg": azimuth}
+
+
+# 擬之日。取夏日之中者,以擬暑候。
+# The modelled day: mid-summer, since the whole point is the heat season.
+擬之日序 = 200
+
+
+def 諸日之位(manifest):
+    """一城諸刻之日位。build 與其補皆取之於此,故二者不能歧。
+
+    鐘之時非日之時。城有偏於其子午線者,又有行夏令者,故必以其區之偏正之;
+    而其偏必取於所擬之日,不取於今日 —— 冬日所行之build,若取今日之偏,
+    則以冬之偏擬夏之日。
+
+    ORDER MATTERS: the UTC offset must be read for the day being modelled, not
+    for today. A build run in winter would otherwise model a summer day with a
+    winter DST offset.
+
+    Extracted so the pipeline and the backfill that patches already-built packs
+    cannot drift — they were two copies of this arithmetic for one definition.
+    """
+    import datetime
+    import zoneinfo
+
+    lon = (manifest["bbox"][0] + manifest["bbox"][2]) / 2
+    lat = (manifest["bbox"][1] + manifest["bbox"][3]) / 2
+    tz = zoneinfo.ZoneInfo(manifest.get("timezone", "America/Los_Angeles"))
+    日 = datetime.date(2026, 1, 1) + datetime.timedelta(days=擬之日序 - 1)
+    偏 = (datetime.datetime.combine(日, datetime.time(12), tzinfo=tz)
+          .utcoffset().total_seconds() / 3600.0)
+    return [sun_position(lat, lon, 擬之日序, h, 偏) for h in manifest["hour_buckets"]], 偏

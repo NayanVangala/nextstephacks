@@ -180,7 +180,12 @@ export function RouteView({ cityId = "la" }: { cityId?: string }) {
   // 同一路,他時行之,可省幾何。再計其曝而已,不再尋路 —— 八次尋路者三百餘毫秒。
   const 遲之利 = useMemo(
     () => (result && pack
-      ? 算遲行之利(result.edges, hourIdx, pack.manifest.hour_buckets.length)
+      ? 算遲行之利(
+          result.edges,
+          hourIdx,
+          pack.manifest.hour_buckets.length,
+          pack.manifest.sun_altitude_deg,
+        )
       : null),
     [result, hourIdx, pack],
   );

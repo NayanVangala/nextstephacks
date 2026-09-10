@@ -89,40 +89,45 @@ describe("所稱之數,皆出於實", () => {
   });
 
   /*
-    器所舉者,必實省而不誣 —— 然不必為其至善。
+    器所舉者,必實省,且必為其至善之白晝。
 
-    其守曰:曝全無之時不舉。此守所拒者二,而其一當拒,其一不當:
-      當拒者,夜也 —— 二十時之日在地下一度有四(其擬之日為七月十九),
-      「待日沒而行」非蔭之計,且其省必為十成,舉之則每路皆此時,其言遂廢。
-      不當拒者,白晝而全蔭也 —— 十八時之日尚二十二度,而數路於其時全在影中。
-      此正暑者所欲聞,而器默然,反舉十六時之七成有一。
+    其守前此以曝之零為夜,故十八時全蔭之路(其日尚二十二度)為所棄,
+    反舉十六時之次者 —— 洛城五十六路之中,如此者二。
+    今其守取諸 manifest.sun_altitude_deg,乃能別「日已沒」與「此路全蔭」。
 
-    量之於五十六路:如此者二(百之四)。其言非誣,特非其至善耳。
-    其根在囊:pipeline 算其日之高度而不書之於囊(shade/sun.py 有之,
-    而 manifest 無之),故前端無以別「日已沒」與「此路全蔭」,
-    但以其曝之零推之。欲正之,須書其高度於囊而後改此守。
-
-    Documented, not asserted away. The guard skips hours whose total exposure is
-    zero. That correctly refuses night — at 20:00 the sun is 1.4° BELOW the
-    horizon on the modelled day, and "wait until dark" is not a shade strategy —
-    but it also refuses genuine full shade in daylight: at 18:00 the sun is
-    still 22° up, and 2 of 56 sampled routes are entirely shaded then. Those get
-    told "71% at 16:00" instead of the 100% actually available.
-
-    Root cause is in the pack, not here: the pipeline computes per-bucket solar
-    altitude (shade/sun.py) and does not emit it, so the frontend cannot tell
-    "sun is down" from "this route is fully shaded" and infers it from zero
-    exposure. Fixing it means emitting altitude into the manifest.
+    The guard used to infer night from zero exposure, which discarded genuine
+    full shade in daylight. It now reads per-bucket solar altitude from the pack.
   */
-  it("器所舉者必實省 —— 其至善與否,別為一事(見上)", () => {
+  it("器所舉者,必為白晝之至善 —— 夜不舉,而全蔭不棄", () => {
+    const 高 = pack.manifest.sun_altitude_deg;
+    expect(高, "囊當載其日高").toBeDefined();
+    expect(高!.length).toBe(pack.manifest.hour_buckets.length);
+
     for (const r of 路) {
-      const g = 算遲行之利(r.edges, 午後, pack.manifest.hour_buckets.length);
-      if (!g) continue;
-      // 所舉之時,其曝必實少於今 —— 此為其勸之底,不可破。
-      expect(路之曝米(r.edges, g.善之時序)).toBeLessThan(路之曝米(r.edges, 午後));
-      expect(g.省之比).toBeGreaterThan(0);
-      // 夜不可舉。二十時者,日在地下。
-      expect(路之曝米(r.edges, g.善之時序)).toBeGreaterThan(0);
+      const g = 算遲行之利(r.edges, 午後, pack.manifest.hour_buckets.length, 高);
+      const 今 = 路之曝米(r.edges, 午後);
+      if (今 <= 0) continue;
+
+      // 白晝諸刻之至善。
+      let 至善 = 今;
+      for (let h = 0; h < 高!.length; h++) {
+        if (高![h] <= 0) continue;
+        至善 = Math.min(至善, 路之曝米(r.edges, h));
+      }
+      if (至善 >= 今) { expect(g).toBeNull(); continue; }
+
+      expect(g).not.toBeNull();
+      // 所舉者必為白晝。
+      expect(高![g!.善之時序]).toBeGreaterThan(0);
+      // 且必為其至善 —— 全蔭之刻不復為所棄。
+      expect(路之曝米(r.edges, g!.善之時序)).toBeCloseTo(至善, 6);
     }
+  });
+
+  it("囊無其日高者,從其舊法而不廢 —— fork 之舊囊賴此", () => {
+    const r = 路[0];
+    const g = 算遲行之利(r.edges, 午後, pack.manifest.hour_buckets.length);
+    // 舊法猶行,但其果或非至善(此正所以立其新法)。
+    if (g) expect(g.省之比).toBeGreaterThan(0);
   });
 });

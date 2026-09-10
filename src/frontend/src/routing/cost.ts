@@ -124,19 +124,37 @@ export function 算遲行之利(
   edges: Edge[],
   hourIdx: number,
   時數: number,
+  日高?: number[],
 ): 遲行之利 | null {
   if (edges.length === 0 || 時數 <= 1) return null;
   const 今 = 路之曝米(edges, hourIdx);
   let 善序 = hourIdx;
   let 善 = 今;
   for (let h = 0; h < 時數; h++) {
+    /*
+      夜不可舉。「待日落而行」非蔭之計 —— 且其省必為十成,
+      故不去之則每路皆舉此時,而其言遂無用。
+
+      其別當取於日之高,不取於其曝之零。二者前此相混,而其混有實害:
+      十八時之日尚二十二度(洛城,所擬之日七月十九),而數路於其時全在影中 ——
+      此正暑者所欲聞,而器棄之如夜,反舉十六時之七成有一。
+      量之於洛城五十六路:如此者二。
+
+      MUST test the sun's altitude, not the route's exposure. Zero exposure means
+      either "the sun is down" or "this route is entirely in shadow", and those
+      are opposite findings. Conflating them threw away the best advice the tool
+      had on 2 of 56 sampled LA routes: at 18:00 the sun is still 22° up, and a
+      fully shaded route then is exactly what a heat-sensitive person is asking
+      for. Per-city it differs — Miami's 06:00 bucket is below the horizon,
+      Seattle's 20:00 is still 7° above it — which no exposure heuristic could
+      have known.
+
+      日高闕者,從其舊法 —— 舊囊無此籤,而其行不當因此而廢。
+      Falls back to the old heuristic when the pack predates the field.
+    */
+    const 夜 = 日高 ? (日高[h] ?? 0) <= 0 : 路之曝米(edges, h) <= 0;
+    if (夜) continue;
     const v = 路之曝米(edges, h);
-    // 曝全無者,日已沒也。「待日落而行」非蔭之計 —— 且其省必為十成,
-    // 故不去之則每路皆舉此時,而其言遂無用。
-    // Zero total exposure means the sun is down. Night always wins a
-    // lowest-sun comparison by 100%, so leaving it in makes this advice
-    // constant and therefore worthless. Shade advice is about daylight.
-    if (v <= 0) continue;
     if (v < 善) {
       善 = v;
       善序 = h;

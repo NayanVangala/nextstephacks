@@ -54,6 +54,14 @@ export interface Manifest {
   bbox: [number, number, number, number];
   timezone: string;
   hour_buckets: number[];
+  /**
+   * 每刻之日高,度也。負者日在地下。
+   *
+   * 可闕 —— 舊囊無之。闕則從其舊法(以曝之零推其夜),見 算遲行之利。
+   * Optional: packs built before this field existed omit it, and the caller
+   * falls back to inferring night from zero exposure.
+   */
+  sun_altitude_deg?: number[];
   generated_at: string;
   buildings_total?: number;
   /** 高無籤而以中位補之者。界面必告之,不可默。 */
