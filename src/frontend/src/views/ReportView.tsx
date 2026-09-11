@@ -164,9 +164,20 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
                   flags, hourIdx,
                 })}
               >
+                {/*
+                  其序所由者,介數也 —— 而前此獨不書之。故八行同書「exposure
+                  100%」,其別在所不見之數:是一榜而自隱其所以為榜者。
+                  The list is ordered by betweenness and exposure, and the row
+                  showed neither the ordering term nor anything that differed
+                  between rows — eight identical "exposure 100%" lines.
+                */}
                 <span className="数">{Math.round(x.edge.length_m)} m</span>
                 <span className="text-muted-foreground">·</span>
-                <span>exposure <span className="数">{(x.曝 * 100).toFixed(0)}%</span></span>
+                <span><span className="数">{(x.曝 * 100).toFixed(0)}%</span> sun</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-muted-foreground">
+                  on <span className="数">{(x.比 * 100).toFixed(0)}%</span> of sampled routes
+                </span>
                 {x.edge.confidence !== "high" && (
                   <span className="text-muted-foreground">· {x.edge.confidence} confidence</span>
                 )}

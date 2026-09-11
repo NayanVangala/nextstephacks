@@ -36,7 +36,16 @@ export function ProfilePicker({
   return (
     <fieldset className="border-t border-line pt-3.5">
       <legend className="mb-1 text-sm font-semibold">Accessibility profile</legend>
-      <div className="flex flex-col gap-3">
+      {/*
+        三者並列,不相疊。疊之則此組高一百九十像素,而四數之卡遂落於折下——
+        人之來此者所欲者其數,而其首屏所見皆其操之器。並之則高六十,
+        四卡皆在其上。窄屏仍疊,其幅不足以三分。
+        Stacked, this control was 190px tall and pushed the four figures — the
+        reason the page exists — below the fold on a 900px viewport. Three
+        columns costs ~60px and puts the numbers on the first screen. Still
+        stacked on narrow screens, where there is no room to divide.
+      */}
+      <div className="grid gap-x-5 gap-y-3 sm:grid-cols-3">
         {/* 全行為 label:方寸之匣十六像素,不足以指觸 —— WCAG 2.2 之最小為
             二十四,平臺所勸為四十四。此物本為手不便者而設,尤不可狹。 */}
         {之項.map(({ key, label, hint }) => (

@@ -19,6 +19,8 @@ export function 造亂數(種子: number): () => number {
 export interface 熱陷之項 {
   edge: Edge;
   介數: number;
+  /** 介數之比 —— 所取之節,其幾分之路經此段。界面所書者此,非其生數。 */
+  比: number;
   曝: number;
   分: number;
 }
@@ -76,11 +78,27 @@ export function 熱陷(
     }
   }
 
+  /*
+    ── 其分必乘其長 ──────────────────────────────────────────────────
+    前此 分 = 介數 × 曝,不計其長。故其首八者,皆三米至二十八米之短接 ——
+    人所必經而曝者誠然,然三米之地非所以為陷。量之於洛城午後:其榜八段,
+    合之不及百米,而其曝皆十成,是一榜而無一可讀之別。
+
+    陷者,人於日下所積之米也,故乘其長。其名曰「carrying the most foot
+    traffic and the most sun」—— 三米之段不當稱「most sun」,是其文與其
+    算本不相副,今副之。
+
+    The score ignored length, so the top rows were 3-28 m connector stubs: all
+    at 100% exposure, under 100 m of sidewalk between the eight of them, and
+    nothing to tell one row from the next. A heat trap is exposed metres of
+    pedestrian load, which is what the section's own label already claims to
+    rank, so the length belongs in the product.
+  */
   const 出: 熱陷之項[] = [];
   for (const e of pack.edges) {
     const 介數 = 用次.get(e.id) ?? 0;
     const 曝 = e.sun_exposure ? e.sun_exposure[hourIdx] ?? 1 : 1;
-    出.push({ edge: e, 介數, 曝, 分: 介數 * 曝 });
+    出.push({ edge: e, 介數, 比: k === 0 ? 0 : 介數 / k, 曝, 分: 介數 * 曝 * e.length_m });
   }
   出.sort((a, b) => b.分 - a.分);
   return 出.slice(0, 取幾);

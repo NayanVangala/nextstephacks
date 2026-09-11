@@ -347,7 +347,24 @@ export default function App() {
           widths, so it is not drawn — the same measured call Nav.tsx makes
           about its link list.
         */
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 hidden h-[24rem] overflow-hidden lg:block"
+        /*
+          其高自二十四rem退至十一 —— 止於印之記,不及其操之器。
+
+          量之:版底在頁之四九六,而身之組止於三七九、時之桿止於四五二,
+          是其器全在版下。前此身之組疊為一列,居其左,而版濃於其右,故未嘗相犯;
+          今並為三列,其第三列正入其濃處,而「Blind or low vision」一行無地可承,
+          遂坐於網目之上 —— 正犯此檔上文所自立之戒。
+          十一rem者,印之記之底(二五三)也:版為報頭之飾,則止於報頭。
+
+          Measured: the plate ran to y=496 while the profile group ends at 379
+          and the time slider at 452, so the controls sat inside it. That was
+          invisible while the profile options were a single left-hand column;
+          putting them in three columns moved the third one into the dense half,
+          leaving "Blind or low vision" printed straight onto the dot screen
+          with no ground. 11rem ends it at the colophon, which is where the
+          masthead ends.
+        */
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 hidden h-[11rem] overflow-hidden lg:block"
       >
         <RisoPlate
           className="inset-0 size-full"
