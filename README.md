@@ -15,7 +15,7 @@ Passable models both, and says out loud when it doesn't know.
 | **Sidewalk segments** | 477,618 |
 | **Destinations** | 13,349 — 537 cooling centres, 706 evacuation centres, 298 transit stops, 11,808 shaded rest stops |
 | **Runtime** | Entirely in the browser. No API key, no server, no account |
-| **Tests** | 261 frontend, 125 backend |
+| **Tests** | 295 frontend, 137 backend |
 
 <details>
 <summary>All 38 cities</summary>
@@ -190,8 +190,8 @@ turns on, and what happens without it — is in
 ## Tests
 
 ```bash
-npm test --prefix src/frontend    # 261 tests
-pytest tests/backend              # 125 tests
+npm test --prefix src/frontend    # 295 tests
+pytest tests/backend              # 137 tests
 ```
 
 Database migrations run against a real in-process Postgres (PGlite) on every
