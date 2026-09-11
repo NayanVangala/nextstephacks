@@ -26,8 +26,16 @@
  * Native <details>: keyboard-operable, its expanded state announced by screen
  * readers, and no state to get wrong.
  */
+/*
+  其籤自「How this was computed, and what it can't tell you」改為此。
+  長籤者,讀之如一告白,而人不知其可摺;短而自嘲,則其為選而非其責,一望而知。
+  五面同其籤,故一面所學者,五面皆可用。
+  The old label read as a disclaimer and did not announce itself as optional.
+  One short self-deprecating label across all five views instead, so learning it
+  once works everywhere.
+*/
 export function ViewNotes({
-  題 = "How this was computed, and what it can't tell you",
+  題 = "Text for nerds",
   children,
 }: {
   題?: string;

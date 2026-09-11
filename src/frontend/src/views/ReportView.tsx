@@ -11,6 +11,7 @@ import { 停運之狀 } from "../data/停運";
 import { 成址 } from "../data/路之址";
 import { Reveal } from "../motion/reveal";
 import { PressRun } from "../components/PressRun";
+import { ViewNotes } from "../components/ViewNotes";
 
 const 午後 = 4; // hour_buckets[4] === 14:00
 
@@ -110,107 +111,18 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         />
       </section>
 
-      {站總 > 0 && 有輪椅之欄 === false && (
-        <Reveal>
-        <section aria-label="Transit accessibility data gap" className="报之节 mt-8">
-          <h2 className="题-accent h-xs">Transit accessibility data is not published</h2>
-          <p className="mt-1 max-w-[68ch] text-sm">
-            The GTFS specification has carried a <code>wheelchair_boarding</code> field
-            since 2011. {pack.manifest.name}'s published feeds omit that column
-            entirely — not blank, absent — across every stop in both the bus and rail
-            datasets.
-          </p>
-          <p className="mt-2 max-w-[68ch] text-sm">
-            So for all <strong>{站總}</strong> stops in this area, whether a wheelchair
-            user can board is <strong>unknown</strong> from published data. This tool
-            will not guess. What it can measure is the sidewalk approach, reported
-            above: reaching the stop is a separate problem from boarding at it, and only
-            the first is answerable here.
-          </p>
-        </section>
-        </Reveal>
-      )}
-
-      <Reveal>
-      <section aria-label="Severance" className="报之节 mt-8">
-        <h2 className="题-accent h-xs">What the traversable figure hides</h2>
-        <p className="mt-1 max-w-[68ch] text-sm">
-          <strong className="数">{百分(報.通.率)}</strong> of the sidewalk network is
-          traversable for this profile, which sounds close to solved. It is not the
-          number that matters. The blocked segments are mostly short flights of steps,
-          and each one severs whatever sits behind it.
-        </p>
-        <p className="mt-2 max-w-[68ch] text-sm">
-          Counting connectivity instead of length:{" "}
-          <strong className="数">{報.斷.此身之節.toLocaleString()}</strong> points are
-          reachable for this profile against{" "}
-          <strong className="数">{報.斷.眾人之節.toLocaleString()}</strong> for an
-          unrestricted pedestrian — <strong className="数">{報.斷.斷之節.toLocaleString()}</strong>{" "}
-          points of usable sidewalk exist but cannot be reached.
-        </p>
-        {/*
-          此語必自其數而出。前此書「皆在一百四米之內」—— 乃洛城之量,而施於十六城:
-          量之,綠灣之最遠者三一七米,紐約四一八米,且有十處出其四百米之外。
-          其上之卡正已算之,而其文顧不用其所算。
-          MUST be derived. This read "Every destination here sits within 104 m",
-          which is a Los Angeles measurement rendered over all sixteen cities —
-          Green Bay's furthest is 317 m and New York has ten destinations beyond
-          400 m. The card directly above already computes this; the prose was
-          simply ignoring it.
-        */}
-        <p className="mt-2 max-w-[68ch] text-sm text-muted-foreground">
-          {報.無階.length === 0
-            ? "Every destination in this extract sits within 400 m of the step-free network, so proximity is not the barrier here. Connectivity is."
-            : `${報.無階.length} of the destinations in this extract sit more than 400 m from the step-free network — for the rest, proximity is not the barrier. Connectivity is.`}
-        </p>
-      </section>
-      </Reveal>
-
-      <Reveal>
-      <section aria-label="Building height coverage" className="报之节 mt-8">
-        <h2 className="题-accent h-xs">Building height coverage</h2>
-        <p className="mt-1 max-w-[68ch] text-sm">
-          Shade is computed by projecting building shadows, so it is only as good as
-          OpenStreetMap's height data — and that varies enormously by city.{" "}
-          <strong className="数">
-            {(pack.manifest.buildings_total ?? 0).toLocaleString()}
-          </strong>{" "}
-          buildings here,{" "}
-          <strong className="数">
-            {Math.round(
-              100 * (pack.manifest.buildings_assumed_height ?? 0) /
-                Math.max(pack.manifest.buildings_total ?? 1, 1),
-            )}%
-          </strong>{" "}
-          of them with no published height, filled in at an assumed 7 storeys.
-        </p>
-        {/*
-          前此曰「鳳凰城已量而棄之,不為第三城」—— 而鳳凰城正在其城之列(第三),
-          且其文書其比為六,而其實為九。二誤同出一處,皆二城之世之遺。
-          This paragraph said Phoenix "was measured and rejected as a third city"
-          while Phoenix is city #3 in the picker, and quoted 6% coverage where the
-          landing quotes 9% (the real figure is 8.6%). Both errors are leftovers
-          from when the project shipped two cities.
-        */}
-        <p className="mt-2 max-w-[68ch] text-sm text-muted-foreground">
-          For comparison: New York publishes heights for 95% of its downtown
-          buildings and Los Angeles for 92%, while Las Vegas publishes them for
-          6% and Green Bay for 2%. Across all thirty-eight downtowns, 47,375 of
-          81,864 building footprints — 58% — have no published height at all.
-          Where coverage is this thin the shade model is mostly inference, and
-          the hatch marks say so on every segment.
-        </p>
-      </section>
-      </Reveal>
-
       <Reveal>
       <section aria-label="Data confidence" className="报之节 mt-8">
         <h2 className="题-accent h-xs">Data confidence</h2>
-        <p className="mt-1 max-w-[68ch] text-sm">
-          Accessibility attributes come from OpenStreetMap. A segment is only{" "}
-          <strong>high</strong> confidence when a wheelchair, kerb, or steps tag was
-          explicitly present. Everything else was inferred, and an inferred segment is
-          not a verified-passable one.
+        {/*
+          一句而止。其長者三句,已入「文之為好事者」——
+          而此一句所載者,正其表之所不能自言:high 者,其籤明書者也。
+          Compressed to the single sentence the list below cannot say for itself.
+          The rest of the explanation moved into the disclosure at the foot.
+        */}
+        <p className="mt-1 max-w-[68ch] text-sm text-muted-foreground">
+          Only a segment with an explicit OpenStreetMap wheelchair, kerb, or steps tag
+          counts as <strong>high</strong>. The rest is inferred.
         </p>
         <ul className="mt-2 text-sm">
           {(["high", "medium", "low"] as const).map((k) => (
@@ -318,18 +230,136 @@ export function ReportView({ cityId = "la" }: { cityId?: string }) {
         </Reveal>
       )}
 
-      <Reveal>
-      <section aria-label="Paratransit" className="报之节 mt-8">
-        <h2 className="题-accent h-xs">Paratransit</h2>
-        <p className="mt-1 max-w-[68ch] text-sm">
-          {pack.manifest.name}'s ADA paratransit operator requires advance booking. A
-          wildfire or a heat emergency does not give that much notice, so the transit
-          mode many disabled residents depend on is structurally unavailable in exactly
-          the emergency that would require it. This is a policy finding, not a routing
-          one — no public scheduling API exists to model it.
-        </p>
-      </section>
-      </Reveal>
+      {/*
+        ── 文之為好事者設 ────────────────────────────────────────────────
+        此面前此四數之下繼以七百言,其六節皆散文。人之來此者,所欲者其數;
+        而其數沒於文中,須捲四屏而後盡。故散文歸於一摺,而其表、其榜、其警
+        仍在其面。
+
+        所摺者,皆已有其數見於上:
+          斷之數 —— 第三卡「Sidewalk cut off for this profile」正書之,
+                    是其「可通率」之疑不待此節而在其側(ViewNotes 之首戒);
+          推高之比 —— PressRun 一條,橫於其題之下,與其數同見;
+          公交之闕 —— 此面無一處言其可乘與否,故摺之不生「已知」之誤。
+        所不摺者:停運之警(隨時而變)、熱陷之榜(可點而行)、信之表(數也)。
+
+        Everything folded here already has its figure on the surface: the
+        severance count is card 3 (so the traversable number's caveat still
+        ships beside it, per ViewNotes' first rule), the assumed-height share is
+        in the PressRun line under the title, and nothing on this page claims
+        boarding accessibility is known, so folding that finding cannot make an
+        unknown read as known. Live alerts, the heat-trap list and the
+        confidence table stay on the surface.
+      */}
+      <ViewNotes 題="Text for nerds">
+        <section aria-label="Severance" className="报之节 mt-2">
+          <h2 className="题-accent h-xs">What the traversable figure hides</h2>
+          <p className="mt-1 max-w-[68ch] text-sm">
+            <strong className="数">{百分(報.通.率)}</strong> of the sidewalk network is
+            traversable for this profile, which sounds close to solved. It is not the
+            number that matters. The blocked segments are mostly short flights of steps,
+            and each one severs whatever sits behind it.
+          </p>
+          <p className="mt-2 max-w-[68ch] text-sm">
+            Counting connectivity instead of length:{" "}
+            <strong className="数">{報.斷.此身之節.toLocaleString()}</strong> points are
+            reachable for this profile against{" "}
+            <strong className="数">{報.斷.眾人之節.toLocaleString()}</strong> for an
+            unrestricted pedestrian — <strong className="数">{報.斷.斷之節.toLocaleString()}</strong>{" "}
+            points of usable sidewalk exist but cannot be reached.
+          </p>
+          {/*
+            此語必自其數而出。前此書「皆在一百四米之內」—— 乃洛城之量,而施於十六城:
+            量之,綠灣之最遠者三一七米,紐約四一八米,且有十處出其四百米之外。
+            其上之卡正已算之,而其文顧不用其所算。
+            MUST be derived. This read "Every destination here sits within 104 m",
+            which is a Los Angeles measurement rendered over all sixteen cities —
+            Green Bay's furthest is 317 m and New York has ten destinations beyond
+            400 m. The card directly above already computes this; the prose was
+            simply ignoring it.
+          */}
+          <p className="mt-2 max-w-[68ch] text-sm text-muted-foreground">
+            {報.無階.length === 0
+              ? "Every destination in this extract sits within 400 m of the step-free network, so proximity is not the barrier here. Connectivity is."
+              : `${報.無階.length} of the destinations in this extract sit more than 400 m from the step-free network — for the rest, proximity is not the barrier. Connectivity is.`}
+          </p>
+        </section>
+
+        {站總 > 0 && 有輪椅之欄 === false && (
+          <section aria-label="Transit accessibility data gap" className="报之节 mt-6">
+            <h2 className="题-accent h-xs">Transit accessibility data is not published</h2>
+            <p className="mt-1 max-w-[68ch] text-sm">
+              The GTFS specification has carried a <code>wheelchair_boarding</code> field
+              since 2011. {pack.manifest.name}'s published feeds omit that column
+              entirely — not blank, absent — across every stop in both the bus and rail
+              datasets.
+            </p>
+            <p className="mt-2 max-w-[68ch] text-sm">
+              So for all <strong>{站總}</strong> stops in this area, whether a wheelchair
+              user can board is <strong>unknown</strong> from published data. This tool
+              will not guess. What it can measure is the sidewalk approach, reported
+              above: reaching the stop is a separate problem from boarding at it, and only
+              the first is answerable here.
+            </p>
+          </section>
+        )}
+
+        <section aria-label="Building height coverage" className="报之节 mt-6">
+          <h2 className="题-accent h-xs">Building height coverage</h2>
+          <p className="mt-1 max-w-[68ch] text-sm">
+            Shade is computed by projecting building shadows, so it is only as good as
+            OpenStreetMap's height data — and that varies enormously by city.{" "}
+            <strong className="数">
+              {(pack.manifest.buildings_total ?? 0).toLocaleString()}
+            </strong>{" "}
+            buildings here,{" "}
+            <strong className="数">
+              {Math.round(
+                100 * (pack.manifest.buildings_assumed_height ?? 0) /
+                  Math.max(pack.manifest.buildings_total ?? 1, 1),
+              )}%
+            </strong>{" "}
+            of them with no published height, filled in at an assumed 7 storeys.
+          </p>
+          {/*
+            前此曰「鳳凰城已量而棄之,不為第三城」—— 而鳳凰城正在其城之列(第三),
+            且其文書其比為六,而其實為九。二誤同出一處,皆二城之世之遺。
+            This paragraph said Phoenix "was measured and rejected as a third city"
+            while Phoenix is city #3 in the picker, and quoted 6% coverage where the
+            landing quotes 9% (the real figure is 8.6%). Both errors are leftovers
+            from when the project shipped two cities.
+          */}
+          <p className="mt-2 max-w-[68ch] text-sm text-muted-foreground">
+            For comparison: New York publishes heights for 95% of its downtown
+            buildings and Los Angeles for 92%, while Las Vegas publishes them for
+            6% and Green Bay for 2%. Across all thirty-eight downtowns, 47,375 of
+            81,864 building footprints — 58% — have no published height at all.
+            Where coverage is this thin the shade model is mostly inference, and
+            the hatch marks say so on every segment.
+          </p>
+        </section>
+
+        <section aria-label="How confidence is assigned" className="报之节 mt-6">
+          <h2 className="题-accent h-xs">How confidence is assigned</h2>
+          <p className="mt-1 max-w-[68ch] text-sm">
+            Accessibility attributes come from OpenStreetMap. A segment is only{" "}
+            <strong>high</strong> confidence when a wheelchair, kerb, or steps tag was
+            explicitly present. Everything else was inferred, and an inferred segment is
+            not a verified-passable one.
+          </p>
+        </section>
+
+        <section aria-label="Paratransit" className="报之节 mt-6">
+          <h2 className="题-accent h-xs">Paratransit</h2>
+          <p className="mt-1 max-w-[68ch] text-sm">
+            {pack.manifest.name}'s ADA paratransit operator requires advance booking. A
+            wildfire or a heat emergency does not give that much notice, so the transit
+            mode many disabled residents depend on is structurally unavailable in exactly
+            the emergency that would require it. This is a policy finding, not a routing
+            one — no public scheduling API exists to model it.
+          </p>
+        </section>
+      </ViewNotes>
     </main>
   );
 }
